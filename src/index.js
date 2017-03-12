@@ -1,4 +1,4 @@
-/// <reference path='./workfront-api.d.ts' />
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7,16 +7,44 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import * as deepExtend from "deep-extend";
-import * as FormData from "form-data";
-import * as api from "workfront-api";
-import * as queryString from "querystring";
-import * as followRedirects from "follow-redirects";
-import { TimedOut } from "./timed-out";
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t;
+    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var deepExtend = require("deep-extend");
+var FormData = require("form-data");
+var api = require("workfront-api");
+var queryString = require("querystring");
+var followRedirects = require("follow-redirects");
+var timed_out_1 = require("./timed-out");
 /**
  * Workfront API connection settings
  */
-export let apiFactoryConfig = {
+exports.apiFactoryConfig = {
     url: "https://idt.my.workfront.com",
     //url: "https://idt.attasksandbox.com/" // TEST
     //version: "4.0"
@@ -25,12 +53,12 @@ export let apiFactoryConfig = {
 };
 var ApiFactory = api.ApiFactory;
 var ApiConstants = api.ApiConstants;
-var instance = ApiFactory.getInstance(apiFactoryConfig);
+var instance = ApiFactory.getInstance(exports.apiFactoryConfig);
 instance.httpParams.apiKey = "d0tz5bgzlif3fpdpap46lvqe9s727jfe"; // LIVE key
 //instance.httpParams.apiKey = "2y1o1oc6p8umthza4z25bncdbixy54w2"; // TEST key
-const HTTP_REQ_TIMEOUT = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
+var HTTP_REQ_TIMEOUT = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 // used to store entity metadata responses
-let metaDataCache = {};
+var metaDataCache = {};
 /**
  * Override this method because we want only to provide username & not password - for example to get alternate user session with provided API key and username.
  *
@@ -41,14 +69,15 @@ let metaDataCache = {};
  * @returns {any}
  */
 api.Api.prototype.login = function (username, password) {
-    return this.request('login', (() => {
+    var _this = this;
+    return this.request('login', (function () {
         console.log("logging in! Username: " + username);
-        let params = { username: username };
+        var params = { username: username };
         if (password) {
             params.password = password;
         }
-        if (this.httpParams.apiKey) {
-            params.apiKey = this.httpParams.apiKey;
+        if (_this.httpParams.apiKey) {
+            params.apiKey = _this.httpParams.apiKey;
         }
         return params;
     })(), null, api.Api.Methods.POST).then(function (data) {
@@ -84,9 +113,9 @@ api.Api.prototype.upload = function (stream, overrides) {
     var httpTransport = this.httpTransport;
     return new Promise(function (resolve, reject) {
         var request = httpTransport.request(options, this._handleResponse(resolve, reject));
-        TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
+        timed_out_1.TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
         // get content length and fire away
-        form.getLength((err, length) => {
+        form.getLength(function (err, length) {
             if (err) {
                 reject(err);
                 return;
@@ -107,7 +136,7 @@ api.Api.prototype.upload = function (stream, overrides) {
  * @returns {function(IncomingMessage): undefined}
  * @private
  */
-api.Api.prototype._handleResponse = (resolve, reject) => {
+api.Api.prototype._handleResponse = function (resolve, reject) {
     return function (response) {
         console.log("*** Response: " + response.statusCode + ", " + response.statusMessage);
         var body = '';
@@ -118,7 +147,7 @@ api.Api.prototype._handleResponse = (resolve, reject) => {
             body += chunk;
         });
         response.on('end', function () {
-            console.log(`HTTP response: ${body}`);
+            console.log("HTTP response: " + body);
             // console.log(`Response headers: ${JSON.stringify(response.headers)}`);
             var data;
             try {
@@ -150,18 +179,26 @@ api.Api.prototype._handleResponse = (resolve, reject) => {
  * @returns {any|http.ClientRequest|ClientRequest|any<request.Request, request.CoreOptions, request.RequiredUriUrl>}
  */
 api.Api.prototype.share = function (objCode, objId, userId, coreAction) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let params = {
-            accessorID: userId,
-            accessorObjCode: "USER",
-            coreAction: coreAction
-        };
-        if (this.httpParams.apiKey) {
-            params.apiKey = this.httpParams.apiKey;
-        }
-        let endpoint = objCode + '/' + objId + '/share';
-        let res = yield this.request(endpoint, params, [], api.Api.Methods.PUT);
-        return res;
+    return __awaiter(this, void 0, void 0, function () {
+        var params, endpoint, res;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    params = {
+                        accessorID: userId,
+                        accessorObjCode: "USER",
+                        coreAction: coreAction
+                    };
+                    if (this.httpParams.apiKey) {
+                        params.apiKey = this.httpParams.apiKey;
+                    }
+                    endpoint = objCode + '/' + objId + '/share';
+                    return [4 /*yield*/, this.request(endpoint, params, [], api.Api.Methods.PUT)];
+                case 1:
+                    res = _a.sent();
+                    return [2 /*return*/, res];
+            }
+        });
     });
 };
 /**
@@ -175,13 +212,13 @@ api.Api.prototype.metadata = function (objCode, useCache) {
         // console.log(`Metadata from cache! ${objCode}`);
         return Promise.resolve(metaDataCache[objCode]);
     }
-    let params = {};
+    var params = {};
     if (this.httpParams.apiKey) {
         params.apiKey = this.httpParams.apiKey;
     }
-    let endpoint = objCode + "/metadata";
+    var endpoint = objCode + "/metadata";
     // console.log(`Metadata from network! ${objCode}`);
-    return this.request(endpoint, params, [], api.Api.Methods.GET).then((metaData) => {
+    return this.request(endpoint, params, [], api.Api.Methods.GET).then(function (metaData) {
         metaDataCache[objCode] = metaData;
         return metaData;
     });
@@ -199,6 +236,7 @@ var requestHasData = function (method) {
  * @returns {Promise<void>|Promise}
  */
 api.Api.prototype.download = function (downloadURL, output) {
+    var _this = this;
     var options = {
         method: 'GET'
     };
@@ -212,26 +250,26 @@ api.Api.prototype.download = function (downloadURL, output) {
     //var httpTransport = this.httpTransport;
     var isHttps = this.httpOptions.protocol === 'https:';
     var httpTransport = isHttps ? followRedirects.https : followRedirects.http;
-    return new Promise((resolve, reject) => {
-        console.log("Making a download request: " + JSON.stringify(options) + ", session ID: " + this.httpOptions.headers.sessionID);
-        var request = httpTransport.request(options, (response) => {
+    return new Promise(function (resolve, reject) {
+        console.log("Making a download request: " + JSON.stringify(options) + ", session ID: " + _this.httpOptions.headers.sessionID);
+        var request = httpTransport.request(options, function (response) {
             console.log("*** Download response: " + response.statusCode + ", " + response.statusMessage);
             if (response.statusCode != 200) {
-                return reject(`Download failed! Response code: ${response.statusCode}, message: ${response.statusMessage}`);
+                return reject("Download failed! Response code: " + response.statusCode + ", message: " + response.statusMessage);
             }
             // if (typeof response.setEncoding === 'function') {
             //     response.setEncoding('utf8');
             // }
             response.on("error", reject);
             response.pipe(output);
-            output.on('finish', () => {
-                console.log(`HTTP download ended!`);
+            output.on('finish', function () {
+                console.log("HTTP download ended!");
                 resolve();
             });
             // response.on('data', (chunk) => { output.write(chunk); });
             // response.on('end', () => { console.log(`HTTP download ended!`); resolve(); });
         });
-        TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
+        timed_out_1.TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
         request.on('error', reject);
         request.end();
     });
@@ -282,7 +320,7 @@ api.Api.prototype.request = function (path, params, fields, method) {
         }
     }
     // debug
-    console.log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
+    console.log("Making a request: " + JSON.stringify(options) + ", params: " + JSON.stringify(params));
     // let configName = Config.instance().name;
     // if (configName == Config.OJA) {
     //     console.log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
@@ -290,7 +328,7 @@ api.Api.prototype.request = function (path, params, fields, method) {
     var httpTransport = this.httpTransport;
     return new Promise(function (resolve, reject) {
         var request = httpTransport.request(options, this._handleResponse(resolve, reject));
-        TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
+        timed_out_1.TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
         request.on('error', reject);
         if (!alwaysUseGet && params && requestHasData(options.method)) {
             request.write(params);
@@ -309,18 +347,18 @@ api.Api.prototype.request = function (path, params, fields, method) {
  * @returns {UserNames} - user names (firstname, lastname)
  */
 function parseEmailNames(addr) {
-    let result = {};
+    var result = {};
     if (addr.name && addr.name.trim()) {
         // There is a name part in an email address, like "Jaanek Oja <jaanekoja@gmail.com>"
         if (addr.name.indexOf(",") > 0) {
             // Microsoft Outlook tends to put a , between the names and puts the last name first. We will look for that configuration first.
-            let sep = addr.name.indexOf(",");
+            var sep = addr.name.indexOf(",");
             result.lastName = addr.name.substr(0, sep).trim();
             result.firstName = addr.name.substr(sep + 1).trim();
         }
         else if (addr.name.indexOf(" ") > 0) {
             // Gmail and others
-            let sep = addr.name.indexOf(" ");
+            var sep = addr.name.indexOf(" ");
             result.firstName = addr.name.substr(0, sep).trim();
             result.lastName = addr.name.substr(sep + 1).trim();
         }
@@ -332,8 +370,8 @@ function parseEmailNames(addr) {
     else {
         // It's something non standard like no name and just an email address. For this we just make it work and put
         // the from name in both after forcing a string conversion.
-        let sep = addr.address.indexOf("@");
-        let mailboxName = addr.address.substr(0, sep).trim();
+        var sep = addr.address.indexOf("@");
+        var mailboxName = addr.address.substr(0, sep).trim();
         result.firstName = mailboxName;
         result.lastName = mailboxName;
     }
@@ -345,11 +383,11 @@ function parseEmailNames(addr) {
  * @returns {string} - a new random password
  */
 function randomPassword() {
-    let alphabet = "abcdefghjklmnpqrstuwxyzABCDEFGHJKLMNPQRSTUWXYZ23456789";
-    let result = [];
-    let min = 0, max = alphabet.length - 1;
-    for (let i = 0; i < 8; i++) {
-        let n = Math.floor(Math.random() * (max - min)) + min;
+    var alphabet = "abcdefghjklmnpqrstuwxyzABCDEFGHJKLMNPQRSTUWXYZ23456789";
+    var result = [];
+    var min = 0, max = alphabet.length - 1;
+    for (var i = 0; i < 8; i++) {
+        var n = Math.floor(Math.random() * (max - min)) + min;
         result.push(alphabet[n]);
     }
     return result.join("");
@@ -357,7 +395,7 @@ function randomPassword() {
 /**
  * A Workfront internal API for our project that provides a convenient and wrapped methods to be used in different usage scenarios.
  */
-export var Workfront;
+var Workfront;
 (function (Workfront) {
     // export the general API
     Workfront.api = instance;
@@ -366,26 +404,34 @@ export var Workfront;
     ;
     ;
     // This is just a meta data entity to hold document folder parent entity field name and value
-    class DocumentFolderParentField {
-        constructor(name, value) {
+    var DocumentFolderParentField = (function () {
+        function DocumentFolderParentField(name, value) {
             this.name = name;
             this.value = value;
         }
-    }
+        return DocumentFolderParentField;
+    }());
     Workfront.DocumentFolderParentField = DocumentFolderParentField;
     ;
-    class Issue {
-    }
+    var Issue = (function () {
+        function Issue() {
+        }
+        return Issue;
+    }());
     Issue.EXT_MSG_PREFIX = "FROM_EMAIL.MESSAGE_ID:";
     Workfront.Issue = Issue;
-    class ReplyMessage {
-        constructor() {
+    var ReplyMessage = (function () {
+        function ReplyMessage() {
             this.isReply = false;
         }
-    }
+        return ReplyMessage;
+    }());
     Workfront.ReplyMessage = ReplyMessage;
-    class IssueUpdate {
-    }
+    var IssueUpdate = (function () {
+        function IssueUpdate() {
+        }
+        return IssueUpdate;
+    }());
     Workfront.IssueUpdate = IssueUpdate;
     // constants
     Workfront.API_DATE_FORMAT = "YYYY-MM-DD'T'HH:mm:ss:SSSZ"; // Date format in API requests: 2016-08-30T03:52:05:383-0700
@@ -399,17 +445,17 @@ export var Workfront;
     function login(fromEmail, waitDelay) {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
-        let api = ApiFactory.getInstance(apiFactoryConfig, true);
+        var api = ApiFactory.getInstance(exports.apiFactoryConfig, true);
         api.httpParams.apiKey = instance.httpParams.apiKey;
         // if there is wait delay specified after a login
         if (waitDelay) {
-            return new Promise((resolve, reject) => {
-                api.login(fromEmail.address).then((login) => {
-                    console.log(`Login delay: ${waitDelay}`);
-                    setTimeout(() => {
+            return new Promise(function (resolve, reject) {
+                api.login(fromEmail.address).then(function (login) {
+                    console.log("Login delay: " + waitDelay);
+                    setTimeout(function () {
                         resolve(login);
                     }, waitDelay);
-                }).catch((error) => {
+                }).catch(function (error) {
                     reject(error);
                 });
             });
@@ -428,7 +474,7 @@ export var Workfront;
     function logout(login) {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
-        let api = ApiFactory.getInstance(apiFactoryConfig, true);
+        var api = ApiFactory.getInstance(exports.apiFactoryConfig, true);
         delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
         api.httpOptions.headers.sessionID = login.sessionID;
         return api.logout();
@@ -438,17 +484,17 @@ export var Workfront;
         console.log("*** Executing as User (with existing login session). Email: " + fromEmail.address + ", login session: " + JSON.stringify(login));
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
-        let api = ApiFactory.getInstance(apiFactoryConfig, true);
+        var api = ApiFactory.getInstance(exports.apiFactoryConfig, true);
         delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
         api.httpOptions.headers.sessionID = login.sessionID;
         // login and execute provided function under a user
-        let updated = new Promise((resolve, reject) => {
-            callback(api, login).then((result) => {
+        var updated = new Promise(function (resolve, reject) {
+            callback(api, login).then(function (result) {
                 console.log("Execute as user finished, result: " + JSON.stringify(result));
                 resolve(result);
-            }).catch((error) => {
+            }).catch(function (error) {
                 console.log(error);
-                console.log(`Error. User: ${fromEmail.address}, error: ${JSON.stringify(error)}`);
+                console.log("Error. User: " + fromEmail.address + ", error: " + JSON.stringify(error));
                 reject(error);
             });
         });
@@ -465,58 +511,58 @@ export var Workfront;
     function execAsUser(console, fromEmail, callback) {
         // check if we have WfContext coming in, if so then if not already logged in then login
         if (console.getSession && console.setSession) {
-            let ctx = console;
-            let login = ctx.getSession(fromEmail.address);
-            if (!login) {
+            var ctx_1 = console;
+            var login_1 = ctx_1.getSession(fromEmail.address);
+            if (!login_1) {
                 // login first
-                console.log(`*** No login session found for user email: ${fromEmail.address}. Getting a new session.`);
-                return Workfront.login(fromEmail, 5000).then((login) => {
+                console.log("*** No login session found for user email: " + fromEmail.address + ". Getting a new session.");
+                return Workfront.login(fromEmail, 5000).then(function (login) {
                     console.log("Got login session for user: " + fromEmail.address + ", user id: " + login.userID + ", sessionId: " + login.sessionID);
-                    ctx.setSession(fromEmail.address, login);
+                    ctx_1.setSession(fromEmail.address, login);
                     return execAsUserWithSession(console, fromEmail, callback, login);
                 });
             }
             else {
-                console.log(`Existing login session found for user email: ${fromEmail.address}, user id: ${login.userID}, sessionId: ${login.sessionID}`);
-                return execAsUserWithSession(console, fromEmail, callback, login);
+                console.log("Existing login session found for user email: " + fromEmail.address + ", user id: " + login_1.userID + ", sessionId: " + login_1.sessionID);
+                return execAsUserWithSession(console, fromEmail, callback, login_1);
             }
         }
         else {
             console.log("*** Executing as User (with logging in first). Email: " + fromEmail.address);
             // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
             // For that reason, we create a new instance of api
-            let api = ApiFactory.getInstance(apiFactoryConfig, true);
-            api.httpParams.apiKey = instance.httpParams.apiKey;
+            var api_1 = ApiFactory.getInstance(exports.apiFactoryConfig, true);
+            api_1.httpParams.apiKey = instance.httpParams.apiKey;
             // login and execute provided function under a user
-            let updated = new Promise((resolve, reject) => {
-                api.login(fromEmail.address).then((login) => {
-                    delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
-                    let userId = login.userID;
-                    let sessionId = login.sessionID;
+            var updated = new Promise(function (resolve, reject) {
+                api_1.login(fromEmail.address).then(function (login) {
+                    delete api_1.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
+                    var userId = login.userID;
+                    var sessionId = login.sessionID;
                     console.log("Got login session for user: " + fromEmail.address + ", user id: " + userId + ", sessionId: " + sessionId);
-                    return callback(api, login).then((result) => {
+                    return callback(api_1, login).then(function (result) {
                         console.log("Execute as user finished, result: " + JSON.stringify(result));
                         return result;
                     });
-                }).then((result) => {
+                }).then(function (result) {
                     console.log("Logging out! User: " + fromEmail.address);
-                    api.logout().then(() => {
-                        console.log(`Logout success!`);
+                    api_1.logout().then(function () {
+                        console.log("Logout success!");
                         resolve(result);
-                    }).catch((logoutError) => {
-                        console.log(`Error while trying to logout! Error ${logoutError}`);
+                    }).catch(function (logoutError) {
+                        console.log("Error while trying to logout! Error " + logoutError);
                         // anyway we are done with a call, so resolve it as success
                         resolve(result);
                     });
                     //api.logout();
-                }).catch((error) => {
+                }).catch(function (error) {
                     console.log(error);
-                    console.log(`Error. Logging out! User: ${fromEmail.address}, error: ${JSON.stringify(error)}`);
-                    api.logout().then(() => {
-                        console.log(`Logout success!`);
+                    console.log("Error. Logging out! User: " + fromEmail.address + ", error: " + JSON.stringify(error));
+                    api_1.logout().then(function () {
+                        console.log("Logout success!");
                         reject(error);
-                    }).catch((logoutError) => {
-                        console.log(`Error while trying to logout! Error ${logoutError}`);
+                    }).catch(function (logoutError) {
+                        console.log("Error while trying to logout! Error " + logoutError);
                         // anyway we are done with a call, so resolve it as success
                         reject(error);
                     });
@@ -537,7 +583,7 @@ export var Workfront;
      */
     function getProjectById(console, projId, fields) {
         console.log("Getting Project by id: " + projId);
-        return Workfront.api.get("PROJ", projId, fields).then((project) => {
+        return Workfront.api.get("PROJ", projId, fields).then(function (project) {
             return project;
         });
     }
@@ -553,7 +599,7 @@ export var Workfront;
         return Workfront.api.search("PROJ", {
             referenceNumber: refNr,
             referenceNumber_Mod: "eq"
-        }, ["referenceNumber"]).then((projects) => {
+        }, ["referenceNumber"]).then(function (projects) {
             if (projects.length) {
                 return projects[0];
             }
@@ -571,16 +617,17 @@ export var Workfront;
      * @returns {Promise<Upload>|Promise} - an object containing provided attachments and Workfront reference handles to them
      */
     function uploadMailAttachmentsAsUser(console, fromEmail, attachments) {
-        console.log(`Uploading mail attachments as user ${fromEmail.address}, attachments: ${attachments}!`);
+        console.log("Uploading mail attachments as user " + fromEmail.address + ", attachments: " + attachments + "!");
         if (attachments && attachments.length) {
-            return execAsUser(console, fromEmail, (api, login) => {
-                let allUploads = new Array();
-                for (let att of attachments) {
-                    let data = att.content;
+            return execAsUser(console, fromEmail, function (api, login) {
+                var allUploads = new Array();
+                for (var _i = 0, attachments_1 = attachments; _i < attachments_1.length; _i++) {
+                    var att = attachments_1[_i];
+                    var data = att.content;
                     //console.log("Content object type: " + data.constructor);
                     allUploads.push(api.upload(data, { filename: att.fileName, contentType: att.contentType }));
                 }
-                return Promise.all(allUploads).then((data) => {
+                return Promise.all(allUploads).then(function (data) {
                     console.log("Attachments uploaded!");
                     return { attachments: attachments, handles: data };
                 });
@@ -601,9 +648,10 @@ export var Workfront;
      * @returns {Promise<User>|Promise}
      */
     function getOrCreateUser(console, fromEmail, accessConfigs, fetchSsoId) {
-        let isIDTEmployee = fromEmail.address.indexOf("@idt.com") > 0 ? true : false;
+        var _this = this;
+        var isIDTEmployee = fromEmail.address.indexOf("@idt.com") > 0 ? true : false;
         // Set user access levels/settings if new user needs to be created 
-        let accessConfig = {
+        var accessConfig = {
             accessLevelID: accessConfigs.externalUsers.accessLevelID,
             companyID: accessConfigs.externalUsers.companyID,
             homeGroupID: accessConfigs.externalUsers.homeGroupID
@@ -614,90 +662,95 @@ export var Workfront;
             accessConfig.companyID = accessConfigs.idtUsers.companyID;
             accessConfig.homeGroupID = accessConfigs.idtUsers.homeGroupID;
         }
-        let queryFields = ["emailAddr", "firstName", "lastName"]; // additional fields to return
-        let userDone = new Promise((resolve, reject) => {
+        var queryFields = ["emailAddr", "firstName", "lastName"]; // additional fields to return
+        var userDone = new Promise(function (resolve, reject) {
             // First, check if that user already exists
             Workfront.api.search("USER", {
                 emailAddr: fromEmail.address,
                 emailAddr_Mod: "cieq"
-            }, queryFields).then((users) => __awaiter(this, void 0, void 0, function* () {
-                console.log(`getOrCreateUser. Got users: ${users}`);
-                if (users && users.length > 1) {
-                    return Promise.reject("Multiple users returned for an email: " + fromEmail.address);
-                }
-                if (users && users.length) {
-                    // we have found an existing user
-                    console.log("*** User found by email: " + fromEmail.address);
-                    return users[0];
-                }
-                else {
-                    // user not found
-                    console.log("*** User not found by email: " + fromEmail.address);
-                    // check if we need to get ssoId
-                    let ssoId = null;
-                    if (fetchSsoId && isIDTEmployee) {
-                        ssoId = yield fetchSsoId(fromEmail.address);
-                        console.log(`*** IDT Employee. User sso id: ${ssoId}`);
+            }, queryFields).then(function (users) { return __awaiter(_this, void 0, void 0, function () {
+                var ssoId_1, userNames_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            console.log("getOrCreateUser. Got users: " + users);
+                            if (users && users.length > 1) {
+                                return [2 /*return*/, Promise.reject("Multiple users returned for an email: " + fromEmail.address)];
+                            }
+                            if (!(users && users.length)) return [3 /*break*/, 1];
+                            // we have found an existing user
+                            console.log("*** User found by email: " + fromEmail.address);
+                            return [2 /*return*/, users[0]];
+                        case 1:
+                            // user not found
+                            console.log("*** User not found by email: " + fromEmail.address);
+                            ssoId_1 = null;
+                            if (!(fetchSsoId && isIDTEmployee)) return [3 /*break*/, 3];
+                            return [4 /*yield*/, fetchSsoId(fromEmail.address)];
+                        case 2:
+                            ssoId_1 = _a.sent();
+                            console.log("*** IDT Employee. User sso id: " + ssoId_1);
+                            _a.label = 3;
+                        case 3:
+                            userNames_1 = parseEmailNames(fromEmail);
+                            return [2 /*return*/, Workfront.api.create("USER", (function () {
+                                    var params = {
+                                        firstName: userNames_1.firstName,
+                                        lastName: userNames_1.lastName,
+                                        emailAddr: fromEmail.address,
+                                        accessLevelID: accessConfig.accessLevelID,
+                                        companyID: accessConfig.companyID,
+                                        homeGroupID: accessConfig.homeGroupID
+                                    };
+                                    if (ssoId_1) {
+                                        params.ssoUsername = ssoId_1;
+                                    }
+                                    return params;
+                                })(), queryFields).then(function (user) {
+                                    // User created
+                                    console.log("*** User created! User: " + JSON.stringify(user));
+                                    if (!user.ID) {
+                                        return Promise.reject("Something went wrong while creating a new user! User ID is not defined! Result: " + JSON.stringify(user));
+                                    }
+                                    // If we have an external user to IDT then we must assign a username and password for that user
+                                    if (isIDTEmployee == false) {
+                                        console.log("*** Assigning a token to the user!");
+                                        // First, get a token for the registration process
+                                        return Workfront.api.execute("USER", user.ID, 'assignUserToken').then(function (token) {
+                                            console.log("Got token for new user! Token: " + JSON.stringify(token));
+                                            return Promise.resolve(token);
+                                        }).then(function (token) {
+                                            console.log("*** Generate password!");
+                                            // now that we have a token, finish the registration
+                                            user.password = randomPassword();
+                                            // For unknown reasons you need to send the first and last name in again when completing the user reg. Just an AtTask thing.
+                                            return Workfront.api.execute("USER", user.ID, 'completeUserRegistration', {
+                                                firstName: userNames_1.firstName,
+                                                lastName: userNames_1.lastName,
+                                                token: token.result,
+                                                title: "",
+                                                newPassword: user.password
+                                            });
+                                        }).then(function (data) {
+                                            // For some reason when this works it only returns null ({"result":null}). I swear it wasn't doing that last week (11/25/14) today.
+                                            console.log("User registration complete! Result: " + JSON.stringify(data) + ". User ID: " + user.ID);
+                                            return user;
+                                        }).catch(function (error) {
+                                            return Promise.reject(error);
+                                        });
+                                    }
+                                    else {
+                                        console.log("IDT user! User ID: " + user.ID);
+                                        return user;
+                                    }
+                                }).then(function (user) {
+                                    return user;
+                                }).catch(function (error) {
+                                    return Promise.reject(error);
+                                })];
                     }
-                    // Create a new user
-                    let userNames = parseEmailNames(fromEmail);
-                    return Workfront.api.create("USER", (() => {
-                        let params = {
-                            firstName: userNames.firstName,
-                            lastName: userNames.lastName,
-                            emailAddr: fromEmail.address,
-                            accessLevelID: accessConfig.accessLevelID,
-                            companyID: accessConfig.companyID,
-                            homeGroupID: accessConfig.homeGroupID
-                        };
-                        if (ssoId) {
-                            params.ssoUsername = ssoId;
-                        }
-                        return params;
-                    })(), queryFields).then((user) => {
-                        // User created
-                        console.log("*** User created! User: " + JSON.stringify(user));
-                        if (!user.ID) {
-                            return Promise.reject("Something went wrong while creating a new user! User ID is not defined! Result: " + JSON.stringify(user));
-                        }
-                        // If we have an external user to IDT then we must assign a username and password for that user
-                        if (isIDTEmployee == false) {
-                            console.log("*** Assigning a token to the user!");
-                            // First, get a token for the registration process
-                            return Workfront.api.execute("USER", user.ID, 'assignUserToken').then((token) => {
-                                console.log(`Got token for new user! Token: ${JSON.stringify(token)}`);
-                                return Promise.resolve(token);
-                            }).then((token) => {
-                                console.log("*** Generate password!");
-                                // now that we have a token, finish the registration
-                                user.password = randomPassword();
-                                // For unknown reasons you need to send the first and last name in again when completing the user reg. Just an AtTask thing.
-                                return Workfront.api.execute("USER", user.ID, 'completeUserRegistration', {
-                                    firstName: userNames.firstName,
-                                    lastName: userNames.lastName,
-                                    token: token.result,
-                                    title: "",
-                                    newPassword: user.password
-                                });
-                            }).then((data) => {
-                                // For some reason when this works it only returns null ({"result":null}). I swear it wasn't doing that last week (11/25/14) today.
-                                console.log(`User registration complete! Result: ${JSON.stringify(data)}. User ID: ${user.ID}`);
-                                return user;
-                            }).catch((error) => {
-                                return Promise.reject(error);
-                            });
-                        }
-                        else {
-                            console.log(`IDT user! User ID: ${user.ID}`);
-                            return user;
-                        }
-                    }).then((user) => {
-                        return user;
-                    }).catch((error) => {
-                        return Promise.reject(error);
-                    });
-                }
-            })).then((user) => {
+                });
+            }); }).then(function (user) {
                 console.log("User: " + JSON.stringify(user));
                 resolve(user);
             }).catch(reject);
@@ -711,24 +764,26 @@ export var Workfront;
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
     function getOrCreateUsersByEmail(console, userEmails, emailsToIgnore, otherConfigs, fetchSsoId) {
-        console.log(`Get or create users by email! Emails: ${JSON.stringify(userEmails)}`);
+        console.log("Get or create users by email! Emails: " + JSON.stringify(userEmails));
         // ignore service mailbox emails
-        let ignoreEmails = new Set();
+        var ignoreEmails = new Set();
         // add all mail account emails to ignore
-        for (let email of emailsToIgnore) {
+        for (var _i = 0, emailsToIgnore_1 = emailsToIgnore; _i < emailsToIgnore_1.length; _i++) {
+            var email = emailsToIgnore_1[_i];
             ignoreEmails.add(email.toLowerCase());
         }
         ignoreEmails.add("webmaster@idt.com");
         //
-        let usersFetched = [];
-        for (let userEmail of userEmails) {
+        var usersFetched = [];
+        for (var _a = 0, userEmails_1 = userEmails; _a < userEmails_1.length; _a++) {
+            var userEmail = userEmails_1[_a];
             // Sometimes distribution lists are copied when submitting a request. We do not want to create them as a user.
             // Some distribution lists start with "corp", and some start with "kk" (for unknown reasons).
             if (userEmail.address.substr(0, 2) != "kk" && userEmail.address.substr(0, 4) != "corp" && !ignoreEmails.has(userEmail.address.toLowerCase())) {
                 usersFetched.push(getOrCreateUser(console, userEmail, otherConfigs.accessConfigs, fetchSsoId));
             }
         }
-        return Promise.all(usersFetched).then((users) => {
+        return Promise.all(usersFetched).then(function (users) {
             console.log("Users fetched or created! " + JSON.stringify(users));
             return users;
         });
@@ -744,7 +799,7 @@ export var Workfront;
      */
     function getUserById(console, userId, fields) {
         console.log("Getting User by id: " + userId);
-        return Workfront.api.get("USER", userId, fields).then((user) => {
+        return Workfront.api.get("USER", userId, fields).then(function (user) {
             return user;
         });
     }
@@ -759,7 +814,7 @@ export var Workfront;
      */
     function getTeamById(console, teamId, fields) {
         console.log("Getting Team by id: " + teamId);
-        return Workfront.api.get("TEAMOB", teamId, fields).then((team) => {
+        return Workfront.api.get("TEAMOB", teamId, fields).then(function (team) {
             return team;
         });
     }
@@ -774,7 +829,7 @@ export var Workfront;
      */
     function getIssueById(console, issueId, fields) {
         console.log("Getting Issue by id: " + issueId);
-        return Workfront.api.get("OPTASK", issueId, fields).then((issue) => {
+        return Workfront.api.get("OPTASK", issueId, fields).then(function (issue) {
             return issue;
         });
     }
@@ -793,7 +848,7 @@ export var Workfront;
         return Workfront.api.search("OPTASK", {
             extRefID: extRefID,
             extRefID_Mod: "eq"
-        }).then((issues) => {
+        }).then(function (issues) {
             if (issues && issues.length > 1) {
                 return Promise.reject(Error("More than one issue found for message id: " + extRefID));
             }
@@ -816,12 +871,13 @@ export var Workfront;
      * @returns {any}
      */
     // @todo see if we can replace the specific "updateIssueAsUser" function with this more generic one.
-    function makeUpdatesAsUser(console, from, entityRef, updates, fields = []) {
-        return execAsUser(console, from, (api, login) => {
+    function makeUpdatesAsUser(console, from, entityRef, updates, fields) {
+        if (fields === void 0) { fields = []; }
+        return execAsUser(console, from, function (api, login) {
             console.log("[makeUpdateAsUser] - Got login session for user: " + from.address + ", sessionId: " + login.sessionID);
             // update
-            return api.edit(entityRef.objCode, entityRef.ID, updates, fields).then((updatedObj) => {
-                console.log(`[makeUpdateAsUser] ${entityRef.objCode}, ID: ${entityRef.ID}, updates: ${JSON.stringify(updatedObj)}`);
+            return api.edit(entityRef.objCode, entityRef.ID, updates, fields).then(function (updatedObj) {
+                console.log("[makeUpdateAsUser] " + entityRef.objCode + ", ID: " + entityRef.ID + ", updates: " + JSON.stringify(updatedObj));
                 return updatedObj;
             });
         });
@@ -838,7 +894,7 @@ export var Workfront;
         return Workfront.api.search("OPTASK", {
             referenceNumber: refNr,
             referenceNumber_Mod: "eq"
-        }, ["referenceNumber"]).then((issues) => {
+        }, ["referenceNumber"]).then(function (issues) {
             if (issues.length) {
                 return issues[0];
             }
@@ -857,7 +913,7 @@ export var Workfront;
      */
     function createIssueAsUser(console, fromEmail, params) {
         console.log("*** Creating issue! Params: " + JSON.stringify(params));
-        return execAsUser(console, fromEmail, (api) => {
+        return execAsUser(console, fromEmail, function (api) {
             return api.create("OPTASK", params);
         });
     }
@@ -874,9 +930,9 @@ export var Workfront;
      */
     function updateIssueAsUser(console, fromEmail, issueId, updates, fields) {
         console.log("*** Updating issue as User. Email: " + fromEmail.address + ", updates: " + JSON.stringify(updates));
-        return execAsUser(console, fromEmail, (api, login) => {
+        return execAsUser(console, fromEmail, function (api, login) {
             // update
-            return api.edit("OPTASK", issueId, updates, fields).then((issue) => {
+            return api.edit("OPTASK", issueId, updates, fields).then(function (issue) {
                 console.log("Issue updated: " + JSON.stringify(issue));
                 return issue;
             });
@@ -892,7 +948,7 @@ export var Workfront;
      */
     function createFolderAsUser(console, fromEmail, params, fields) {
         console.log("*** Creating document folder! Params: " + JSON.stringify(params));
-        return execAsUser(console, fromEmail, (api) => {
+        return execAsUser(console, fromEmail, function (api) {
             return api.create("DOCFDR", params, fields);
         });
     }
@@ -906,11 +962,11 @@ export var Workfront;
      */
     function getOrCreateDocumentFolder(console, fromEmail, folderParentField, folderName, fields, parentFolderId) {
         if (!folderParentField) {
-            return Promise.reject(`Document folder parent entity field name (issueID, taskID, projectID) is required to create a folder! Requested folder name: ${folderName}`);
+            return Promise.reject("Document folder parent entity field name (issueID, taskID, projectID) is required to create a folder! Requested folder name: " + folderName);
         }
-        console.log(`*** Searching document folder! Folder name: ${folderName}, entity field: ${JSON.stringify(folderParentField)}, parent folder id: ${parentFolderId}`);
-        return Workfront.api.search("DOCFDR", (() => {
-            let params = {
+        console.log("*** Searching document folder! Folder name: " + folderName + ", entity field: " + JSON.stringify(folderParentField) + ", parent folder id: " + parentFolderId);
+        return Workfront.api.search("DOCFDR", (function () {
+            var params = {
                 name: folderName,
                 name_Mod: "cieq"
             };
@@ -919,15 +975,15 @@ export var Workfront;
                 params.parentID = parentFolderId;
             }
             return params;
-        })(), fields).then((docFolders) => {
+        })(), fields).then(function (docFolders) {
             if (docFolders.length) {
-                let docFolder = docFolders[0];
+                var docFolder = docFolders[0];
                 docFolder.folderParentField = folderParentField;
                 return docFolder;
             }
             else {
-                return createFolderAsUser(console, fromEmail, (() => {
-                    let params = {
+                return createFolderAsUser(console, fromEmail, (function () {
+                    var params = {
                         name: folderName
                     };
                     params[folderParentField.name] = folderParentField.value;
@@ -935,7 +991,7 @@ export var Workfront;
                         params.parentID = parentFolderId;
                     }
                     return params;
-                })(), fields).then((docFolder) => {
+                })(), fields).then(function (docFolder) {
                     docFolder.folderParentField = folderParentField;
                     return docFolder;
                 });
@@ -952,13 +1008,13 @@ export var Workfront;
      * @returns {Promise<Document[]>|Promise} - created documents
      */
     function createDocumentsAsUser(console, fromEmail, parentRef, upload, docFieldsToReturn, docFolder) {
-        return execAsUser(console, fromEmail, (api, login) => {
-            let allPromises = new Array();
-            for (let i = 0; i < upload.attachments.length; i++) {
-                let att = upload.attachments[i];
-                let handle = upload.handles[i];
+        return execAsUser(console, fromEmail, function (api, login) {
+            var allPromises = new Array();
+            var _loop_1 = function (i) {
+                var att = upload.attachments[i];
+                var handle = upload.handles[i];
                 // verify that document has a name
-                let docName = att.fileName;
+                var docName = att.fileName;
                 if (!docName) {
                     docName = att.generatedFileName;
                 }
@@ -966,8 +1022,8 @@ export var Workfront;
                     docName = "unknown";
                 }
                 // create documents
-                allPromises.push(api.create("DOCU", (() => {
-                    let params = {
+                allPromises.push(api.create("DOCU", (function () {
+                    var params = {
                         name: docName,
                         docObjCode: parentRef.objCode,
                         objID: parentRef.ID,
@@ -982,8 +1038,11 @@ export var Workfront;
                     }
                     return params;
                 })(), docFieldsToReturn));
+            };
+            for (var i = 0; i < upload.attachments.length; i++) {
+                _loop_1(i);
             }
-            return Promise.all(allPromises).then((docs) => {
+            return Promise.all(allPromises).then(function (docs) {
                 return docs;
             });
         });
@@ -999,7 +1058,7 @@ export var Workfront;
      */
     function getDocumentById(console, docId, fields) {
         console.log("Getting Document by id: " + docId);
-        return Workfront.api.get("DOCU", docId, fields).then((doc) => {
+        return Workfront.api.get("DOCU", docId, fields).then(function (doc) {
             return doc;
         });
     }
@@ -1014,7 +1073,7 @@ export var Workfront;
      */
     function getDocumentVersionById(console, docVerId, fields) {
         console.log("Getting Document Version by id: " + docVerId + ", fields to return: " + JSON.stringify(fields));
-        return Workfront.api.get("DOCV", docVerId, fields).then((docVer) => {
+        return Workfront.api.get("DOCV", docVerId, fields).then(function (docVer) {
             return docVer;
         });
     }
@@ -1031,12 +1090,12 @@ export var Workfront;
      */
     function createNoteAsUser(console, user, params) {
         console.log("*** Creating Note with User email: " + user.address + ", params: " + JSON.stringify(params));
-        return execAsUser(console, user, (api, login) => {
-            let userId = login.userID;
+        return execAsUser(console, user, function (api, login) {
+            var userId = login.userID;
             // create a note
-            let fieldsToReturn = ["ownerID"];
+            var fieldsToReturn = ["ownerID"];
             params.ownerID = userId;
-            return api.create("NOTE", params, fieldsToReturn).then((note) => {
+            return api.create("NOTE", params, fieldsToReturn).then(function (note) {
                 //console.log("Note created: " + JSON.stringify(note));
                 return note;
             });
@@ -1053,11 +1112,11 @@ export var Workfront;
      */
     function createReplyNoteAsUser(console, fromEmail, reply, replyToEntityRef) {
         console.log("*** Creating Reply Note with User email: " + fromEmail.address + ", note update: " + JSON.stringify(reply));
-        return execAsUser(console, fromEmail, (api, login) => {
-            console.log(`Starting to create reply note! From: ${JSON.stringify(fromEmail)}, login: ${JSON.stringify(login)}, reply to entity ref: ${JSON.stringify(replyToEntityRef)}, reply note: ${JSON.stringify(reply)}`);
-            let userId = login.userID;
+        return execAsUser(console, fromEmail, function (api, login) {
+            console.log("Starting to create reply note! From: " + JSON.stringify(fromEmail) + ", login: " + JSON.stringify(login) + ", reply to entity ref: " + JSON.stringify(replyToEntityRef) + ", reply note: " + JSON.stringify(reply));
+            var userId = login.userID;
             // create a note
-            let params = {};
+            var params = {};
             switch (replyToEntityRef.objCode) {
                 case "OPTASK": {
                     params.opTaskID = replyToEntityRef.ID;
@@ -1092,7 +1151,7 @@ export var Workfront;
                     break;
                 }
                 default: {
-                    return Promise.reject(`!!!!ERROR!!!! An unrecognized object type ${replyToEntityRef.objCode} was just entered.`);
+                    return Promise.reject("!!!!ERROR!!!! An unrecognized object type " + replyToEntityRef.objCode + " was just entered.");
                 }
             }
             if (reply.parentJournalEntryID) {
@@ -1115,9 +1174,9 @@ export var Workfront;
                 params.extRefID = reply.extRefID;
             }
             // create a new note
-            console.log(`Starting to create reply note 2! ${JSON.stringify(login)}`);
-            return api.create("NOTE", params).then((note) => {
-                console.log(`Note created to ${params.noteObjCode}:${params.objID}: ${reply.textMsg.substring(0, 50)}...`);
+            console.log("Starting to create reply note 2! " + JSON.stringify(login));
+            return api.create("NOTE", params).then(function (note) {
+                console.log("Note created to " + params.noteObjCode + ":" + params.objID + ": " + reply.textMsg.substring(0, 50) + "...");
                 return note;
             });
         });
@@ -1133,7 +1192,7 @@ export var Workfront;
      */
     function getNoteById(console, noteId, fields) {
         console.log("Getting Note by id: " + noteId);
-        return Workfront.api.get("NOTE", noteId, fields).then((note) => {
+        return Workfront.api.get("NOTE", noteId, fields).then(function (note) {
             return note;
         });
     }
@@ -1148,7 +1207,7 @@ export var Workfront;
      */
     function getJournalEntryById(console, journalEntryId, fields) {
         console.log("Getting Journal Entry by id: " + journalEntryId);
-        return Workfront.api.get("JRNLE", journalEntryId, fields).then((jrnle) => {
+        return Workfront.api.get("JRNLE", journalEntryId, fields).then(function (jrnle) {
             return jrnle;
         });
         // return Workfront.api.search<Note[]>("NOTE", {
@@ -1175,7 +1234,7 @@ export var Workfront;
         return Workfront.api.search("TASK", {
             referenceNumber: refNr,
             referenceNumber_Mod: "eq"
-        }, ["referenceNumber"]).then((tasks) => {
+        }, ["referenceNumber"]).then(function (tasks) {
             if (tasks.length) {
                 return tasks[0];
             }
@@ -1196,9 +1255,9 @@ export var Workfront;
      */
     function updateTaskAsUser(console, fromEmail, taskId, updates) {
         console.log("*** Updating task as User. Email: " + fromEmail.address + ", updates: " + JSON.stringify(updates));
-        return execAsUser(console, fromEmail, (api, login) => {
+        return execAsUser(console, fromEmail, function (api, login) {
             // update
-            return api.edit("TASK", taskId, updates).then((task) => {
+            return api.edit("TASK", taskId, updates).then(function (task) {
                 console.log("Task updated: " + JSON.stringify(task));
                 return task;
             });
@@ -1209,8 +1268,8 @@ export var Workfront;
      * Query for team members
      */
     function getTeamMembers(console, teamId) {
-        let fieldsToReturn = ["ID", "name", "teamMembers:*"];
-        return Workfront.api.get("TEAMOB", teamId, fieldsToReturn).then((team) => {
+        var fieldsToReturn = ["ID", "name", "teamMembers:*"];
+        return Workfront.api.get("TEAMOB", teamId, fieldsToReturn).then(function (team) {
             return team.teamMembers;
         });
         // THE FOLLOWING returns an error: "TEAMMB is not a top level object and can't be requested directly in internal"
@@ -1335,7 +1394,7 @@ export var Workfront;
             aux2: docv.ID,
             subObjCode: "DOCU",
             subObjID: docv.document.ID,
-        }, fieldsToReturn).then((jrnls) => {
+        }, fieldsToReturn).then(function (jrnls) {
             console.log("DOCV Journal Entries len: " + jrnls.length);
             if (jrnls.length) {
                 return jrnls[0];
@@ -1347,13 +1406,13 @@ export var Workfront;
     /**
      */
     function uploadPdfDocumentAsUser(console, fromEmail, parentRef, buffer, fileName, docFolder, docFieldsToReturn) {
-        return execAsUser(console, fromEmail, (api, login) => {
-            return api.upload(buffer, { filename: fileName, contentType: "application/pdf" }).then((upload) => {
+        return execAsUser(console, fromEmail, function (api, login) {
+            return api.upload(buffer, { filename: fileName, contentType: "application/pdf" }).then(function (upload) {
                 console.log("Uploaded PDF! Handle: " + upload.handle + ", as user: " + fromEmail.address + ", sessionId: " + login.sessionID + ", into document folder: " + docFolder);
                 // Now create a document object for that uploaded PDF
                 console.log("Creating document for PDF!");
-                return api.create("DOCU", (() => {
-                    let params = {
+                return api.create("DOCU", (function () {
+                    var params = {
                         name: fileName,
                         docObjCode: parentRef.objCode,
                         objID: parentRef.ID,
@@ -1367,13 +1426,13 @@ export var Workfront;
                         params.folderIDs = [docFolder.ID];
                     }
                     return params;
-                })(), docFieldsToReturn).then((htmlDoc) => {
+                })(), docFieldsToReturn).then(function (htmlDoc) {
                     console.log("Created doc for PDF: " + htmlDoc.name + ", as user: " + fromEmail.address + ", sessionId: " + login.sessionID);
                     return htmlDoc;
-                }).catch((error) => {
+                }).catch(function (error) {
                     return Promise.reject(error);
                 });
-            }).catch((error) => {
+            }).catch(function (error) {
                 return Promise.reject(error);
             });
         });
@@ -1389,8 +1448,8 @@ export var Workfront;
      * @returns {Promise<void>|Promise}
      */
     function download(console, ownerUsername, downloadURL, output) {
-        console.log(`*** Downloading document as Owner. Username: ${ownerUsername}, download url: ${downloadURL}"`);
-        return execAsUser(console, { address: ownerUsername }, (api, login) => {
+        console.log("*** Downloading document as Owner. Username: " + ownerUsername + ", download url: " + downloadURL + "\"");
+        return execAsUser(console, { address: ownerUsername }, function (api, login) {
             // download
             return api.download(downloadURL, output);
         });
@@ -1414,4 +1473,4 @@ export var Workfront;
     //         return docs;
     //     });
     // }
-})(Workfront || (Workfront = {}));
+})(Workfront = exports.Workfront || (exports.Workfront = {}));

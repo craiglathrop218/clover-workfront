@@ -5,6 +5,12 @@
   ],
   "compilerOptions": {
     "noImplicitAny": true,
-    "target": "es5"
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "baseUrl": "./",
+    "typeRoots": [
+      "./",
+      "./node_modules/@types"
+    ]
   }
 }

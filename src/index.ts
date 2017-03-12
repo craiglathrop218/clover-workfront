@@ -1,5 +1,3 @@
-/// <reference path='./workfront-api.d.ts' />
-
 // http://workfront.github.io/workfront-api/Workfront.Api.html
 import * as fs from "fs";
 import * as deepExtend from "deep-extend";
