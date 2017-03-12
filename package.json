@@ -1,0 +1,23 @@
+{
+  "name": "clover-workfront",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/craiglathrop218/clover-workfront.git"
+  },
+  "keywords": [
+    "idt",
+    "clover",
+    "workfront"
+  ],
+  "bugs": {
+    "url": "https://github.com/craiglathrop218/clover-workfront/issues"
+  },
+  "homepage": "https://github.com/craiglathrop218/clover-workfront#readme"
+}
