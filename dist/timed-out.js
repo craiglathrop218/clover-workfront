@@ -1,5 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // modifed version of https://github.com/floatdrop/timed-out
-export var TimedOut;
+var TimedOut;
 (function (TimedOut) {
     function applyToRequest(req, time) {
         if (req.timeoutTimer) {
@@ -21,7 +23,7 @@ export var TimedOut;
         // Clear the connection timeout timer once a socket is assigned to the
         // request and is connected.
         req.on('socket', function assign(socket) {
-            socket.on("lookup", (err, address) => {
+            socket.on("lookup", function (err, address) {
                 console.log("Got remote address! Remote address: " + address + ", for host: " + host);
                 remoteAddress = address;
             });
@@ -57,4 +59,4 @@ export var TimedOut;
     }
     TimedOut.applyToRequest = applyToRequest;
     ;
-})(TimedOut || (TimedOut = {}));
+})(TimedOut = exports.TimedOut || (exports.TimedOut = {}));
