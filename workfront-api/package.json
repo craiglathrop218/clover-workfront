@@ -1,0 +1,11 @@
+{
+  "name": "workfront-api",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Typescript definitions for Workfront API",
+  "main": "",
+  "types": "./workfront-api",
+  "dependencies": {
+    "@types/node": "*"
+  }
+}
