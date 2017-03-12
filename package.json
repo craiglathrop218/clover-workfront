@@ -26,6 +26,9 @@
     "typescript": "^2.2.1"
   },
   "dependencies": {
+    "@types/deep-extend": "^0.4.30",
+    "@types/form-data": "0.0.33",
+    "@types/mailparser": "^0.5.32",
     "@types/node": "^7.0.8",
     "deep-extend": "^0.4.1",
     "follow-redirects": "^1.2.3",

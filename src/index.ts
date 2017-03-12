@@ -1,20 +1,15 @@
-/// <reference path='../../typings/index.d.ts' />
 /// <reference path='./workfront-api.d.ts' />
-/// <reference path='./form-data.d.ts' />
 
 // http://workfront.github.io/workfront-api/Workfront.Api.html
 import * as fs from "fs";
-import * as _ from "lodash";
 import * as deepExtend from "deep-extend";
-import {Promise} from "es6-promise";
 import * as FormData from "form-data";
 import * as api from "workfront-api";
 import * as queryString from "querystring";
 import * as moment from "moment";
 import * as followRedirects from "follow-redirects";
 import {IncomingMessage} from "http";
-import {EmailAddress} from "mailparser";
-import {Attachment} from "mailparser";
+import {EmailAddress, Attachment} from "mailparser";
 import {Api, LoginResult} from "workfront-api";
 import {TimedOut} from "./timed-out";
 
