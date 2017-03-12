@@ -1,14 +1,13 @@
-/// <reference path='../../typings/index.d.ts' />
+/// <reference types="node" />
 
 import {RequestOptions} from "http";
+//import * as Promise from "es6-promise";
+import * as fs from "fs";
 
 /**
  * A Typescript API for Workfront module
  */
 declare module "workfront-api" {
-    //import * as Promise from "es6-promise";
-    import * as fs from "fs";
-
     namespace Workfront {
         interface HttpParams {
             apiKey: string;

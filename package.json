@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index",
+  "main": "./dist/index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,6 +26,7 @@
     "typescript": "^2.2.1"
   },
   "dependencies": {
+    "@types/node": "^7.0.8",
     "deep-extend": "^0.4.1",
     "follow-redirects": "^1.2.3",
     "form-data": "^2.1.2",
