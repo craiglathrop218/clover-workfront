@@ -1,6 +1,5 @@
 /// <reference types="workfront-api" />
 /// <reference types="node" />
-import * as api from "workfront-api";
 import * as moment from "moment";
 import { EmailAddress, Attachment } from "mailparser";
 import { Api, LoginResult } from "workfront-api";
@@ -15,7 +14,7 @@ export declare let apiFactoryConfig: {
  * A Workfront internal API for our project that provides a convenient and wrapped methods to be used in different usage scenarios.
  */
 export declare namespace Workfront {
-    var api: api.Api;
+    var api: Api;
     /**
      * Defines user access object
      */
