@@ -113,7 +113,7 @@ declare namespace Workfront {
          * @param objCode - One of object codes from Workfront API Explorer
          * @param query - An object with search criteria
          */
-        count<T>(objCode: string, query): Promise<T>;
+        count<T>(objCode: string, query: string): Promise<T>;
 
         /**
          * Executes an action for the given object
@@ -158,7 +158,7 @@ declare namespace Workfront {
          * @param objID - ID of object
          * @param bForce - Pass true to cause the server to remove the specified data and its dependants
          */
-        remove<T>(objCode: string, objID, bForce?: boolean): Promise<T>;
+        remove<T>(objCode: string, objID: string, bForce?: boolean): Promise<T>;
 
         /**
          * Performs report request, where only the aggregate of some field is desired, with one or more groupings.
