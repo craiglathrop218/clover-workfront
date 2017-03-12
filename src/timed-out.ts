@@ -1,8 +1,5 @@
-'use strict';
-
 import {ClientRequest} from "http";
 import * as net from "net";
-import * as util from "util";
 
 interface MyClientRequest extends ClientRequest {
 	timeoutTimer: number;
