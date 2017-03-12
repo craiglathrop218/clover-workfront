@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Typescript definitions for Workfront API",
   "main": "",
-  "types": "./workfront-api",
+  "types": "./index.d.ts",
   "dependencies": {
     "@types/node": "*"
   }
