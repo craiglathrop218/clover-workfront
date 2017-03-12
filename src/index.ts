@@ -400,14 +400,6 @@ export namespace Workfront {
         homeGroupID: string
     }
 
-    export interface LdapConfig {
-        host: string,
-        port: number,
-        password: string,
-        baseDn: string,
-        bindDn: string
-    }
-
     export interface FetchSsoId extends Function {
         (email: string): Promise<string>
     }

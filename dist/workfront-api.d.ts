@@ -1,7 +1,6 @@
 /// <reference types="node" />
 
 import {RequestOptions} from "http";
-//import * as Promise from "es6-promise";
 import * as fs from "fs";
 
 /**

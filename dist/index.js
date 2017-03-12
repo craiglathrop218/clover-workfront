@@ -1,6 +1,4 @@
-/// <reference path='../../typings/index.d.ts' />
 /// <reference path='./workfront-api.d.ts' />
-/// <reference path='./form-data.d.ts' />
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -10,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as deepExtend from "deep-extend";
-import { Promise } from "es6-promise";
 import * as FormData from "form-data";
 import * as api from "workfront-api";
 import * as queryString from "querystring";
