@@ -446,7 +446,7 @@ export namespace Workfront {
     export type Document = WfModel.Document;
     export type DocumentVersion = WfModel.DocumentVersion;
     export type DocumentFolder = WfModel.DocumentFolder;
-    export type DocumentFolderParentField = WfModel.DocumentFolderParentField;
+    export let DocumentFolderParentField = WfModel.DocumentFolderParentField;
     export type AssignUserToken = WfModel.AssignUserToken;
     export type CompleteUserRegistration = WfModel.CompleteUserRegistration;
     export type Note = WfModel.Note;
@@ -454,9 +454,9 @@ export namespace Workfront {
     export type NoteTag = WfModel.NoteTag;
     export type Team = WfModel.Team;
     export type TeamMember = WfModel.TeamMember;
-    export type Issue = WfModel.Issue;
-    export type ReplyMessage = WfModel.ReplyMessage;
-    export type IssueUpdate = WfModel.IssueUpdate;
+    export let Issue = WfModel.Issue;
+    export let ReplyMessage = WfModel.ReplyMessage;
+    export let IssueUpdate = WfModel.IssueUpdate;
     export type Task = WfModel.Task;
     export type AccessRule = WfModel.AccessRule;
     export type MetaData = WfModel.MetaData;
