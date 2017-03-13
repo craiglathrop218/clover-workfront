@@ -41,6 +41,7 @@ var api = require("workfront-api");
 var queryString = require("querystring");
 var followRedirects = require("follow-redirects");
 var timed_out_1 = require("./timed-out");
+var model_1 = require("./model");
 /**
  * Workfront API connection settings
  */
@@ -401,6 +402,10 @@ var Workfront;
     Workfront.api = instance;
     ;
     ;
+    Workfront.DocumentFolderParentField = model_1.WfModel.DocumentFolderParentField;
+    Workfront.Issue = model_1.WfModel.Issue;
+    Workfront.ReplyMessage = model_1.WfModel.ReplyMessage;
+    Workfront.IssueUpdate = model_1.WfModel.IssueUpdate;
     // constants
     Workfront.API_DATE_FORMAT = "YYYY-MM-DD'T'HH:mm:ss:SSSZ"; // Date format in API requests: 2016-08-30T03:52:05:383-0700
     Workfront.DOCV_PROCESSED_MARK = "CLOVER-VER:".toUpperCase();

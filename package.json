@@ -1,7 +1,7 @@
 {
   "name": "clover-workfront",
   "private": true,
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,6 +24,7 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.1.5",
+    "merge2": "^1.0.3",
     "typescript": "^2.2.1"
   },
   "dependencies": {

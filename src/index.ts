@@ -52,7 +52,7 @@ api.Api.prototype.login = function (username, password) {
             params.apiKey = this.httpParams.apiKey;
         }
         return params;
-    })(), null, api.Api.Methods.POST).then(function (data) {
+    })(), null, api.Api.Methods.POST).then(function (data: any) {
         this.httpOptions.headers.sessionID = data.sessionID;
         return data;
     }.bind(this));
@@ -92,7 +92,7 @@ api.Api.prototype.upload = function(stream: fs.ReadStream|Buffer, overrides?: {f
 
     var httpTransport = this.httpTransport;
 
-    return new Promise<any>(function (resolve, reject) {
+    return new Promise<any>(function (resolve: any, reject: any) {
         var request = httpTransport.request(options, this._handleResponse(resolve, reject));
         TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
         // get content length and fire away
@@ -118,7 +118,7 @@ api.Api.prototype.upload = function(stream: fs.ReadStream|Buffer, overrides?: {f
  * @returns {function(IncomingMessage): undefined}
  * @private
  */
-api.Api.prototype._handleResponse = (resolve, reject) => {
+api.Api.prototype._handleResponse = (resolve: any, reject: any) => {
     return function (response: IncomingMessage) {
         console.log("*** Response: " + response.statusCode + ", " + response.statusMessage);
         var body = '';
@@ -263,7 +263,7 @@ api.Api.prototype.download = function(downloadURL: string, output: NodeJS.Writab
  * @param method
  * @returns {Promise<T>|Promise}
  */
-api.Api.prototype.request = function(path, params, fields, method) {
+api.Api.prototype.request = function(path: string, params: any, fields: string[], method: string) {
     fields = fields || [];
     if (typeof fields === 'string') {
         fields = [fields];
@@ -272,7 +272,7 @@ api.Api.prototype.request = function(path, params, fields, method) {
     params = params || {};
     deepExtend(params, this.httpParams);
 
-    var options = {},
+    var options: any = {},
         alwaysUseGet = this.httpOptions.alwaysUseGet;
 
     deepExtend(options, this.httpOptions);
@@ -312,7 +312,7 @@ api.Api.prototype.request = function(path, params, fields, method) {
 
     var httpTransport = this.httpTransport;
 
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve: any, reject: any) {
         var request = httpTransport.request(options, this._handleResponse(resolve, reject));
         TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
         request.on('error', reject);
@@ -439,27 +439,27 @@ export namespace Workfront {
     export interface Upload {attachments: Attachment[], handles: UploadHandle[]};
 
     // Define Workfront API related types in here fop convenient use in other parts of our project
-    export type WfError = WfModel.WfError;
-    export type WfObject = WfModel.WfObject;
-    export type Project = WfModel.Project;
-    export type User = WfModel.User;
-    export type Document = WfModel.Document;
-    export type DocumentVersion = WfModel.DocumentVersion;
-    export type DocumentFolder = WfModel.DocumentFolder;
-    export let DocumentFolderParentField = WfModel.DocumentFolderParentField;
-    export type AssignUserToken = WfModel.AssignUserToken;
-    export type CompleteUserRegistration = WfModel.CompleteUserRegistration;
-    export type Note = WfModel.Note;
-    export type JournalEntry = WfModel.JournalEntry;
-    export type NoteTag = WfModel.NoteTag;
-    export type Team = WfModel.Team;
-    export type TeamMember = WfModel.TeamMember;
-    export let Issue = WfModel.Issue;
-    export let ReplyMessage = WfModel.ReplyMessage;
-    export let IssueUpdate = WfModel.IssueUpdate;
-    export type Task = WfModel.Task;
-    export type AccessRule = WfModel.AccessRule;
-    export type MetaData = WfModel.MetaData;
+    export import WfError = WfModel.WfError;
+    export import WfObject = WfModel.WfObject;
+    export import Project = WfModel.Project;
+    export import User = WfModel.User;
+    export import Document = WfModel.Document;
+    export import DocumentVersion = WfModel.DocumentVersion;
+    export import DocumentFolder = WfModel.DocumentFolder;
+    export import DocumentFolderParentField = WfModel.DocumentFolderParentField;
+    export import AssignUserToken = WfModel.AssignUserToken;
+    export import CompleteUserRegistration = WfModel.CompleteUserRegistration;
+    export import Note = WfModel.Note;
+    export import JournalEntry = WfModel.JournalEntry;
+    export import NoteTag = WfModel.NoteTag;
+    export import Team = WfModel.Team;
+    export import TeamMember = WfModel.TeamMember;
+    export import Issue = WfModel.Issue;
+    export import ReplyMessage = WfModel.ReplyMessage;
+    export import IssueUpdate = WfModel.IssueUpdate;
+    export import Task = WfModel.Task;
+    export import AccessRule = WfModel.AccessRule;
+    export import MetaData = WfModel.MetaData;
 
     export interface WfConnError {
         active: boolean,
