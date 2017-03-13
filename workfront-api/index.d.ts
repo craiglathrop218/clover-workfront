@@ -54,7 +54,7 @@ declare namespace Workfront {
     export class Api {
         httpOptions: RequestOptions;
         httpParams: HttpParams;
-        Methods: Methods;
+        static Methods: Methods;
 
         /**
          * Creates an instance of this class.

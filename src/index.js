@@ -401,38 +401,6 @@ var Workfront;
     Workfront.api = instance;
     ;
     ;
-    ;
-    ;
-    // This is just a meta data entity to hold document folder parent entity field name and value
-    var DocumentFolderParentField = (function () {
-        function DocumentFolderParentField(name, value) {
-            this.name = name;
-            this.value = value;
-        }
-        return DocumentFolderParentField;
-    }());
-    Workfront.DocumentFolderParentField = DocumentFolderParentField;
-    ;
-    var Issue = (function () {
-        function Issue() {
-        }
-        return Issue;
-    }());
-    Issue.EXT_MSG_PREFIX = "FROM_EMAIL.MESSAGE_ID:";
-    Workfront.Issue = Issue;
-    var ReplyMessage = (function () {
-        function ReplyMessage() {
-            this.isReply = false;
-        }
-        return ReplyMessage;
-    }());
-    Workfront.ReplyMessage = ReplyMessage;
-    var IssueUpdate = (function () {
-        function IssueUpdate() {
-        }
-        return IssueUpdate;
-    }());
-    Workfront.IssueUpdate = IssueUpdate;
     // constants
     Workfront.API_DATE_FORMAT = "YYYY-MM-DD'T'HH:mm:ss:SSSZ"; // Date format in API requests: 2016-08-30T03:52:05:383-0700
     Workfront.DOCV_PROCESSED_MARK = "CLOVER-VER:".toUpperCase();
