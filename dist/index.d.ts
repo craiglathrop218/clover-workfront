@@ -83,6 +83,7 @@ export declare namespace Workfront {
     export import Task = WfModel.Task;
     export import AccessRule = WfModel.AccessRule;
     export import MetaData = WfModel.MetaData;
+    export import QueryCount = WfModel.QueryCount;
     interface WfConnError {
         active: boolean;
         errorDate: moment.Moment;

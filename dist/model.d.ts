@@ -265,4 +265,7 @@ export declare namespace WfModel {
         queries: any;
         operations: string[];
     }
+    interface QueryCount {
+        count: number;
+    }
 }
