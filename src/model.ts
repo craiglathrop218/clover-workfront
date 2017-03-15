@@ -280,4 +280,8 @@ export namespace WfModel {
         queries: any,
         operations: string[]
     }
+
+    export interface QueryCount {
+        count: number;
+    }
 }
