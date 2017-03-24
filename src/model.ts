@@ -13,10 +13,104 @@ export namespace WfModel {
         name: string,
         categoryID: string;
         enteredBy: User,
-        owner: User;
-        sponsor: User;
-        referenceNumber: number;
-        accessRules: AccessRule[];
+        owner: User,
+        sponsor: User,
+        referenceNumber: number,
+        accessRules: AccessRule[],
+        objectCategories: ObjectCategory[]
+    }
+
+    export interface ObjectCategory {
+        objCode: string,
+        ID: string,
+        category: Category
+    }
+
+    export interface Category {
+        objCode: string,
+        ID: string,
+        name: string,
+        catObjCode: string,
+        parameterGroup: string,
+        enteredByID: string,
+        extRefID: string,
+        groupID: string,
+        hasCalculatedFields: boolean,
+        lastUpdateDate: string,
+        lastUpdatedByID: string,
+        otherGroups: Group[],
+        categoryParameters: CategoryParameter[],
+    }
+
+    export interface CategoryParameter {
+        objCode: string,
+        categoryID: string,
+        customerID: string,
+        displayOrder: number,
+        isInvalidExpression: boolean,
+        isRequired: boolean,
+        parameterGroupID: string,
+        parameterID: string,
+        rowShared: boolean,
+        securityLevel: string,
+        viewSecurityLevel: string,
+        parameter: Parameter,
+        parameterGroup: ParameterGroup
+    }
+
+    export interface Parameter {
+        objCode: string,
+        ID: string,
+        name: string,
+        extRefID: string,
+        customerID: string,
+        parameterOptions: ParameterOption[],
+        description: string,
+        dataType: string, // DATE (Date), DTTM (Date/Time), NMBR (Number), CURC (Currency), TEXT (Text) etc.
+        displaySize: number,
+        displayType: string, // MULT (Multi-Select Drop Down), SLCT (Drop Down), CALC (Calculated), TEXT (Text Field), RDIO (Radio Buttons), CHCK (Checkboxes), TXTA (Text Area), PSWD (Password Field), DTXT (Descriptive Field) etc.
+        formatConstraint: string,
+        isRequired: boolean,
+        lastUpdateDate: string,
+        lastUpdatedByID: string
+    }
+
+    export interface ParameterOption {
+        objCode: string,
+        ID: string,
+        customerID: string,
+        extRefID: string,
+        displayOrder: number,
+        isDefault: boolean,
+        isHidden: boolean,
+        parameterID: string,
+        label: string,
+        value: string
+    }
+
+    export interface ParameterGroup {
+        objCode: string,
+        ID: string,
+        name: string,
+        extRefID: string,
+        customerID: string,
+        description: string,
+        displayOrder: number,
+        isDefault: boolean,
+        lastUpdateDate: string,
+        lastUpdatedByID: string
+    }
+
+    export interface Group {
+        objCode: string,
+        ID: string,
+        name: string,
+        customerID: string,
+        description: string,
+        enteredByID: string,
+        entryDate: string,
+        extRefID: string,
+        parentID: string
     }
 
     export interface User {

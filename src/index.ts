@@ -462,6 +462,14 @@ export namespace Workfront {
     export import MetaData = WfModel.MetaData;
     export import QueryCount = WfModel.QueryCount;
 
+    export import ObjectCategory = WfModel.ObjectCategory;
+    export import Category = WfModel.Category;
+    export import CategoryParameter = WfModel.CategoryParameter;
+    export import Parameter = WfModel.Parameter;
+    export import ParameterOption = WfModel.ParameterOption;
+    export import ParameterGroup = WfModel.ParameterGroup;
+    export import Group = WfModel.Group;
+
     export interface WfConnError {
         active: boolean,
         errorDate: moment.Moment

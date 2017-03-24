@@ -23,6 +23,93 @@ export declare namespace WfModel {
         sponsor: User;
         referenceNumber: number;
         accessRules: AccessRule[];
+        objectCategories: ObjectCategory[];
+    }
+    interface ObjectCategory {
+        objCode: string;
+        ID: string;
+        category: Category;
+    }
+    interface Category {
+        objCode: string;
+        ID: string;
+        name: string;
+        catObjCode: string;
+        parameterGroup: string;
+        enteredByID: string;
+        extRefID: string;
+        groupID: string;
+        hasCalculatedFields: boolean;
+        lastUpdateDate: string;
+        lastUpdatedByID: string;
+        otherGroups: Group[];
+        categoryParameters: CategoryParameter[];
+    }
+    interface CategoryParameter {
+        objCode: string;
+        categoryID: string;
+        customerID: string;
+        displayOrder: number;
+        isInvalidExpression: boolean;
+        isRequired: boolean;
+        parameterGroupID: string;
+        parameterID: string;
+        rowShared: boolean;
+        securityLevel: string;
+        viewSecurityLevel: string;
+        parameter: Parameter;
+        parameterGroup: ParameterGroup;
+    }
+    interface Parameter {
+        objCode: string;
+        ID: string;
+        name: string;
+        extRefID: string;
+        customerID: string;
+        parameterOptions: ParameterOption[];
+        description: string;
+        dataType: string;
+        displaySize: number;
+        displayType: string;
+        formatConstraint: string;
+        isRequired: boolean;
+        lastUpdateDate: string;
+        lastUpdatedByID: string;
+    }
+    interface ParameterOption {
+        objCode: string;
+        ID: string;
+        customerID: string;
+        extRefID: string;
+        displayOrder: number;
+        isDefault: boolean;
+        isHidden: boolean;
+        parameterID: string;
+        label: string;
+        value: string;
+    }
+    interface ParameterGroup {
+        objCode: string;
+        ID: string;
+        name: string;
+        extRefID: string;
+        customerID: string;
+        description: string;
+        displayOrder: number;
+        isDefault: boolean;
+        lastUpdateDate: string;
+        lastUpdatedByID: string;
+    }
+    interface Group {
+        objCode: string;
+        ID: string;
+        name: string;
+        customerID: string;
+        description: string;
+        enteredByID: string;
+        entryDate: string;
+        extRefID: string;
+        parentID: string;
     }
     interface User {
         ID: string;
