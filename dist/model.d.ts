@@ -75,6 +75,7 @@ export declare namespace WfModel {
         isRequired: boolean;
         lastUpdateDate: string;
         lastUpdatedByID: string;
+        parameterDescriptiveText?: ParameterDescriptiveText;
     }
     interface ParameterOption {
         objCode: string;
@@ -87,6 +88,12 @@ export declare namespace WfModel {
         parameterID: string;
         label: string;
         value: string;
+    }
+    interface ParameterDescriptiveText {
+        customerID: string;
+        parameterID: string;
+        text: string;
+        url: string;
     }
     interface ParameterGroup {
         objCode: string;
