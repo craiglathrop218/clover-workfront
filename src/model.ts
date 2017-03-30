@@ -72,7 +72,8 @@ export namespace WfModel {
         formatConstraint: string,
         isRequired: boolean,
         lastUpdateDate: string,
-        lastUpdatedByID: string
+        lastUpdatedByID: string,
+        parameterDescriptiveText?: ParameterDescriptiveText
     }
 
     export interface ParameterOption {
@@ -86,6 +87,13 @@ export namespace WfModel {
         parameterID: string,
         label: string,
         value: string
+    }
+
+    export interface ParameterDescriptiveText {
+        customerID: string,
+        parameterID: string,
+        text: string,
+        url: string
     }
 
     export interface ParameterGroup {
