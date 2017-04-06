@@ -305,6 +305,7 @@ export namespace WfModel {
         public ID: string;
         public objCode: string;
         public name: string;
+        public entryDate: string;
         public plannedCompletionDate: string;
         public status: string;
         public referenceNumber: number;
@@ -315,6 +316,7 @@ export namespace WfModel {
         public description: string;
         public isHelpDesk: boolean;
         public opTaskType: string; // with enum values
+        public priority: number;
         public enteredByID: string;
         public extRefID: string;
         public assignedToID: string;
@@ -346,10 +348,37 @@ export namespace WfModel {
         name: string;
         referenceNumber: number;
         plannedStartDate: string;
+        plannedCompletionDate: string;
         status: string;
         percentComplete: number;
         commitDate: string;
+        milestoneID: string;
+        milestone: Milestone;
         accessRules: AccessRule[];
+        enteredBy: User; // user who created a task
+        assignedTo: User; // user whom this task is assigned
+    }
+
+    export interface Milestone {
+        ID: string,
+        objCode: string,
+        name: string;
+        color: string,
+        description: string,
+        extRefID: string,
+        milestonePathID: string,
+        milestonePath: MilestonePath,
+        sequence: number
+    }
+
+    export interface MilestonePath {
+        ID: string,
+        objCode: string,
+        name: string;
+        description: string,
+        enteredByID: string,
+        entryDate: string,
+        extRefID: string
     }
 
     // Share objects

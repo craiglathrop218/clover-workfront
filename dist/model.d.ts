@@ -288,6 +288,7 @@ export declare namespace WfModel {
         ID: string;
         objCode: string;
         name: string;
+        entryDate: string;
         plannedCompletionDate: string;
         status: string;
         referenceNumber: number;
@@ -298,6 +299,7 @@ export declare namespace WfModel {
         description: string;
         isHelpDesk: boolean;
         opTaskType: string;
+        priority: number;
         enteredByID: string;
         extRefID: string;
         assignedToID: string;
@@ -326,10 +328,35 @@ export declare namespace WfModel {
         name: string;
         referenceNumber: number;
         plannedStartDate: string;
+        plannedCompletionDate: string;
         status: string;
         percentComplete: number;
         commitDate: string;
+        milestoneID: string;
+        milestone: Milestone;
         accessRules: AccessRule[];
+        enteredBy: User;
+        assignedTo: User;
+    }
+    interface Milestone {
+        ID: string;
+        objCode: string;
+        name: string;
+        color: string;
+        description: string;
+        extRefID: string;
+        milestonePathID: string;
+        milestonePath: MilestonePath;
+        sequence: number;
+    }
+    interface MilestonePath {
+        ID: string;
+        objCode: string;
+        name: string;
+        description: string;
+        enteredByID: string;
+        entryDate: string;
+        extRefID: string;
     }
     interface AccessRule {
         ID: string;
