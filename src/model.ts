@@ -415,4 +415,6 @@ export namespace WfModel {
     export interface QueryCount {
         count: number;
     }
+
+
 }

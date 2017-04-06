@@ -81,6 +81,8 @@ export declare namespace Workfront {
     export import ReplyMessage = WfModel.ReplyMessage;
     export import IssueUpdate = WfModel.IssueUpdate;
     export import Task = WfModel.Task;
+    export import Milestone = WfModel.Milestone;
+    export import MilestonePath = WfModel.MilestonePath;
     export import AccessRule = WfModel.AccessRule;
     export import MetaData = WfModel.MetaData;
     export import QueryCount = WfModel.QueryCount;
