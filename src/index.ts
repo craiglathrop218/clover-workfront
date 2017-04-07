@@ -471,6 +471,7 @@ export namespace Workfront {
     export import ParameterOption = WfModel.ParameterOption;
     export import ParameterGroup = WfModel.ParameterGroup;
     export import Group = WfModel.Group;
+    export import CustomEnum = WfModel.CustomEnum;
 
     export interface WfConnError {
         active: boolean,

@@ -386,6 +386,20 @@ export declare namespace WfModel {
         queries: any;
         operations: string[];
     }
+    interface CustomEnum {
+        ID: string;
+        objCode: string;
+        color: string;
+        label: string;
+        description: string;
+        customerID: string;
+        enumClass: string;
+        extRefID: string;
+        isPrimary: boolean;
+        value: string;
+        valueAsInt: number;
+        valueAsString: string;
+    }
     interface QueryCount {
         count: number;
     }
