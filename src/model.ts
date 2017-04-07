@@ -11,6 +11,7 @@ export namespace WfModel {
         objCode: string,
         ID: string,
         name: string,
+        status: string;
         categoryID: string;
         enteredBy: User,
         owner: User,
