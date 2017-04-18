@@ -49,7 +49,8 @@ exports.apiFactoryConfig = {
     url: "https://idt.my.workfront.com",
     //url: "https://idt.attasksandbox.com/" // TEST
     //version: "4.0"
-    version: "5.0"
+    //version: "5.0"
+    version: "6.0"
     //version: "internal"
 };
 var ApiFactory = api.ApiFactory;
@@ -243,10 +244,10 @@ api.Api.prototype.download = function (downloadURL, output) {
     };
     deepExtend(options, this.httpOptions);
     options.headers = {};
-    if (!this.httpOptions.headers.sessionID) {
-        throw new Error("Session ID is missing!"); // User needs to be logged in before calling download
-    }
-    options.headers.sessionID = this.httpOptions.headers.sessionID;
+    // if (!this.httpOptions.headers.sessionID) {
+    //     throw new Error("Session ID is missing!"); // User needs to be logged in before calling download
+    // }
+    // options.headers.sessionID = this.httpOptions.headers.sessionID;
     options.path = downloadURL;
     //var httpTransport = this.httpTransport;
     var isHttps = this.httpOptions.protocol === 'https:';
@@ -1420,12 +1421,26 @@ var Workfront;
      * @param output - a writeable stream to save the document
      * @returns {Promise<void>|Promise}
      */
-    function download(console, ownerUsername, downloadURL, output) {
+    function downloadAsUser(console, ownerUsername, downloadURL, output) {
         console.log("*** Downloading document as Owner. Username: " + ownerUsername + ", download url: " + downloadURL + "\"");
         return execAsUser(console, { address: ownerUsername }, function (api, login) {
             // download
             return api.download(downloadURL, output);
         });
+    }
+    Workfront.downloadAsUser = downloadAsUser;
+    /**
+     * Download a document
+     *
+     * @param console - logger object (for later debugging in case of errors happen in processing)
+     * @param downloadUrl - a document Url
+     * @param output - a writeable stream to save the document
+     * @returns {Promise<void>|Promise}
+     */
+    function download(console, downloadURL, output) {
+        console.log("*** Downloading document. Download url: " + downloadURL + "\"");
+        // download
+        return Workfront.api.download(downloadURL, output);
     }
     Workfront.download = download;
     /**
