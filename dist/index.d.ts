@@ -360,13 +360,4 @@ export declare namespace Workfront {
      * @returns {Promise<void>|Promise}
      */
     function downloadAsUser(console: Logger, ownerUsername: string, downloadURL: string, output: NodeJS.WritableStream): Promise<void>;
-    /**
-     * Download a document
-     *
-     * @param console - logger object (for later debugging in case of errors happen in processing)
-     * @param downloadUrl - a document Url
-     * @param output - a writeable stream to save the document
-     * @returns {Promise<void>|Promise}
-     */
-    function download(console: Logger, downloadURL: string, output: NodeJS.WritableStream): Promise<void>;
 }

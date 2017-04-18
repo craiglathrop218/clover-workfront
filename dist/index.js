@@ -244,10 +244,12 @@ api.Api.prototype.download = function (downloadURL, output) {
     };
     deepExtend(options, this.httpOptions);
     options.headers = {};
-    // if (!this.httpOptions.headers.sessionID) {
-    //     throw new Error("Session ID is missing!"); // User needs to be logged in before calling download
-    // }
-    // options.headers.sessionID = this.httpOptions.headers.sessionID;
+    // User needs to be logged in before calling download
+    // We cannot download only using an API key unfortunately
+    if (!this.httpOptions.headers.sessionID) {
+        throw new Error("Session ID is missing!");
+    }
+    options.headers.sessionID = this.httpOptions.headers.sessionID;
     options.path = downloadURL;
     //var httpTransport = this.httpTransport;
     var isHttps = this.httpOptions.protocol === 'https:';
@@ -1429,20 +1431,19 @@ var Workfront;
         });
     }
     Workfront.downloadAsUser = downloadAsUser;
-    /**
-     * Download a document
-     *
-     * @param console - logger object (for later debugging in case of errors happen in processing)
-     * @param downloadUrl - a document Url
-     * @param output - a writeable stream to save the document
-     * @returns {Promise<void>|Promise}
-     */
-    function download(console, downloadURL, output) {
-        console.log("*** Downloading document. Download url: " + downloadURL + "\"");
-        // download
-        return Workfront.api.download(downloadURL, output);
-    }
-    Workfront.download = download;
+    // /**
+    //  * Download a document
+    //  *
+    //  * @param console - logger object (for later debugging in case of errors happen in processing)
+    //  * @param downloadUrl - a document Url
+    //  * @param output - a writeable stream to save the document
+    //  * @returns {Promise<void>|Promise}
+    //  */
+    // export function download(console: Logger, downloadURL: string, output: NodeJS.WritableStream): Promise<void> {
+    //     console.log(`*** Downloading document. Download url: ${downloadURL}"`);
+    //     // download
+    //     return api.download(downloadURL, output);
+    // }
     /**
      */
     // export function fetchNewDocuments(console: Logger, fieldsToReturn?: string|string[]): Promise<Document[]> {
