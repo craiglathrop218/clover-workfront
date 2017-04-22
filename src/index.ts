@@ -402,7 +402,7 @@ export namespace Workfront {
         homeGroupID: string
     }
 
-    export interface FetchSsoId extends Function {
+    export interface FetchSsoId {
         (email: string): Promise<string>
     }
 
