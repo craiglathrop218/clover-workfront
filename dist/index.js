@@ -486,7 +486,7 @@ var Workfront;
      */
     function execAsUser(console, fromEmail, callback) {
         return __awaiter(this, void 0, void 0, function () {
-            var ctx_1, login_1, loginCount, execResult, e, e_1, errorClass, errorMsg, api_1, updated;
+            var ctx_1, login_1, loginCount, execResult, e_1, errorClass, errorMsg, api_1, updated;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -511,14 +511,6 @@ var Workfront;
                             })];
                     case 3:
                         execResult = _a.sent();
-                        if (loginCount < 3) {
-                            e = {
-                                error: {}
-                            };
-                            e.error["class"] = "com.attask.common.AuthenticationException";
-                            e.message = "TEST";
-                            throw e;
-                        }
                         return [2 /*return*/, Promise.resolve(execResult)];
                     case 4:
                         e_1 = _a.sent();
