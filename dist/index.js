@@ -140,7 +140,7 @@ api.Api.prototype.upload = function (stream, overrides) {
  */
 api.Api.prototype._handleResponse = function (resolve, reject) {
     return function (response) {
-        console.log("*** Response: " + response.statusCode + ", " + response.statusMessage);
+        console.log("*** Response: " + response.statusCode + ", " + response.statusMessage + ", response headers: " + JSON.stringify(response.headers));
         var body = '';
         if (typeof response.setEncoding === 'function') {
             response.setEncoding('utf8');
@@ -331,7 +331,10 @@ api.Api.prototype.request = function (path, params, fields, method) {
     // }
     var httpTransport = this.httpTransport;
     return new Promise(function (resolve, reject) {
-        var request = httpTransport.request(options, this._handleResponse(resolve, reject));
+        var _this = this;
+        var request = httpTransport.request(options, function (res) {
+            _this._handleResponse(resolve, reject);
+        });
         timed_out_1.TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
         request.on('error', reject);
         if (!alwaysUseGet && params && requestHasData(options.method)) {

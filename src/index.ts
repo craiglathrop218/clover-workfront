@@ -121,7 +121,7 @@ api.Api.prototype.upload = function(stream: fs.ReadStream|Buffer, overrides?: {f
  */
 api.Api.prototype._handleResponse = (resolve: any, reject: any) => {
     return function (response: IncomingMessage) {
-        console.log("*** Response: " + response.statusCode + ", " + response.statusMessage);
+        console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, response headers: ${JSON.stringify(response.headers)}`);
         var body = '';
         if (typeof response.setEncoding === 'function') {
             response.setEncoding('utf8');
@@ -316,7 +316,9 @@ api.Api.prototype.request = function(path: string, params: any, fields: string[]
     var httpTransport = this.httpTransport;
 
     return new Promise(function (resolve: any, reject: any) {
-        var request = httpTransport.request(options, this._handleResponse(resolve, reject));
+        var request = httpTransport.request(options, (res: IncomingMessage) => {
+            this._handleResponse(resolve, reject);
+        });
         TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
         request.on('error', reject);
         if (!alwaysUseGet && params && requestHasData(options.method)) {
