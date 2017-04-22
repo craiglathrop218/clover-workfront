@@ -578,6 +578,16 @@ export namespace Workfront {
                             ctx.setSession(fromEmail.address, login);
                             return execAsUserWithSession<T>(console, fromEmail, callback, login);
                         });
+
+                        if (loginCount < 3) {
+                            let e: any = {
+                                error: {}
+                            }
+                            e.error["class"] = "com.attask.common.AuthenticationException";
+                            e.message = "TEST";
+                            throw e;
+                        }
+
                         return Promise.resolve(execResult);
                     } catch (e) {
                         if (e.error && e.error["class"]) {
