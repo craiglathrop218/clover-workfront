@@ -418,7 +418,7 @@ var Workfront;
      * @param fromEmail - user login email
      * @returns {Promise<LoginResult>}
      */
-    function login(fromEmail, waitDelay) {
+    function login(console, fromEmail, waitDelay) {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
         var api = ApiFactory.getInstance(exports.apiFactoryConfig, true);
@@ -427,7 +427,7 @@ var Workfront;
         if (waitDelay) {
             return new Promise(function (resolve, reject) {
                 api.login(fromEmail.address).then(function (login) {
-                    console.log("Login delay: " + waitDelay);
+                    console.log("Logged in! Waiting after login delay: " + waitDelay + " before returning ...");
                     setTimeout(function () {
                         resolve(login);
                     }, waitDelay);
@@ -485,68 +485,101 @@ var Workfront;
      * @returns {Promise<T} - T
      */
     function execAsUser(console, fromEmail, callback) {
-        // check if we have WfContext coming in, if so then if not already logged in then login
-        if (console.getSession && console.setSession) {
-            var ctx_1 = console;
-            var login_1 = ctx_1.getSession(fromEmail.address);
-            if (!login_1) {
-                // login first
-                console.log("*** No login session found for user email: " + fromEmail.address + ". Getting a new session.");
-                return Workfront.login(fromEmail, 5000).then(function (login) {
-                    console.log("Got login session for user: " + fromEmail.address + ", user id: " + login.userID + ", sessionId: " + login.sessionID);
-                    ctx_1.setSession(fromEmail.address, login);
-                    return execAsUserWithSession(console, fromEmail, callback, login);
-                });
-            }
-            else {
-                console.log("Existing login session found for user email: " + fromEmail.address + ", user id: " + login_1.userID + ", sessionId: " + login_1.sessionID);
-                return execAsUserWithSession(console, fromEmail, callback, login_1);
-            }
-        }
-        else {
-            console.log("*** Executing as User (with logging in first). Email: " + fromEmail.address);
-            // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
-            // For that reason, we create a new instance of api
-            var api_1 = ApiFactory.getInstance(exports.apiFactoryConfig, true);
-            api_1.httpParams.apiKey = instance.httpParams.apiKey;
-            // login and execute provided function under a user
-            var updated = new Promise(function (resolve, reject) {
-                api_1.login(fromEmail.address).then(function (login) {
-                    delete api_1.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
-                    var userId = login.userID;
-                    var sessionId = login.sessionID;
-                    console.log("Got login session for user: " + fromEmail.address + ", user id: " + userId + ", sessionId: " + sessionId);
-                    return callback(api_1, login).then(function (result) {
-                        console.log("Execute as user finished, result: " + JSON.stringify(result));
-                        return result;
-                    });
-                }).then(function (result) {
-                    console.log("Logging out! User: " + fromEmail.address);
-                    api_1.logout().then(function () {
-                        console.log("Logout success!");
-                        resolve(result);
-                    }).catch(function (logoutError) {
-                        console.log("Error while trying to logout! Error " + logoutError);
-                        // anyway we are done with a call, so resolve it as success
-                        resolve(result);
-                    });
-                    //api.logout();
-                }).catch(function (error) {
-                    console.log(error);
-                    console.log("Error. Logging out! User: " + fromEmail.address + ", error: " + JSON.stringify(error));
-                    api_1.logout().then(function () {
-                        console.log("Logout success!");
-                        reject(error);
-                    }).catch(function (logoutError) {
-                        console.log("Error while trying to logout! Error " + logoutError);
-                        // anyway we are done with a call, so resolve it as success
-                        reject(error);
-                    });
-                    //api.logout();
-                });
+        return __awaiter(this, void 0, void 0, function () {
+            var ctx_1, login_1, loginCount, execResult, e_1, errorClass, errorMsg, api_1, updated;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(console.getSession && console.setSession)) return [3 /*break*/, 9];
+                        ctx_1 = console;
+                        login_1 = ctx_1.getSession(fromEmail.address);
+                        if (!!login_1) return [3 /*break*/, 7];
+                        // login first
+                        console.log("*** No login session found for user email: " + fromEmail.address + ". Getting a new session.");
+                        loginCount = 1;
+                        _a.label = 1;
+                    case 1:
+                        if (!true) return [3 /*break*/, 6];
+                        _a.label = 2;
+                    case 2:
+                        _a.trys.push([2, 4, , 5]);
+                        console.log("*** Logging in for user email: " + fromEmail.address + ". Login count: " + loginCount);
+                        return [4 /*yield*/, Workfront.login(console, fromEmail, 2000).then(function (login) {
+                                console.log("Got login session for user: " + fromEmail.address + ", user id: " + login.userID + ", sessionId: " + login.sessionID);
+                                ctx_1.setSession(fromEmail.address, login);
+                                return execAsUserWithSession(console, fromEmail, callback, login);
+                            })];
+                    case 3:
+                        execResult = _a.sent();
+                        return [2 /*return*/, Promise.resolve(execResult)];
+                    case 4:
+                        e_1 = _a.sent();
+                        if (e_1.error && e_1.error["class"]) {
+                            errorClass = e_1.error["class"];
+                            errorMsg = e_1.error.message;
+                            if (errorClass == "com.attask.common.AuthenticationException") {
+                                console.log("*** Authentication Exception for user email: " + fromEmail.address + ", message: " + errorMsg);
+                                if (loginCount < 3) {
+                                    console.log("*** Trying to re-login for user email: " + fromEmail.address + " ...");
+                                    loginCount++;
+                                    return [3 /*break*/, 1];
+                                }
+                                else {
+                                    console.log("*** Giving up to authenticate for user email: " + fromEmail.address);
+                                }
+                            }
+                        }
+                        return [2 /*return*/, Promise.reject(e_1)];
+                    case 5: return [3 /*break*/, 1];
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
+                        console.log("Existing login session found for user email: " + fromEmail.address + ", user id: " + login_1.userID + ", sessionId: " + login_1.sessionID);
+                        return [2 /*return*/, execAsUserWithSession(console, fromEmail, callback, login_1)];
+                    case 8: return [3 /*break*/, 10];
+                    case 9:
+                        console.log("*** Executing as User (with logging in first). Email: " + fromEmail.address);
+                        api_1 = ApiFactory.getInstance(exports.apiFactoryConfig, true);
+                        api_1.httpParams.apiKey = instance.httpParams.apiKey;
+                        updated = new Promise(function (resolve, reject) {
+                            api_1.login(fromEmail.address).then(function (login) {
+                                delete api_1.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
+                                var userId = login.userID;
+                                var sessionId = login.sessionID;
+                                console.log("Got login session for user: " + fromEmail.address + ", user id: " + userId + ", sessionId: " + sessionId);
+                                return callback(api_1, login).then(function (result) {
+                                    console.log("Execute as user finished, result: " + JSON.stringify(result));
+                                    return result;
+                                });
+                            }).then(function (result) {
+                                console.log("Logging out! User: " + fromEmail.address);
+                                api_1.logout().then(function () {
+                                    console.log("Logout success!");
+                                    resolve(result);
+                                }).catch(function (logoutError) {
+                                    console.log("Error while trying to logout! Error " + logoutError);
+                                    // anyway we are done with a call, so resolve it as success
+                                    resolve(result);
+                                });
+                                //api.logout();
+                            }).catch(function (error) {
+                                console.log(error);
+                                console.log("Error. Logging out! User: " + fromEmail.address + ", error: " + JSON.stringify(error));
+                                api_1.logout().then(function () {
+                                    console.log("Logout success!");
+                                    reject(error);
+                                }).catch(function (logoutError) {
+                                    console.log("Error while trying to logout! Error " + logoutError);
+                                    // anyway we are done with a call, so resolve it as success
+                                    reject(error);
+                                });
+                                //api.logout();
+                            });
+                        });
+                        return [2 /*return*/, updated];
+                    case 10: return [2 /*return*/];
+                }
             });
-            return updated;
-        }
+        });
     }
     Workfront.execAsUser = execAsUser;
     /**

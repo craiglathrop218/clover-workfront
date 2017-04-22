@@ -492,7 +492,7 @@ export namespace Workfront {
      * @param fromEmail - user login email
      * @returns {Promise<LoginResult>}
      */
-    export function login(fromEmail: EmailAddress, waitDelay?: number): Promise<LoginResult> {
+    export function login(console: Logger, fromEmail: EmailAddress, waitDelay?: number): Promise<LoginResult> {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
         let api: Api = ApiFactory.getInstance(apiFactoryConfig, true);
@@ -502,7 +502,7 @@ export namespace Workfront {
         if (waitDelay) {
             return new Promise<LoginResult>((resolve, reject) => {
                 api.login(fromEmail.address).then((login: LoginResult) => {
-                    console.log(`Login delay: ${waitDelay}`);
+                    console.log(`Logged in! Waiting after login delay: ${waitDelay} before returning ...`);
                     setTimeout(() => {
                         resolve(login);
                     }, waitDelay);
@@ -561,7 +561,7 @@ export namespace Workfront {
      * @param callback - a function to execute under logged in user
      * @returns {Promise<T} - T
      */
-    export function execAsUser<T>(console: Logger, fromEmail: EmailAddress, callback: (api: Api, login: LoginResult) => Promise<T>): Promise<T> {
+    export async function execAsUser<T>(console: Logger, fromEmail: EmailAddress, callback: (api: Api, login: LoginResult) => Promise<T>): Promise<T> {
         // check if we have WfContext coming in, if so then if not already logged in then login
         if (console.getSession && console.setSession) {
             let ctx: WfContext = <WfContext> console;
@@ -569,11 +569,34 @@ export namespace Workfront {
             if (!login) {
                 // login first
                 console.log(`*** No login session found for user email: ${fromEmail.address}. Getting a new session.`);
-                return Workfront.login(fromEmail, 5000).then((login: LoginResult) => {
-                    console.log("Got login session for user: " + fromEmail.address + ", user id: " + login.userID + ", sessionId: " + login.sessionID);
-                    ctx.setSession(fromEmail.address, login);
-                    return execAsUserWithSession<T>(console, fromEmail, callback, login);
-                });
+                let loginCount = 1;
+                while (true) {
+                    try {
+                        console.log(`*** Logging in for user email: ${fromEmail.address}. Login count: ${loginCount}`);
+                        let execResult: T = await Workfront.login(console, fromEmail, 2000).then((login: LoginResult) => {
+                            console.log("Got login session for user: " + fromEmail.address + ", user id: " + login.userID + ", sessionId: " + login.sessionID);
+                            ctx.setSession(fromEmail.address, login);
+                            return execAsUserWithSession<T>(console, fromEmail, callback, login);
+                        });
+                        return Promise.resolve(execResult);
+                    } catch (e) {
+                        if (e.error && e.error["class"]) {
+                            let errorClass = e.error["class"];
+                            let errorMsg = e.error.message;
+                            if (errorClass == "com.attask.common.AuthenticationException") {
+                                console.log(`*** Authentication Exception for user email: ${fromEmail.address}, message: ${errorMsg}`);
+                                if (loginCount < 3) {
+                                    console.log(`*** Trying to re-login for user email: ${fromEmail.address} ...`);
+                                    loginCount++;
+                                    continue;
+                                } else {
+                                    console.log(`*** Giving up to authenticate for user email: ${fromEmail.address}`);
+                                }
+                            }
+                        }
+                        return Promise.reject(e);
+                    }
+                }
             } else {
                 console.log(`Existing login session found for user email: ${fromEmail.address}, user id: ${login.userID}, sessionId: ${login.sessionID}`);
                 return execAsUserWithSession<T>(console, fromEmail, callback, login);

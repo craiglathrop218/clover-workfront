@@ -106,7 +106,7 @@ export declare namespace Workfront {
      * @param fromEmail - user login email
      * @returns {Promise<LoginResult>}
      */
-    function login(fromEmail: EmailAddress, waitDelay?: number): Promise<LoginResult>;
+    function login(console: Logger, fromEmail: EmailAddress, waitDelay?: number): Promise<LoginResult>;
     /**
      * Login as a user with specified login email
      *
