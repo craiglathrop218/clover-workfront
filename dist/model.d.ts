@@ -134,6 +134,7 @@ export declare namespace WfModel {
     }
     interface Document {
         ID: string;
+        objCode: string;
         name: string;
         description: string;
         lastUpdateDate: string;

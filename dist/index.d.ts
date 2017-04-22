@@ -24,7 +24,7 @@ export declare namespace Workfront {
         companyID: string;
         homeGroupID: string;
     }
-    interface FetchSsoId extends Function {
+    interface FetchSsoId {
         (email: string): Promise<string>;
     }
     /**
