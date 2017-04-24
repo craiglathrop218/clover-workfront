@@ -26,8 +26,7 @@ export let apiFactoryConfig = {
 var ApiFactory = api.ApiFactory;
 var ApiConstants = api.ApiConstants;
 var instance: Api = ApiFactory.getInstance(apiFactoryConfig);
-instance.httpParams.apiKey = "d0tz5bgzlif3fpdpap46lvqe9s727jfe"; // LIVE key
-//instance.httpParams.apiKey = "2y1o1oc6p8umthza4z25bncdbixy54w2"; // TEST key
+instance.httpParams.apiKey = "KEY-NOT-SET"; // LIVE key
 const HTTP_REQ_TIMEOUT: number = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 
 // used to store entity metadata responses
@@ -392,6 +391,10 @@ function randomPassword() {
 export namespace Workfront {
     // export the general API
     export var api: Api = instance;
+
+    export function setApiKey(key: string): void {
+        instance.httpParams.apiKey = key;
+    }
 
     /**
      * Defines user access object

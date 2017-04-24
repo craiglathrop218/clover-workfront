@@ -16,6 +16,7 @@ export declare let apiFactoryConfig: {
  */
 export declare namespace Workfront {
     var api: Api;
+    function setApiKey(key: string): void;
     /**
      * Defines user access object
      */
