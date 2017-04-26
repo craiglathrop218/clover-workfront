@@ -533,7 +533,7 @@ export namespace Workfront {
         return api.logout();
     }
 
-    function execAsUserWithSession<T>(console: Logger, fromEmail: EmailAddress, callback: (api: Api, login: LoginResult) => Promise<T>, login: LoginResult): Promise<T> {
+    export function execAsUserWithSession<T>(console: Logger, fromEmail: EmailAddress, callback: (api: Api, login: LoginResult) => Promise<T>, login: LoginResult): Promise<T> {
         console.log("*** Executing as User (with existing login session). Email: " + fromEmail.address + ", login session: " + JSON.stringify(login));
 
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
