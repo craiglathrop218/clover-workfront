@@ -460,7 +460,8 @@ var Workfront;
     }
     Workfront.logout = logout;
     function execAsUserWithSession(console, fromEmail, callback, login) {
-        console.log("*** Executing as User (with existing login session). Email: " + fromEmail.address + ", login session: " + JSON.stringify(login));
+        var userEmail = fromEmail ? fromEmail.address : "";
+        console.log("*** Executing as User (with existing login session). Email: " + userEmail + ", login session: " + JSON.stringify(login));
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
         var api = ApiFactory.getInstance(exports.apiFactoryConfig, true);
@@ -473,7 +474,7 @@ var Workfront;
                 resolve(result);
             }).catch(function (error) {
                 console.log(error);
-                console.log("Error. User: " + fromEmail.address + ", error: " + JSON.stringify(error));
+                console.log("Error. User: " + userEmail + ", login session: " + JSON.stringify(login) + ", error: " + JSON.stringify(error));
                 reject(error);
             });
         });
