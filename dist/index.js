@@ -479,6 +479,7 @@ var Workfront;
         });
         return updated;
     }
+    Workfront.execAsUserWithSession = execAsUserWithSession;
     /**
      * Logs in as user and execute provided function
      *

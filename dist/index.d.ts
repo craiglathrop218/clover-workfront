@@ -115,6 +115,7 @@ export declare namespace Workfront {
      * @returns {Promise<LoginResult>}
      */
     function logout(login: LoginResult): Promise<Object>;
+    function execAsUserWithSession<T>(console: Logger, fromEmail: EmailAddress, callback: (api: Api, login: LoginResult) => Promise<T>, login: LoginResult): Promise<T>;
     /**
      * Logs in as user and execute provided function
      *
