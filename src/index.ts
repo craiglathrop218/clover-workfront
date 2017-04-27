@@ -478,6 +478,8 @@ export namespace Workfront {
     export import ParameterGroup = WfModel.ParameterGroup;
     export import Group = WfModel.Group;
     export import CustomEnum = WfModel.CustomEnum;
+    export import Assignment = WfModel.Assignment;
+    export import Role = WfModel.Role;
 
     export interface WfConnError {
         active: boolean,

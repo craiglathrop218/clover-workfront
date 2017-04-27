@@ -339,6 +339,7 @@ export declare namespace WfModel {
         accessRules: AccessRule[];
         enteredBy: User;
         assignedTo: User;
+        assignments?: Assignment[];
     }
     interface Milestone {
         ID: string;
@@ -359,6 +360,54 @@ export declare namespace WfModel {
         enteredByID: string;
         entryDate: string;
         extRefID: string;
+    }
+    interface Assignment {
+        ID: string;
+        objCode: string;
+        actualWorkCompleted: number;
+        actualWorkPerDayStartDate: string;
+        assignedByID: string;
+        assignedToID: string;
+        assignmentPercent: number;
+        avgWorkPerDay: number;
+        customerID: string;
+        feedbackStatus: string;
+        isPrimary: boolean;
+        isTeamAssignment: boolean;
+        opTaskID: string;
+        plannedUserAllocationPercentage: number;
+        projectID: string;
+        projectedAvgWorkPerDay: number;
+        projectedUserAllocationPercentage: number;
+        roleID: string;
+        status: string;
+        taskID: string;
+        teamID: string;
+        work: number;
+        workRequired: number;
+        assignedBy: User;
+        assignedTo: User;
+        opTask: Issue;
+        project: Project;
+        role: Role;
+        task: Task;
+        team: Team;
+    }
+    interface Role {
+        ID: string;
+        objCode: string;
+        billingPerHour: number;
+        costPerHour: number;
+        customerID: string;
+        defaultInterface: number;
+        description: string;
+        enteredByID: string;
+        entryDate: string;
+        extRefID: string;
+        layoutTemplateID: string;
+        maxUsers: number;
+        name: string;
+        enteredBy: User;
     }
     interface AccessRule {
         ID: string;

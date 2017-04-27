@@ -95,6 +95,8 @@ export declare namespace Workfront {
     export import ParameterGroup = WfModel.ParameterGroup;
     export import Group = WfModel.Group;
     export import CustomEnum = WfModel.CustomEnum;
+    export import Assignment = WfModel.Assignment;
+    export import Role = WfModel.Role;
     interface WfConnError {
         active: boolean;
         errorDate: moment.Moment;

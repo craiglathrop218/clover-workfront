@@ -359,6 +359,7 @@ export namespace WfModel {
         accessRules: AccessRule[];
         enteredBy: User; // user who created a task
         assignedTo: User; // user whom this task is assigned
+        assignments?: Assignment[]
     }
 
     export interface Milestone {
@@ -381,6 +382,58 @@ export namespace WfModel {
         enteredByID: string,
         entryDate: string,
         extRefID: string
+    }
+
+    export interface Assignment {
+        ID: string,
+        objCode: string,
+        actualWorkCompleted: number,
+        actualWorkPerDayStartDate: string,
+        assignedByID: string,
+        assignedToID: string,
+        assignmentPercent: number,
+        avgWorkPerDay: number,
+        customerID: string,
+        feedbackStatus: string,
+        isPrimary: boolean,
+        isTeamAssignment: boolean,
+        opTaskID: string,
+        plannedUserAllocationPercentage: number,
+        projectID: string,
+        projectedAvgWorkPerDay: number,
+        projectedUserAllocationPercentage: number,
+        roleID: string,
+        status: string,
+        taskID: string,
+        teamID: string,
+        work: number,
+        workRequired: number,
+        assignedBy: User,
+        assignedTo: User,
+        //customer: Customer,
+        opTask: Issue,
+        project: Project,
+        role: Role, // job role
+        task: Task,
+        team: Team,
+        // workItem: WorkItem
+    }
+
+    export interface Role {
+        ID: string,
+        objCode: string,
+        billingPerHour: number,
+        costPerHour: number,
+        customerID: string,
+        defaultInterface: number,
+        description: string,
+        enteredByID: string,
+        entryDate: string,
+        extRefID: string,
+        layoutTemplateID: string,
+        maxUsers: number,
+        name: string,
+        enteredBy: User
     }
 
     // Share objects
