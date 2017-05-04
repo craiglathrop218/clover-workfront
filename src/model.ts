@@ -359,7 +359,8 @@ export namespace WfModel {
         accessRules: AccessRule[];
         enteredBy: User; // user who created a task
         assignedTo: User; // user whom this task is assigned
-        assignments?: Assignment[]
+        assignments?: Assignment[],
+        defaultBaselineTask: BaselineTask
     }
 
     export interface Milestone {
@@ -451,6 +452,38 @@ export namespace WfModel {
         securityObjID: string,
         ancestorID: string,
         ancestorObjCode: string
+    }
+
+    export interface BaselineTask {
+        ID: string,
+        objCode: string,
+        actualCompletionDate: string,
+        actualCost: number,
+        actualDurationMinutes: number,
+        actualStartDate: string,
+        actualWorkRequired: number,
+        baselineID: string,
+        cpi: number,
+        csi: number,
+        customerID: string,
+        durationMinutes: number,
+        durationUnit: string,
+        eac: number,
+        entryDate: string,
+        estCompletionDate: string,
+        estStartDate: string,
+        isDefault: boolean,
+        name: string,
+        percentComplete: number,
+        plannedCompletionDate: string,
+        plannedCost: number,
+        plannedStartDate: string,
+        progressStatus: string,
+        projectedCompletionDate: string,
+        projectedStartDate: string,
+        spi: number,
+        taskID: string,
+        workRequired: number
     }
 
     export interface MetaData {

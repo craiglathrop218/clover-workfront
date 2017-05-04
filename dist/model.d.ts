@@ -340,6 +340,7 @@ export declare namespace WfModel {
         enteredBy: User;
         assignedTo: User;
         assignments?: Assignment[];
+        defaultBaselineTask: BaselineTask;
     }
     interface Milestone {
         ID: string;
@@ -423,6 +424,37 @@ export declare namespace WfModel {
         securityObjID: string;
         ancestorID: string;
         ancestorObjCode: string;
+    }
+    interface BaselineTask {
+        ID: string;
+        objCode: string;
+        actualCompletionDate: string;
+        actualCost: number;
+        actualDurationMinutes: number;
+        actualStartDate: string;
+        actualWorkRequired: number;
+        baselineID: string;
+        cpi: number;
+        csi: number;
+        customerID: string;
+        durationMinutes: number;
+        durationUnit: string;
+        eac: number;
+        entryDate: string;
+        estCompletionDate: string;
+        estStartDate: string;
+        isDefault: boolean;
+        name: string;
+        percentComplete: number;
+        plannedCompletionDate: string;
+        plannedCost: number;
+        plannedStartDate: string;
+        progressStatus: string;
+        projectedCompletionDate: string;
+        projectedStartDate: string;
+        spi: number;
+        taskID: string;
+        workRequired: number;
     }
     interface MetaData {
         name: string;
