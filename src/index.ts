@@ -480,6 +480,7 @@ export namespace Workfront {
     export import CustomEnum = WfModel.CustomEnum;
     export import Assignment = WfModel.Assignment;
     export import Role = WfModel.Role;
+    export import BaselineTask = WfModel.BaselineTask;
 
     export interface WfConnError {
         active: boolean,
