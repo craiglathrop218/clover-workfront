@@ -18,7 +18,50 @@ export namespace WfModel {
         sponsor: User,
         referenceNumber: number,
         accessRules: AccessRule[],
-        objectCategories: ObjectCategory[]
+        objectCategories: ObjectCategory[],
+        portfolioID: string,
+        portfolio: Portfolio
+    }
+
+    export interface Portfolio {
+        objCode: string,
+        ID: string,
+        name: string,
+        accessorIDs: string[],
+        aligned: number,
+        alignmentScoreCardID: string,
+        budget: number,
+        categoryID: string,
+        currency: number,
+        customerID: string,
+        description: string,
+        enteredByID: string,
+        entryDate: string,
+        extRefID: string,
+        hasDocuments: boolean,
+        hasMessages: boolean,
+        hasNotes: boolean,
+        isActive: boolean,
+        lastUpdateDate: string,
+        lastUpdatedByID: string,
+        netValue: number,
+        onBudget: number,
+        onTime: number,
+        ownerID: string,
+        roi: number,
+        category: Category,
+        //customer: Customer
+        enteredBy: User,
+        lastUpdatedBy: User,
+        owner: User,
+        programs: Program[],
+        projects: Project[]
+    }
+
+    export interface Program {
+        objCode: string,
+        ID: string,
+        name: string
     }
 
     export interface ObjectCategory {

@@ -66,6 +66,8 @@ export declare namespace Workfront {
     export import WfError = WfModel.WfError;
     export import WfObject = WfModel.WfObject;
     export import Project = WfModel.Project;
+    export import Portfolio = WfModel.Portfolio;
+    export import Program = WfModel.Program;
     export import User = WfModel.User;
     export import Document = WfModel.Document;
     export import DocumentVersion = WfModel.DocumentVersion;
