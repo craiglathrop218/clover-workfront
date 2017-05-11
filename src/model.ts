@@ -11,6 +11,7 @@ export namespace WfModel {
         objCode: string,
         ID: string,
         name: string,
+        description: string;
         status: string;
         categoryID: string;
         enteredBy: User,
@@ -20,6 +21,9 @@ export namespace WfModel {
         accessRules: AccessRule[],
         objectCategories: ObjectCategory[],
         portfolioID: string,
+        percentComplete: number;
+        plannedStartDate: string;
+        projectedStartDate: string;
         portfolio: Portfolio
     }
 
