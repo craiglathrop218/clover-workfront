@@ -1171,6 +1171,10 @@ var Workfront;
                     params.documentID = replyToEntityRef.ID;
                     break;
                 }
+                case "DOCAPL": {
+                    // params.documentID = replyToEntityRef.ID;
+                    break;
+                }
                 case "TMPL": {
                     params.templateID = replyToEntityRef.ID;
                     break;
@@ -1180,7 +1184,7 @@ var Workfront;
                     break;
                 }
                 default: {
-                    return Promise.reject("!!!!ERROR!!!! An unrecognized object type " + replyToEntityRef.objCode + " was just entered.");
+                    return Promise.reject("!!!!ERROR!!!! An unrecognized object type " + replyToEntityRef.objCode + " while creating a reply note was just entered.");
                 }
             }
             if (reply.parentJournalEntryID) {

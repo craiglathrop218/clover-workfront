@@ -1233,6 +1233,10 @@ export namespace Workfront {
                     params.documentID = replyToEntityRef.ID;
                     break;
                 }
+                case "DOCAPL": {// Document Approval
+                    // params.documentID = replyToEntityRef.ID;
+                    break;
+                }
                 case "TMPL": {// Template
                     params.templateID = replyToEntityRef.ID;
                     break;
@@ -1242,7 +1246,7 @@ export namespace Workfront {
                     break;
                 }
                 default: {
-                    return Promise.reject(`!!!!ERROR!!!! An unrecognized object type ${replyToEntityRef.objCode} was just entered.`);
+                    return Promise.reject(`!!!!ERROR!!!! An unrecognized object type ${replyToEntityRef.objCode} while creating a reply note was just entered.`);
                 }
             }
             if (reply.parentJournalEntryID){
