@@ -1233,10 +1233,6 @@ export namespace Workfront {
                     params.documentID = replyToEntityRef.ID;
                     break;
                 }
-                case "DOCAPL": {// Document Approval
-                    // params.documentID = replyToEntityRef.ID;
-                    break;
-                }
                 case "TMPL": {// Template
                     params.templateID = replyToEntityRef.ID;
                     break;

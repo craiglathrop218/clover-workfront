@@ -1171,10 +1171,6 @@ var Workfront;
                     params.documentID = replyToEntityRef.ID;
                     break;
                 }
-                case "DOCAPL": {
-                    // params.documentID = replyToEntityRef.ID;
-                    break;
-                }
                 case "TMPL": {
                     params.templateID = replyToEntityRef.ID;
                     break;
