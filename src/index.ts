@@ -455,6 +455,7 @@ export namespace Workfront {
     export import DocumentVersion = WfModel.DocumentVersion;
     export import DocumentFolder = WfModel.DocumentFolder;
     export import DocumentFolderParentField = WfModel.DocumentFolderParentField;
+    export import DocumentApproval = WfModel.DocumentApproval;
     export import AssignUserToken = WfModel.AssignUserToken;
     export import CompleteUserRegistration = WfModel.CompleteUserRegistration;
     export import Note = WfModel.Note;
@@ -1150,6 +1151,21 @@ export namespace Workfront {
         console.log("Getting Document Version by id: " + docVerId + ", fields to return: " + JSON.stringify(fields));
         return Workfront.api.get<DocumentVersion>("DOCV", docVerId, fields).then((docVer: DocumentVersion) => {
             return docVer;
+        });
+    }
+
+    /**
+     * Fetches a document approval from Workfront based on provided document approval id.
+     *
+     * @param console - logger object (for later debugging in case of errors happen in processing)
+     * @param docApprovalId - document approval id to fetch
+     * @param fields - extra fields to return for a document
+     * @returns {Promise<DocumentApproval>} - fetched document approval
+     */
+    export function getDocumentApprovalById(console: Logger, docApprovalId: string, fields?: string|string[]): Promise<DocumentApproval> {
+        console.log("Getting Document Approval by id: " + docApprovalId);
+        return Workfront.api.get<DocumentApproval>("DOCAPL", docApprovalId, fields).then((approval: DocumentApproval) => {
+            return approval;
         });
     }
 

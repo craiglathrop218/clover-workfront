@@ -257,6 +257,20 @@ export namespace WfModel {
         }
     }
 
+    export interface DocumentApproval {
+        ID: string,
+        objCode: string,
+        approvalDate: string,
+        approverID: string,
+        autoDocumentShareID: string,
+        customerID: string,
+        documentID: string,
+        noteID: string,
+        requestDate: string,
+        requestorID: string,
+        status: string
+    }
+
     export interface AssignUserToken {result: string};
     export interface CompleteUserRegistration {result: string}
 

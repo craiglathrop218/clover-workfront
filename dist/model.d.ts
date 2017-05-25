@@ -242,6 +242,19 @@ export declare namespace WfModel {
         value: string;
         constructor(name: string, value: string);
     }
+    interface DocumentApproval {
+        ID: string;
+        objCode: string;
+        approvalDate: string;
+        approverID: string;
+        autoDocumentShareID: string;
+        customerID: string;
+        documentID: string;
+        noteID: string;
+        requestDate: string;
+        requestorID: string;
+        status: string;
+    }
     interface AssignUserToken {
         result: string;
     }

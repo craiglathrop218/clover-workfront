@@ -1093,6 +1093,21 @@ var Workfront;
     }
     Workfront.getDocumentVersionById = getDocumentVersionById;
     /**
+     * Fetches a document approval from Workfront based on provided document approval id.
+     *
+     * @param console - logger object (for later debugging in case of errors happen in processing)
+     * @param docApprovalId - document approval id to fetch
+     * @param fields - extra fields to return for a document
+     * @returns {Promise<DocumentApproval>} - fetched document approval
+     */
+    function getDocumentApprovalById(console, docApprovalId, fields) {
+        console.log("Getting Document Approval by id: " + docApprovalId);
+        return Workfront.api.get("DOCAPL", docApprovalId, fields).then(function (approval) {
+            return approval;
+        });
+    }
+    Workfront.getDocumentApprovalById = getDocumentApprovalById;
+    /**
      * Creates a note under a provided user email.
      *
      * A user with provided email must exist in Workfront, otherwise a reject error is returned
