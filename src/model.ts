@@ -305,6 +305,7 @@ export namespace WfModel {
         attachObjCode: string,
         attachObjID: string,
         // References & Collections
+        document?: Document,
         owner?: User,
         tags?: NoteTag[],
         replies?: Note[],

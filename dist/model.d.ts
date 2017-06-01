@@ -291,6 +291,7 @@ export declare namespace WfModel {
         attachDocumentID: string;
         attachObjCode: string;
         attachObjID: string;
+        document?: Document;
         owner?: User;
         tags?: NoteTag[];
         replies?: Note[];
