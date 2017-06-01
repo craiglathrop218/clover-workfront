@@ -196,6 +196,7 @@ export declare namespace WfModel {
         ownerID: string;
         owner: User;
         lastVersionNum: string;
+        currentVersionID: string;
         currentVersion: DocumentVersion;
     }
     interface DocumentVersion {

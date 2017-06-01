@@ -203,6 +203,7 @@ export namespace WfModel {
         ownerID: string,
         owner: User,
         lastVersionNum: string,
+        currentVersionID: string,
         currentVersion: DocumentVersion
     }
     export interface DocumentVersion {
