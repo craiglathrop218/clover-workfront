@@ -19,6 +19,8 @@ export declare namespace WfModel {
         name: string;
         description: string;
         status: string;
+        condition: string;
+        conditionType: string;
         categoryID: string;
         enteredBy: User;
         owner: User;
