@@ -15,6 +15,7 @@ export namespace WfModel {
         status: string;
         condition: string,
         conditionType: string,
+        priority: number,
         categoryID: string;
         enteredBy: User,
         owner: User,
