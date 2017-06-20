@@ -403,6 +403,8 @@ export declare namespace WfModel {
         assignedTo: User;
         assignments?: Assignment[];
         defaultBaselineTask: BaselineTask;
+        parentID: string;
+        parent?: Task;
     }
     interface Milestone {
         ID: string;

@@ -426,7 +426,9 @@ export namespace WfModel {
         enteredBy: User; // user who created a task
         assignedTo: User; // user whom this task is assigned
         assignments?: Assignment[],
-        defaultBaselineTask: BaselineTask
+        defaultBaselineTask: BaselineTask,
+        parentID: string,
+        parent?: Task
     }
 
     export interface Milestone {
