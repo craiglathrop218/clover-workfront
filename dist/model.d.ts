@@ -393,6 +393,8 @@ export declare namespace WfModel {
         referenceNumber: number;
         plannedStartDate: string;
         plannedCompletionDate: string;
+        actualCompletionDate: string;
+        actualStartDate: string;
         status: string;
         percentComplete: number;
         commitDate: string;
