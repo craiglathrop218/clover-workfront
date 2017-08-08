@@ -20,7 +20,8 @@ export let apiFactoryConfig = {
     //url: "https://idt.attasksandbox.com/" // TEST
     //version: "4.0"
     //version: "5.0"
-    version: "6.0"
+    //version: "6.0"
+    version: "7.0"
     //version: "internal"
 };
 var ApiFactory = api.ApiFactory;
