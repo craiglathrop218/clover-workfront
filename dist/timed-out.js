@@ -1,5 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // modifed version of https://github.com/floatdrop/timed-out
-export class TimedOut {
+class TimedOut {
     static applyToRequest(req, time) {
         if (req.timeoutTimer) {
             return req;
@@ -56,3 +58,4 @@ export class TimedOut {
     }
     ;
 }
+exports.TimedOut = TimedOut;

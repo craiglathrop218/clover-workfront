@@ -1,3 +1,4 @@
+/// <reference types="workfront-api" />
 /// <reference types="node" />
 import { Api, Config, LoginResult } from "workfront-api";
 import * as moment from "moment";

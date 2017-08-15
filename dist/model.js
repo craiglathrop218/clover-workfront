@@ -1,4 +1,6 @@
-export var WfModel;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var WfModel;
 (function (WfModel) {
     ;
     ;
@@ -24,4 +26,4 @@ export var WfModel;
     class IssueUpdate {
     }
     WfModel.IssueUpdate = IssueUpdate;
-})(WfModel || (WfModel = {}));
+})(WfModel = exports.WfModel || (exports.WfModel = {}));

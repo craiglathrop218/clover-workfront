@@ -1,9 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // http://workfront.github.io/workfront-api/Workfront.Api.html
-import * as api from "workfront-api";
-import { WfModel } from "./model";
-import { apiOverrides } from "./api-overrides";
+const api = require("workfront-api");
+const model_1 = require("./model");
+const api_overrides_1 = require("./api-overrides");
 // execute api overrides in start of this module
-apiOverrides(api.Api);
+api_overrides_1.apiOverrides(api.Api);
 /**
  * Parse user names (firstname, lastname) out from provided email address.
  *
@@ -65,7 +67,7 @@ var ApiFactory = api.ApiFactory;
  * A Workfront internal API for our project that provides a convenient and wrapped methods to be used in different usage scenarios.
  */
 // implementation
-export class Workfront {
+class Workfront {
     initialize(config = Workfront.apiFactoryConfig) {
         this.apiFactoryConfig = config;
         this.api = ApiFactory.getInstance(this.apiFactoryConfig);
@@ -1105,12 +1107,13 @@ Workfront.apiFactoryConfig = {
     version: "7.0"
     //version: "internal"
 };
+exports.Workfront = Workfront;
 // types
 (function (Workfront) {
     ;
     ;
-    Workfront.DocumentFolderParentField = WfModel.DocumentFolderParentField;
-    Workfront.Issue = WfModel.Issue;
-    Workfront.ReplyMessage = WfModel.ReplyMessage;
-    Workfront.IssueUpdate = WfModel.IssueUpdate;
-})(Workfront || (Workfront = {}));
+    Workfront.DocumentFolderParentField = model_1.WfModel.DocumentFolderParentField;
+    Workfront.Issue = model_1.WfModel.Issue;
+    Workfront.ReplyMessage = model_1.WfModel.ReplyMessage;
+    Workfront.IssueUpdate = model_1.WfModel.IssueUpdate;
+})(Workfront = exports.Workfront || (exports.Workfront = {}));
