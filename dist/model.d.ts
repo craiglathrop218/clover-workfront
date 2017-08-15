@@ -180,27 +180,28 @@ export declare namespace WfModel {
         companyID: string;
     }
     interface Document {
-        ID: string;
-        objCode: string;
+        ID?: string;
+        objCode?: string;
         name: string;
-        description: string;
-        lastUpdateDate: string;
+        description?: string;
+        lastUpdateDate?: string;
         docObjCode: string;
         objID: string;
-        topDocObjCode: string;
-        topObjID: string;
-        isDir: boolean;
-        isPrivate: boolean;
-        isPublic: boolean;
-        extRefID: string;
-        downloadURL: string;
-        folderIDs: string[];
-        userID: string;
-        ownerID: string;
-        owner: User;
-        lastVersionNum: string;
-        currentVersionID: string;
-        currentVersion: DocumentVersion;
+        topDocObjCode?: string;
+        topObjID?: string;
+        isDir?: boolean;
+        isPrivate?: boolean;
+        isPublic?: boolean;
+        extRefID?: string;
+        downloadURL?: string;
+        folderIDs?: string[];
+        userID?: string;
+        ownerID?: string;
+        owner?: User;
+        lastVersionNum?: string;
+        currentVersionID?: string;
+        currentVersion?: DocumentVersion;
+        handle?: string;
     }
     interface DocumentVersion {
         ID: string;
@@ -291,16 +292,21 @@ export declare namespace WfModel {
         isPrivate: boolean;
         hasReplies?: boolean;
         isReply?: boolean;
-        numReplies: number;
-        attachDocumentID: string;
-        attachObjCode: string;
-        attachObjID: string;
+        numReplies?: number;
+        attachDocumentID?: string;
+        attachObjCode?: string;
+        attachObjID?: string;
+        portfolioID?: string;
+        documentID?: string;
+        programID?: string;
+        templateID?: string;
+        templateTaskID?: string;
         document?: Document;
         owner?: User;
         tags?: NoteTag[];
         replies?: Note[];
-        secondsPassed: number;
-        uniqueId: string;
+        secondsPassed?: number;
+        uniqueId?: string;
     }
     interface JournalEntry {
         ID: string;

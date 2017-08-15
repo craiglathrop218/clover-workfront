@@ -187,27 +187,28 @@ export namespace WfModel {
     }
 
     export interface Document {
-        ID: string,
-        objCode: string,
+        ID?: string,
+        objCode?: string,
         name: string, // Document name
-        description: string,
-        lastUpdateDate: string,
+        description?: string,
+        lastUpdateDate?: string,
         docObjCode: string, // parent object code this Document was attached to (Issue, Task, etc.)
         objID: string, // parent object id this document was attached to
-        topDocObjCode: string,
-        topObjID: string,
-        isDir: boolean,
-        isPrivate: boolean,
-        isPublic: boolean,
-        extRefID: string,
-        downloadURL: string,
-        folderIDs: string[], // write-only field, a reference to a folder(s) where to put a new document
-        userID: string,
-        ownerID: string,
-        owner: User,
-        lastVersionNum: string,
-        currentVersionID: string,
-        currentVersion: DocumentVersion
+        topDocObjCode?: string,
+        topObjID?: string,
+        isDir?: boolean,
+        isPrivate?: boolean,
+        isPublic?: boolean,
+        extRefID?: string,
+        downloadURL?: string,
+        folderIDs?: string[], // write-only field, a reference to a folder(s) where to put a new document
+        userID?: string,
+        ownerID?: string,
+        owner?: User,
+        lastVersionNum?: string,
+        currentVersionID?: string,
+        currentVersion?: DocumentVersion,
+        handle?: string // Upload handle
     }
     export interface DocumentVersion {
         ID: string,
@@ -304,10 +305,15 @@ export namespace WfModel {
         isPrivate: boolean,
         hasReplies?: boolean,
         isReply?: boolean,
-        numReplies: number,
-        attachDocumentID: string,
-        attachObjCode: string,
-        attachObjID: string,
+        numReplies?: number,
+        attachDocumentID?: string,
+        attachObjCode?: string,
+        attachObjID?: string,
+        portfolioID?: string,
+        documentID?: string,
+        programID?: string,
+        templateID?: string,
+        templateTaskID?: string,
         // References & Collections
         document?: Document,
         owner?: User,
@@ -315,8 +321,8 @@ export namespace WfModel {
         replies?: Note[],
         // NB! CUSTOM FIELDS BELOW! These fields below does not exist in Workfront - custom fields added for internal processing
         // isUpdate: boolean,
-        secondsPassed: number,
-        uniqueId: string
+        secondsPassed?: number,
+        uniqueId?: string
     }
 
     export interface JournalEntry {

@@ -1,13 +1,10 @@
-import {ClientRequest} from "http";
 import * as net from "net";
-
-interface MyClientRequest extends ClientRequest {
-	timeoutTimer: number;
-}
+import {ClientRequest} from "http";
 
 // modifed version of https://github.com/floatdrop/timed-out
-export namespace TimedOut {
-	export function applyToRequest(req: MyClientRequest, time: number) {
+
+export class TimedOut {
+	static applyToRequest(req: TimedOut.MyClientRequest, time: number): TimedOut.MyClientRequest {
 		if (req.timeoutTimer) {
 			return req;
 		}
@@ -68,4 +65,11 @@ export namespace TimedOut {
 
 		return req.on('error', clear);
 	};
+}
+
+// Types
+export namespace TimedOut {
+	export interface MyClientRequest extends ClientRequest {
+		timeoutTimer: number;
+	}
 }
