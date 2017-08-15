@@ -98,7 +98,7 @@ export class Workfront {
     apiFactoryConfig: Config;
     api: Api;
 
-    constructor(config: Config = Workfront.apiFactoryConfig) {
+    initialize(config: Config = Workfront.apiFactoryConfig) {
         this.apiFactoryConfig = config;
         this.api = ApiFactory.getInstance(this.apiFactoryConfig);
         this.api.httpParams.apiKey = "KEY-NOT-SET"; // LIVE key
