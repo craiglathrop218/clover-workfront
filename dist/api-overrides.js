@@ -7,6 +7,7 @@ const queryString = require("querystring");
 const timed_out_1 = require("./timed-out");
 const HTTP_REQ_TIMEOUT = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 function apiOverrides(Api) {
+    let ApiFun = Api;
     // used to store entity metadata responses
     let metaDataCache = {};
     /**

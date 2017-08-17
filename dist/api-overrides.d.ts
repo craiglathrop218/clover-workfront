@@ -1,4 +1,2 @@
-/// <reference types="workfront-api" />
-import { Api } from "workfront-api";
-declare function apiOverrides(Api: Api): void;
+declare function apiOverrides(Api: Function): void;
 export { apiOverrides };

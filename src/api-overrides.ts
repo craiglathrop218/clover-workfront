@@ -1,4 +1,4 @@
-import {Api} from "workfront-api";
+import {Api as ApiFun} from "workfront-api";
 import * as fs from "fs";
 import * as deepExtend from "deep-extend";
 import * as FormData from "form-data";
@@ -10,7 +10,8 @@ import {WfModel} from "./model";
 
 const HTTP_REQ_TIMEOUT: number = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 
-function apiOverrides(Api: Api) {
+function apiOverrides(Api: Function) {
+    let ApiFun = <any>Api;
     // used to store entity metadata responses
     let metaDataCache: any = {};
 
