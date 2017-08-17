@@ -16,7 +16,7 @@ export declare class Workfront {
     static apiFactoryConfig: Config;
     apiFactoryConfig: Config;
     api: Api;
-    initialize(config?: Config): void;
+    initialize(config: Config, key: string): void;
     setApiKey(key: string): void;
     /**
      * Login as a user with specified login email

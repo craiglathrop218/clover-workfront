@@ -68,10 +68,10 @@ var ApiFactory = api.ApiFactory;
  */
 // implementation
 class Workfront {
-    initialize(config = Workfront.apiFactoryConfig) {
+    initialize(config = Workfront.apiFactoryConfig, key) {
         this.apiFactoryConfig = config;
         this.api = ApiFactory.getInstance(this.apiFactoryConfig);
-        this.api.httpParams.apiKey = "KEY-NOT-SET"; // LIVE key
+        this.api.httpParams.apiKey = key;
     }
     setApiKey(key) {
         this.api.httpParams.apiKey = key;

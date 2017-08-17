@@ -98,10 +98,10 @@ export class Workfront {
     apiFactoryConfig: Config;
     api: Api;
 
-    initialize(config: Config = Workfront.apiFactoryConfig) {
+    initialize(config: Config = Workfront.apiFactoryConfig, key: string) {
         this.apiFactoryConfig = config;
         this.api = ApiFactory.getInstance(this.apiFactoryConfig);
-        this.api.httpParams.apiKey = "KEY-NOT-SET"; // LIVE key
+        this.api.httpParams.apiKey = key;
     }
 
     setApiKey(key: string): void {
@@ -974,7 +974,7 @@ export class Workfront {
      */
     getTeamMembers(console: Workfront.Logger, teamId: string): Promise<WfModel.TeamMember[]> {
         let fieldsToReturn = ["ID", "name", "teamMembers:*"];
-        return this.api.get<WfModel.TeamMember[]>("TEAMOB", teamId, fieldsToReturn).then((team: WfModel.Team) => {
+        return this.api.get<WfModel.Team>("TEAMOB", teamId, fieldsToReturn).then((team: WfModel.Team) => {
             return team.teamMembers;
         });
         // THE FOLLOWING returns an error: "TEAMMB is not a top level object and can't be requested directly in internal"
