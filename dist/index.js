@@ -1091,6 +1091,24 @@ class Workfront {
             return api.download(downloadURL, output);
         });
     }
+    /**
+     * Remove an entity from Workfront under a specified user
+     *
+     * @param {Workfront.Logger} console
+     * @param {EmailAddress} from
+     * @param {WfModel.WfObject} entityRef
+     * @returns {Promise<WfModel.WfObject>}
+     */
+    removeAsUser(console, from, entityRef, bForce) {
+        return this.execAsUser(console, from, (api, login) => {
+            console.log("[removeAsUser] - Got login session for user: " + from.address + ", sessionId: " + login.sessionID);
+            // remove
+            return api.remove(entityRef.objCode, entityRef.ID, bForce).then((removedObj) => {
+                console.log(`[removeAsUser] ${entityRef.objCode}, ID: ${entityRef.ID}, removed obj: ${JSON.stringify(removedObj)}`);
+                return removedObj;
+            });
+        });
+    }
 }
 // constants
 Workfront.API_DATE_FORMAT = "YYYY-MM-DD'T'HH:mm:ss:SSSZ"; // Date format in API requests: 2016-08-30T03:52:05:383-0700

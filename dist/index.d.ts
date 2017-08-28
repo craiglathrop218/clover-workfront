@@ -288,6 +288,15 @@ export declare class Workfront {
      * @returns {Promise<void>|Promise}
      */
     downloadAsUser(console: Workfront.Logger, ownerUsername: string, downloadURL: string, output: NodeJS.WritableStream): Promise<void>;
+    /**
+     * Remove an entity from Workfront under a specified user
+     *
+     * @param {Workfront.Logger} console
+     * @param {EmailAddress} from
+     * @param {WfModel.WfObject} entityRef
+     * @returns {Promise<WfModel.WfObject>}
+     */
+    removeAsUser(console: Workfront.Logger, from: EmailAddress, entityRef: WfModel.WfObject, bForce?: boolean): Promise<WfModel.WfObject>;
 }
 export declare namespace Workfront {
     /**

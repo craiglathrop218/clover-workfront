@@ -1163,6 +1163,25 @@ export class Workfront {
         });
     }
 
+    /**
+     * Remove an entity from Workfront under a specified user
+     *
+     * @param {Workfront.Logger} console
+     * @param {EmailAddress} from
+     * @param {WfModel.WfObject} entityRef
+     * @returns {Promise<WfModel.WfObject>}
+     */
+    removeAsUser(console: Workfront.Logger, from: EmailAddress, entityRef: WfModel.WfObject, bForce?: boolean): Promise<WfModel.WfObject> {
+        return this.execAsUser<WfModel.WfObject>(console, from, (api: Api, login: LoginResult) => {
+            console.log("[removeAsUser] - Got login session for user: " + from.address + ", sessionId: " + login.sessionID);
+            // remove
+            return api.remove<WfModel.WfObject>(entityRef.objCode, entityRef.ID, bForce).then((removedObj: WfModel.WfObject) => {
+                console.log(`[removeAsUser] ${entityRef.objCode}, ID: ${entityRef.ID}, removed obj: ${JSON.stringify(removedObj)}`);
+                return removedObj;
+            });
+        });
+    }
+
     // /**
     //  * Download a document
     //  *
