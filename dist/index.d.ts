@@ -221,7 +221,7 @@ export declare class Workfront {
      * @param params - note fields
      * @returns {Promise<Note>|Promise} - created note
      */
-    createNoteAsUser(console: Workfront.Logger, user: EmailAddress, params: WfModel.Note): Promise<WfModel.Note>;
+    createNoteAsUser(console: Workfront.Logger, user: EmailAddress, params: WfModel.Note, fieldsToReturn: string[]): Promise<WfModel.Note>;
     /**
      * Create a reply note as a user with provided email.
      *
