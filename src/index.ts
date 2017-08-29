@@ -792,12 +792,11 @@ export class Workfront {
      * @param params - note fields
      * @returns {Promise<Note>|Promise} - created note
      */
-    createNoteAsUser(console: Workfront.Logger, user: EmailAddress, params: WfModel.Note): Promise<WfModel.Note> {
+    createNoteAsUser(console: Workfront.Logger, user: EmailAddress, params: WfModel.Note, fieldsToReturn: string[]): Promise<WfModel.Note> {
         console.log("*** Creating Note with User email: " + user.address + ", params: " + JSON.stringify(params));
         return this.execAsUser<WfModel.Note>(console, user, (api: Api, login: LoginResult) => {
             let userId = login.userID;
             // create a note
-            let fieldsToReturn = ["ownerID"];
             params.ownerID = userId;
             return api.create("NOTE", params, fieldsToReturn).then((note: WfModel.Note) => {
                 //console.log("Note created: " + JSON.stringify(note));
