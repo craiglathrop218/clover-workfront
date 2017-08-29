@@ -9,8 +9,8 @@ export declare namespace WfModel {
         code: number;
     }
     interface WfObject {
-        objCode: string;
-        ID: string;
+        objCode?: string;
+        ID?: string;
         name?: string;
     }
     interface Project {
@@ -267,9 +267,9 @@ export declare namespace WfModel {
         result: string;
     }
     interface Note extends WfObject {
-        ID: string;
-        objCode: string;
-        extRefID: string;
+        ID?: string;
+        objCode?: string;
+        extRefID?: string;
         ownerID?: string;
         objID?: string;
         auditType?: string;
@@ -289,7 +289,7 @@ export declare namespace WfModel {
         referenceObjectName?: string;
         topReferenceObjectName?: string;
         isMessage?: boolean;
-        isPrivate: boolean;
+        isPrivate?: boolean;
         hasReplies?: boolean;
         isReply?: boolean;
         numReplies?: number;

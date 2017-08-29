@@ -2,8 +2,8 @@
 export namespace WfModel {
     export interface WfError {error: string, "class": string, message: string, title: string, msgKey: string, attributes: Array<string>, code: number};
     export interface WfObject {
-        objCode: string,
-        ID: string,
+        objCode?: string,
+        ID?: string,
         name?: string
     };
 
@@ -280,9 +280,9 @@ export namespace WfModel {
     export interface CompleteUserRegistration {result: string}
 
     export interface Note extends WfObject {
-        ID: string,
-        objCode: string,
-        extRefID: string,
+        ID?: string,
+        objCode?: string,
+        extRefID?: string,
         ownerID?: string
         objID?: string,
         auditType?: string,
@@ -302,7 +302,7 @@ export namespace WfModel {
         referenceObjectName?: string,
         topReferenceObjectName?: string,
         isMessage?: boolean,
-        isPrivate: boolean,
+        isPrivate?: boolean,
         hasReplies?: boolean,
         isReply?: boolean,
         numReplies?: number,
