@@ -306,116 +306,97 @@ class Workfront {
      * @param accessConfigs - the workfront access settings / levels for a user
      * @returns {Promise<User>|Promise}
      */
-    getOrCreateUser(console, fromEmail, accessConfigs, fetchSsoId) {
-        let isIDTEmployee = fromEmail.address.indexOf("@idt.com") > 0 ? true : false;
+    async getOrCreateUser(console, fromEmail, accessConfigs, fetchSsoId) {
+        // First, check if user already exists
+        let userFields = ["emailAddr", "firstName", "lastName"]; // additional fields to return
+        let users = await this.api.search("USER", {
+            emailAddr: fromEmail.address,
+            emailAddr_Mod: "cieq"
+        }, userFields);
+        console.log(`getOrCreateUser. Got users: ${users}`);
+        if (users && users.length > 1) {
+            throw new Error(`Multiple users returned for an email: ${fromEmail.address}`);
+        }
+        if (users && users.length) {
+            // we have found an existing user
+            console.log(`*** User found by email: ${fromEmail.address}`);
+            return users[0];
+        }
+        // user not found
+        console.log(`*** User not found by email: ${fromEmail.address}`);
+        // skip creating idt.com users
+        let isIDTEmployee = fromEmail.address.toLowerCase().indexOf("@idt.com") > 0 ? true : false;
+        if (isIDTEmployee) {
+            // Skipping idt.com user creation
+            console.log(`*** Skipping to create new user: ${fromEmail.address}`);
+            return null;
+        }
+        // // check if we need to get ssoId
+        // let ssoId: string = null;
+        // if (fetchSsoId && isIDTEmployee) {
+        //     ssoId = await fetchSsoId(fromEmail.address);
+        //     console.log(`*** IDT Employee. User sso id: ${ssoId}`);
+        // }
         // Set user access levels/settings if new user needs to be created
         let accessConfig = {
             accessLevelID: accessConfigs.externalUsers.accessLevelID,
             companyID: accessConfigs.externalUsers.companyID,
             homeGroupID: accessConfigs.externalUsers.homeGroupID
         };
-        if (isIDTEmployee) {
-            // User has an @idt.com address. IDT company code and proper access level
-            accessConfig.accessLevelID = accessConfigs.idtUsers.accessLevelID;
-            accessConfig.companyID = accessConfigs.idtUsers.companyID;
-            accessConfig.homeGroupID = accessConfigs.idtUsers.homeGroupID;
-        }
-        let queryFields = ["emailAddr", "firstName", "lastName"]; // additional fields to return
-        let userDone = new Promise((resolve, reject) => {
-            // First, check if that user already exists
-            this.api.search("USER", {
+        // if (isIDTEmployee) {
+        //     // User has an @idt.com address. IDT company code and proper access level
+        //     accessConfig.accessLevelID = accessConfigs.idtUsers.accessLevelID;
+        //     accessConfig.companyID = accessConfigs.idtUsers.companyID;
+        //     accessConfig.homeGroupID = accessConfigs.idtUsers.homeGroupID;
+        // }
+        // Create a new user
+        console.log(`*** Creating new user: ${fromEmail.address}`);
+        let userNames = parseEmailNames(fromEmail);
+        let user = await this.api.create("USER", (() => {
+            let params = {
+                firstName: userNames.firstName,
+                lastName: userNames.lastName,
                 emailAddr: fromEmail.address,
-                emailAddr_Mod: "cieq"
-            }, queryFields).then(async (users) => {
-                console.log(`getOrCreateUser. Got users: ${users}`);
-                if (users && users.length > 1) {
-                    return Promise.reject("Multiple users returned for an email: " + fromEmail.address);
-                }
-                if (users && users.length) {
-                    // we have found an existing user
-                    console.log("*** User found by email: " + fromEmail.address);
-                    return users[0];
-                }
-                else {
-                    // user not found
-                    console.log("*** User not found by email: " + fromEmail.address);
-                    // check if we need to get ssoId
-                    let ssoId = null;
-                    if (fetchSsoId && isIDTEmployee) {
-                        ssoId = await fetchSsoId(fromEmail.address);
-                        console.log(`*** IDT Employee. User sso id: ${ssoId}`);
-                    }
-                    // Create a new user
-                    let userNames = parseEmailNames(fromEmail);
-                    return this.api.create("USER", (() => {
-                        let params = {
-                            firstName: userNames.firstName,
-                            lastName: userNames.lastName,
-                            emailAddr: fromEmail.address,
-                            accessLevelID: accessConfig.accessLevelID,
-                            companyID: accessConfig.companyID,
-                            homeGroupID: accessConfig.homeGroupID
-                        };
-                        if (ssoId) {
-                            params.ssoUsername = ssoId;
-                        }
-                        return params;
-                    })(), queryFields).then((user) => {
-                        // User created
-                        console.log("*** User created! User: " + JSON.stringify(user));
-                        if (!user.ID) {
-                            return Promise.reject("Something went wrong while creating a new user! User ID is not defined! Result: " + JSON.stringify(user));
-                        }
-                        // If we have an external user to IDT then we must assign a username and password for that user
-                        if (isIDTEmployee == false) {
-                            console.log("*** Assigning a token to the user!");
-                            // First, get a token for the registration process
-                            return this.api.execute("USER", user.ID, 'assignUserToken').then((token) => {
-                                console.log(`Got token for new user! Token: ${JSON.stringify(token)}`);
-                                return Promise.resolve(token);
-                            }).then((token) => {
-                                console.log("*** Generate password!");
-                                // now that we have a token, finish the registration
-                                user.password = randomPassword();
-                                // For unknown reasons you need to send the first and last name in again when completing the user reg. Just an AtTask thing.
-                                return this.api.execute("USER", user.ID, 'completeUserRegistration', {
-                                    firstName: userNames.firstName,
-                                    lastName: userNames.lastName,
-                                    token: token.result,
-                                    title: "",
-                                    newPassword: user.password
-                                });
-                            }).then((data) => {
-                                // For some reason when this works it only returns null ({"result":null}). I swear it wasn't doing that last week (11/25/14) today.
-                                console.log(`User registration complete! Result: ${JSON.stringify(data)}. User ID: ${user.ID}`);
-                                return user;
-                            }).catch((error) => {
-                                return Promise.reject(error);
-                            });
-                        }
-                        else {
-                            console.log(`IDT user! User ID: ${user.ID}`);
-                            return user;
-                        }
-                    }).then((user) => {
-                        return user;
-                    }).catch((error) => {
-                        return Promise.reject(error);
-                    });
-                }
-            }).then((user) => {
-                console.log("User: " + JSON.stringify(user));
-                resolve(user);
-            }).catch(reject);
+                accessLevelID: accessConfig.accessLevelID,
+                companyID: accessConfig.companyID,
+                homeGroupID: accessConfig.homeGroupID
+            };
+            // if (ssoId) {
+            //     params.ssoUsername = ssoId;
+            // }
+            return params;
+        })(), userFields);
+        // User created
+        console.log("*** User created! User: " + JSON.stringify(user));
+        if (!user.ID) {
+            throw new Error("Something went wrong while creating a new user! User ID is not defined! Result: " + JSON.stringify(user));
+        }
+        // We have an external user to IDT then we must assign a username and password for that user
+        console.log("*** Assigning a token to the user!");
+        // First, get a token for the registration process
+        let token = await this.api.execute("USER", user.ID, 'assignUserToken');
+        console.log(`Got token for new user! Token: ${JSON.stringify(token)}`);
+        console.log("*** Generate password!");
+        // now that we have a token, finish the registration
+        user.password = randomPassword();
+        // For unknown reasons you need to send the first and last name in again when completing the user reg. Just an AtTask thing.
+        let data = await this.api.execute("USER", user.ID, 'completeUserRegistration', {
+            firstName: userNames.firstName,
+            lastName: userNames.lastName,
+            token: token.result,
+            title: "",
+            newPassword: user.password
         });
-        return userDone;
+        // For some reason when this works it only returns null ({"result":null}). I swear it wasn't doing that last week (11/25/14) today.
+        console.log(`User registration complete! Result: ${JSON.stringify(data)}. User ID: ${user.ID}`);
+        return user;
     }
     /**
      * For all provided user email addresses create corresponding user objects in Workfront.
      *
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
-    getOrCreateUsersByEmail(console, userEmails, emailsToIgnore, otherConfigs, fetchSsoId) {
+    async getOrCreateUsersByEmail(console, userEmails, emailsToIgnore, otherConfigs, fetchSsoId) {
         console.log(`Get or create users by email! Emails: ${JSON.stringify(userEmails)}`);
         // ignore service mailbox emails
         let ignoreEmails = new Set();
@@ -425,18 +406,25 @@ class Workfront {
         }
         ignoreEmails.add("webmaster@idt.com");
         //
+        let userEmailsFetched = [];
         let usersFetched = [];
         for (let userEmail of userEmails) {
             // Sometimes distribution lists are copied when submitting a request. We do not want to create them as a user.
             // Some distribution lists start with "corp", and some start with "kk" (for unknown reasons).
             if (userEmail.address.substr(0, 2) != "kk" && userEmail.address.substr(0, 4) != "corp" && !ignoreEmails.has(userEmail.address.toLowerCase())) {
                 usersFetched.push(this.getOrCreateUser(console, userEmail, otherConfigs.accessConfigs, fetchSsoId));
+                userEmailsFetched.push(userEmail.address);
             }
         }
-        return Promise.all(usersFetched).then((users) => {
-            console.log("Users fetched or created! " + JSON.stringify(users));
-            return users;
-        });
+        let users = await Promise.all(usersFetched);
+        console.log("Users fetched or created! " + JSON.stringify(users));
+        let result = new Map();
+        for (let i = 0; i < userEmailsFetched.length; i++) {
+            let email = userEmailsFetched[i];
+            let user = users[i];
+            result.set(email, user);
+        }
+        return result;
     }
     /**
      * Fetches a user from Workfront based on provided user id.

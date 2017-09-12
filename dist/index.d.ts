@@ -84,7 +84,7 @@ export declare class Workfront {
      *
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
-    getOrCreateUsersByEmail(console: Workfront.Logger, userEmails: EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fetchSsoId: Workfront.FetchSsoId): Promise<WfModel.User[]>;
+    getOrCreateUsersByEmail(console: Workfront.Logger, userEmails: EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fetchSsoId: Workfront.FetchSsoId): Promise<Map<string, Workfront.User>>;
     /**
      * Fetches a user from Workfront based on provided user id.
      *
