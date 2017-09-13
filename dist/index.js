@@ -477,12 +477,12 @@ class Workfront {
      * @param extRefID - an email id.
      * @returns {Promise<Issue>} - an issue if found based on email id
      */
-    getIssueByExtId(console, extRefID) {
+    getIssueByExtId(console, extRefID, fields) {
         console.log("Checking issue existence by extRefId: " + extRefID);
         return this.api.search("OPTASK", {
             extRefID: extRefID,
             extRefID_Mod: "eq"
-        }).then((issues) => {
+        }, fields).then((issues) => {
             if (issues && issues.length > 1) {
                 return Promise.reject(Error("More than one issue found for message id: " + extRefID));
             }
@@ -521,11 +521,11 @@ class Workfront {
      * @param refNr - issue reference nr. Got from an email body
      * @returns {Promise<Issue>} - an issue if found, otherwise null
      */
-    getIssueByRefNr(console, refNr) {
+    getIssueByRefNr(console, refNr, fields) {
         return this.api.search("OPTASK", {
             referenceNumber: refNr,
             referenceNumber_Mod: "eq"
-        }, ["referenceNumber"]).then((issues) => {
+        }, fields).then((issues) => {
             if (issues.length) {
                 return issues[0];
             }
@@ -541,10 +541,10 @@ class Workfront {
      * @param params - fields to be set on an issue
      * @returns {Promise<Issue>} - created Issue
      */
-    createIssueAsUser(console, fromEmail, params) {
+    createIssueAsUser(console, fromEmail, params, fields) {
         console.log("*** Creating issue! Params: " + JSON.stringify(params));
         return this.execAsUser(console, fromEmail, (api) => {
-            return api.create("OPTASK", params);
+            return api.create("OPTASK", params, fields);
         });
     }
     /**

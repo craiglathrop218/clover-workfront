@@ -121,7 +121,7 @@ export declare class Workfront {
      * @param extRefID - an email id.
      * @returns {Promise<Issue>} - an issue if found based on email id
      */
-    getIssueByExtId(console: Workfront.Logger, extRefID: string): Promise<WfModel.Issue>;
+    getIssueByExtId(console: Workfront.Logger, extRefID: string, fields?: string | string[]): Promise<WfModel.Issue>;
     /**
      * A generic function for updating any object on behalf of another user.
      * @param userEmail
@@ -139,7 +139,7 @@ export declare class Workfront {
      * @param refNr - issue reference nr. Got from an email body
      * @returns {Promise<Issue>} - an issue if found, otherwise null
      */
-    getIssueByRefNr(console: Workfront.Logger, refNr: string): Promise<WfModel.Issue>;
+    getIssueByRefNr(console: Workfront.Logger, refNr: string, fields?: string | string[]): Promise<WfModel.Issue>;
     /**
      * Creates a new Issue with provided fields.
      *
@@ -147,7 +147,7 @@ export declare class Workfront {
      * @param params - fields to be set on an issue
      * @returns {Promise<Issue>} - created Issue
      */
-    createIssueAsUser(console: Workfront.Logger, fromEmail: EmailAddress, params: Object): Promise<WfModel.Issue>;
+    createIssueAsUser(console: Workfront.Logger, fromEmail: EmailAddress, params: Object, fields?: string | string[]): Promise<WfModel.Issue>;
     /**
      * Update issue as a user with provided email.
      *

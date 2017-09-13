@@ -532,12 +532,12 @@ export class Workfront {
      * @param extRefID - an email id.
      * @returns {Promise<Issue>} - an issue if found based on email id
      */
-    getIssueByExtId(console: Workfront.Logger, extRefID: string): Promise<WfModel.Issue> {
+    getIssueByExtId(console: Workfront.Logger, extRefID: string, fields?: string|string[]): Promise<WfModel.Issue> {
         console.log("Checking issue existence by extRefId: " + extRefID);
         return this.api.search<WfModel.Issue[]>("OPTASK", {
             extRefID: extRefID,
             extRefID_Mod: "eq"
-        }).then((issues: WfModel.Issue[]) => {
+        }, fields).then((issues: WfModel.Issue[]) => {
             if (issues && issues.length > 1) {
                 return Promise.reject(Error("More than one issue found for message id: " + extRefID));
             } else if (issues.length) {
@@ -576,11 +576,11 @@ export class Workfront {
      * @param refNr - issue reference nr. Got from an email body
      * @returns {Promise<Issue>} - an issue if found, otherwise null
      */
-    getIssueByRefNr(console: Workfront.Logger, refNr: string): Promise<WfModel.Issue> {
+    getIssueByRefNr(console: Workfront.Logger, refNr: string, fields?: string|string[]): Promise<WfModel.Issue> {
         return this.api.search<WfModel.Issue[]>("OPTASK", {
             referenceNumber: refNr,
             referenceNumber_Mod: "eq"
-        }, ["referenceNumber"]).then((issues: WfModel.Issue[]) => {
+        }, fields).then((issues: WfModel.Issue[]) => {
             if (issues.length) {
                 return issues[0];
             } else {
@@ -596,10 +596,10 @@ export class Workfront {
      * @param params - fields to be set on an issue
      * @returns {Promise<Issue>} - created Issue
      */
-    createIssueAsUser(console: Workfront.Logger, fromEmail: EmailAddress, params: Object): Promise<WfModel.Issue> {
+    createIssueAsUser(console: Workfront.Logger, fromEmail: EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.Issue> {
         console.log("*** Creating issue! Params: " + JSON.stringify(params));
         return this.execAsUser<WfModel.Issue>(console, fromEmail, (api: Api) => {
-            return api.create<WfModel.Issue>("OPTASK", params);
+            return api.create<WfModel.Issue>("OPTASK", params, fields);
         });
     }
 
