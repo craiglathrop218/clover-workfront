@@ -352,6 +352,8 @@ export declare namespace WfModel {
         customerID: string;
         teamID: string;
         userID: string;
+        team: Team;
+        user: User;
     }
     class Issue {
         static EXT_MSG_PREFIX: string;

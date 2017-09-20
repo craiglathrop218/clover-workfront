@@ -371,7 +371,9 @@ export namespace WfModel {
     export interface TeamMember {
         customerID: string,
         teamID: string,
-        userID: string
+        userID: string,
+        team: Team,
+        user: User
     }
     export class Issue {
         static EXT_MSG_PREFIX: string = "FROM_EMAIL.MESSAGE_ID:";
