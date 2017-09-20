@@ -270,7 +270,7 @@ export declare class Workfront {
     /**
      * Query for team members
      */
-    getTeamMembers(console: Workfront.Logger, teamId: string): Promise<WfModel.TeamMember[]>;
+    getTeamMembers(console: Workfront.Logger, teamId: string, fields?: string[]): Promise<WfModel.TeamMember[]>;
     /**
      * Find DocV corresponding journal entry
      */

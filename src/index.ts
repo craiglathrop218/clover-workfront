@@ -966,8 +966,9 @@ export class Workfront {
     /**
      * Query for team members
      */
-    getTeamMembers(console: Workfront.Logger, teamId: string): Promise<WfModel.TeamMember[]> {
+    getTeamMembers(console: Workfront.Logger, teamId: string, fields?: string[]): Promise<WfModel.TeamMember[]> {
         let fieldsToReturn = ["ID", "name", "teamMembers:*"];
+        if (fields) { fieldsToReturn = fields; }
         return this.api.get<WfModel.Team>("TEAMOB", teamId, fieldsToReturn).then((team: WfModel.Team) => {
             return team.teamMembers;
         });

@@ -894,8 +894,11 @@ class Workfront {
     /**
      * Query for team members
      */
-    getTeamMembers(console, teamId) {
+    getTeamMembers(console, teamId, fields) {
         let fieldsToReturn = ["ID", "name", "teamMembers:*"];
+        if (fields) {
+            fieldsToReturn = fields;
+        }
         return this.api.get("TEAMOB", teamId, fieldsToReturn).then((team) => {
             return team.teamMembers;
         });
