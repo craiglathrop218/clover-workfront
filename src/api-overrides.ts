@@ -256,11 +256,13 @@ function apiOverrides(Api: Function) {
         params = params || {};
 
         // convert params object to updates={}
-        if (params && typeof params === "object") {
-            let updates = {
-                updates: JSON.stringify(params)
+        if (method === Api.Methods.POST || method === Api.Methods.PUT) {
+            if (params && typeof params === "object") {
+                let updates = {
+                    updates: JSON.stringify(params)
+                }
+                params = updates;
             }
-            params = updates;
         }
 
         // append httpParams

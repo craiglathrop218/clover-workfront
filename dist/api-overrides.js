@@ -233,11 +233,13 @@ function apiOverrides(Api) {
         }
         params = params || {};
         // convert params object to updates={}
-        if (params && typeof params === "object") {
-            let updates = {
-                updates: JSON.stringify(params)
-            };
-            params = updates;
+        if (method === Api.Methods.POST || method === Api.Methods.PUT) {
+            if (params && typeof params === "object") {
+                let updates = {
+                    updates: JSON.stringify(params)
+                };
+                params = updates;
+            }
         }
         // append httpParams
         deepExtend(params, this.httpParams);
