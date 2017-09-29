@@ -233,8 +233,8 @@ function apiOverrides(Api) {
         }
         params = params || {};
         // convert params object to updates={}
-        if (method === Api.Methods.POST || method === Api.Methods.PUT) {
-            if (params && typeof params === "object") {
+        if (params && typeof params === "object") {
+            if ((method === Api.Methods.POST || method === Api.Methods.PUT) && params[Symbol.for("updates")] !== undefined) {
                 let updates = {
                     updates: JSON.stringify(params)
                 };
