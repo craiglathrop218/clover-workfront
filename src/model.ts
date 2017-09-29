@@ -315,6 +315,8 @@ export namespace WfModel {
         templateID?: string,
         templateTaskID?: string,
         // References & Collections
+        parentJournalEntry?: JournalEntry,
+        parentNote?: Note,
         document?: Document,
         owner?: User,
         tags?: NoteTag[],

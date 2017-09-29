@@ -301,6 +301,8 @@ export declare namespace WfModel {
         programID?: string;
         templateID?: string;
         templateTaskID?: string;
+        parentJournalEntry?: JournalEntry;
+        parentNote?: Note;
         document?: Document;
         owner?: User;
         tags?: NoteTag[];
