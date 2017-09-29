@@ -351,20 +351,20 @@ export namespace WfModel {
         secondsPassed: number
     }
     export interface NoteTag {
-        ID: string,
-        objCode: string, // NTAG
-        customerID: string,
-        length: number,
-        noteID: string,
-        objID: string,
-        objObjCode: string, // USER - if tag references a User, then "objID" is a reference to User ID
-        referenceObjectName: string,
-        startIdx: number,
-        teamID: string,
-        userID: string, // exists if tag is a reference to User
-        note: Note,
-        user: User,
-        team: Team
+        ID?: string,
+        objCode?: string, // NTAG
+        customerID?: string,
+        length?: number,
+        noteID?: string,
+        objID?: string,
+        objObjCode?: string, // USER - if tag references a User, then "objID" is a reference to User ID
+        referenceObjectName?: string,
+        startIdx?: number,
+        teamID?: string,
+        userID?: string, // exists if tag is a reference to User
+        note?: Note,
+        user?: User,
+        team?: Team
     }
 
     export interface Team {
