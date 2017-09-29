@@ -241,6 +241,17 @@ export declare class Workfront {
      */
     getNoteById(console: Workfront.Logger, noteId: string, fields?: string | string[]): Promise<WfModel.Note>;
     /**
+     * Creates a note tag under a provided user email.
+     *
+     * A user with provided email must exist in Workfront, otherwise a reject error is returned
+     *
+     * @param console - logger object (for later debugging in case of errors happen in processing)
+     * @param user - a user email under which to create a note tag
+     * @param params - note tag fields
+     * @returns {Promise<NoteTag>|Promise} - created note tag
+     */
+    createNoteTagAsUser(console: Workfront.Logger, user: EmailAddress, noteId: string, params: WfModel.NoteTag, fieldsToReturn: string[]): Promise<WfModel.NoteTag>;
+    /**
      * Fetches the Note object from Workfront based on referenced journal entry id.
      *
      * @param console - logger object (for later debugging in case of errors happen in processing)

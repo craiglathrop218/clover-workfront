@@ -828,6 +828,28 @@ class Workfront {
         });
     }
     /**
+     * Creates a note tag under a provided user email.
+     *
+     * A user with provided email must exist in Workfront, otherwise a reject error is returned
+     *
+     * @param console - logger object (for later debugging in case of errors happen in processing)
+     * @param user - a user email under which to create a note tag
+     * @param params - note tag fields
+     * @returns {Promise<NoteTag>|Promise} - created note tag
+     */
+    createNoteTagAsUser(console, user, noteId, params, fieldsToReturn) {
+        console.log("*** Creating Note with User email: " + user.address + ", params: " + JSON.stringify(params));
+        return this.execAsUser(console, user, (api, login) => {
+            let userId = login.userID;
+            // create a note tag
+            params.noteID = noteId;
+            return api.create("NTAG", params, fieldsToReturn).then((noteTag) => {
+                //console.log("NoteTag created: " + JSON.stringify(note));
+                return noteTag;
+            });
+        });
+    }
+    /**
      * Fetches the Note object from Workfront based on referenced journal entry id.
      *
      * @param console - logger object (for later debugging in case of errors happen in processing)

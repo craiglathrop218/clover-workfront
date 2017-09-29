@@ -339,9 +339,13 @@ export declare namespace WfModel {
         noteID: string;
         objID: string;
         objObjCode: string;
+        referenceObjectName: string;
         startIdx: number;
         teamID: string;
         userID: string;
+        note: Note;
+        user: User;
+        team: Team;
     }
     interface Team {
         ID: string;
