@@ -163,9 +163,6 @@ function apiOverrides(Api) {
             return metaData;
         });
     };
-    var requestHasData = function (method) {
-        return method !== Api.Methods.GET && method !== Api.Methods.PUT;
-    };
     /**
      * Download a document
      *
@@ -215,6 +212,9 @@ function apiOverrides(Api) {
             request.end();
         });
     };
+    var requestHasData = function (method) {
+        return method !== Api.Methods.GET && method !== Api.Methods.PUT;
+    };
     /**
      * For different reasons we override this Workfront API method.
      * 1. It has deepExtend which fixes existing bug in Workfront API
@@ -232,6 +232,14 @@ function apiOverrides(Api) {
             fields = [fields];
         }
         params = params || {};
+        // convert params object to updates={}
+        if (params && typeof params === "object") {
+            let updates = {
+                updates: JSON.stringify(params)
+            };
+            params = updates;
+        }
+        // append httpParams
         deepExtend(params, this.httpParams);
         var options = {}, alwaysUseGet = this.httpOptions.alwaysUseGet;
         deepExtend(options, this.httpOptions);
