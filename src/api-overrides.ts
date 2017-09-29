@@ -255,9 +255,9 @@ function apiOverrides(Api: Function) {
         }
         params = params || {};
 
-        // convert params object to updates={}
+        // convert params object to updates={} for POST method only if specified via Symbol, PUT already sends via updates={} by default
         if (params && typeof params === "object") {
-            if ((method === Api.Methods.POST || method === Api.Methods.PUT) && params[Symbol.for("updates")] !== undefined) {
+            if ((method === Api.Methods.POST) && params[Symbol.for("updates")] !== undefined) {
                 let updates = {
                     updates: JSON.stringify(params)
                 }
