@@ -299,21 +299,49 @@ class Workfront {
         }
     }
     /**
-     * Fetches an existing user from Workfront based on provided email address or if not found then creates a new user.
+     * For all provided user email addresses create corresponding user objects in Workfront.
+     *
+     * @returns {Promise<T>|Promise<R>|Promise} - created user objects
+     */
+    async getUsersByEmail(console, userEmails, emailsToIgnore, fieldsToReturn) {
+        console.log(`Get users by email! Emails: ${JSON.stringify(userEmails)}`);
+        // ignore service mailbox emails
+        let ignoreEmails = new Set();
+        // add all mail account emails to ignore
+        for (let email of emailsToIgnore) {
+            ignoreEmails.add(email.toLowerCase());
+        }
+        // fetch users by email
+        let userEmailsFetched = [];
+        let usersFetched = [];
+        for (let userEmail of userEmails) {
+            usersFetched.push(this.getUserByEmail(console, userEmail, fieldsToReturn));
+            userEmailsFetched.push(userEmail.address);
+        }
+        let users = await Promise.all(usersFetched);
+        console.log("Users fetched! " + JSON.stringify(users));
+        let result = new Map();
+        for (let i = 0; i < userEmailsFetched.length; i++) {
+            let email = userEmailsFetched[i];
+            let user = users[i];
+            result.set(email, user);
+        }
+        return result;
+    }
+    /**
+     * Fetches an existing user from Workfront based on provided email address
      *
      * @param console - logger object (for later debugging in case of errors happen in processing)
      * @param fromEmail - an email address of a user that sent the email
-     * @param accessConfigs - the workfront access settings / levels for a user
      * @returns {Promise<User>|Promise}
      */
-    async getOrCreateUser(console, fromEmail, accessConfigs, fetchSsoId) {
+    async getUserByEmail(console, fromEmail, fieldsToReturn) {
         // First, check if user already exists
-        let userFields = ["emailAddr", "firstName", "lastName"]; // additional fields to return
         let users = await this.api.search("USER", {
             emailAddr: fromEmail.address,
             emailAddr_Mod: "cieq"
-        }, userFields);
-        console.log(`getOrCreateUser. Got users: ${users}`);
+        }, fieldsToReturn);
+        console.log(`getUser. Got users: ${users}`);
         if (users && users.length > 1) {
             throw new Error(`Multiple users returned for an email: ${fromEmail.address}`);
         }
@@ -324,6 +352,22 @@ class Workfront {
         }
         // user not found
         console.log(`*** User not found by email: ${fromEmail.address}`);
+        return null;
+    }
+    /**
+     * Fetches an existing user from Workfront based on provided email address or if not found then creates a new user.
+     *
+     * @param console - logger object (for later debugging in case of errors happen in processing)
+     * @param fromEmail - an email address of a user that sent the email
+     * @param accessConfigs - the workfront access settings / levels for a user
+     * @returns {Promise<User>|Promise}
+     */
+    async getOrCreateUser(console, fromEmail, accessConfigs, userFieldsToReturn, fetchSsoId) {
+        let user = await this.getUserByEmail(console, fromEmail, userFieldsToReturn);
+        if (user) {
+            // we found existing user, return it
+            return user;
+        }
         // skip creating idt.com users
         let isIDTEmployee = fromEmail.address.toLowerCase().indexOf("@idt.com") > 0 ? true : false;
         if (isIDTEmployee) {
@@ -352,7 +396,7 @@ class Workfront {
         // Create a new user
         console.log(`*** Creating new user: ${fromEmail.address}`);
         let userNames = parseEmailNames(fromEmail);
-        let user = await this.api.create("USER", (() => {
+        user = await this.api.create("USER", (() => {
             let params = {
                 firstName: userNames.firstName,
                 lastName: userNames.lastName,
@@ -365,7 +409,7 @@ class Workfront {
             //     params.ssoUsername = ssoId;
             // }
             return params;
-        })(), userFields);
+        })(), userFieldsToReturn);
         // User created
         console.log("*** User created! User: " + JSON.stringify(user));
         if (!user.ID) {
@@ -396,7 +440,7 @@ class Workfront {
      *
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
-    async getOrCreateUsersByEmail(console, userEmails, emailsToIgnore, otherConfigs, fetchSsoId) {
+    async getOrCreateUsersByEmail(console, userEmails, emailsToIgnore, otherConfigs, fieldsToReturn, fetchSsoId) {
         console.log(`Get or create users by email! Emails: ${JSON.stringify(userEmails)}`);
         // ignore service mailbox emails
         let ignoreEmails = new Set();
@@ -404,15 +448,14 @@ class Workfront {
         for (let email of emailsToIgnore) {
             ignoreEmails.add(email.toLowerCase());
         }
-        ignoreEmails.add("webmaster@idt.com");
-        //
+        // fetch users by email
         let userEmailsFetched = [];
         let usersFetched = [];
         for (let userEmail of userEmails) {
             // Sometimes distribution lists are copied when submitting a request. We do not want to create them as a user.
             // Some distribution lists start with "corp", and some start with "kk" (for unknown reasons).
             if (userEmail.address.substr(0, 2) != "kk" && userEmail.address.substr(0, 4) != "corp" && !ignoreEmails.has(userEmail.address.toLowerCase())) {
-                usersFetched.push(this.getOrCreateUser(console, userEmail, otherConfigs.accessConfigs, fetchSsoId));
+                usersFetched.push(this.getOrCreateUser(console, userEmail, otherConfigs.accessConfigs, fieldsToReturn, fetchSsoId));
                 userEmailsFetched.push(userEmail.address);
             }
         }

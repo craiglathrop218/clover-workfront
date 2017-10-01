@@ -68,6 +68,20 @@ export declare class Workfront {
      */
     uploadMailAttachmentsAsUser(console: Workfront.Logger, fromEmail: EmailAddress, attachments: Attachment[]): Promise<Workfront.Upload>;
     /**
+     * For all provided user email addresses create corresponding user objects in Workfront.
+     *
+     * @returns {Promise<T>|Promise<R>|Promise} - created user objects
+     */
+    getUsersByEmail(console: Workfront.Logger, userEmails: EmailAddress[], emailsToIgnore: string[], fieldsToReturn: string[]): Promise<Map<string, Workfront.User>>;
+    /**
+     * Fetches an existing user from Workfront based on provided email address
+     *
+     * @param console - logger object (for later debugging in case of errors happen in processing)
+     * @param fromEmail - an email address of a user that sent the email
+     * @returns {Promise<User>|Promise}
+     */
+    getUserByEmail(console: Workfront.Logger, fromEmail: EmailAddress, fieldsToReturn: string[]): Promise<WfModel.User>;
+    /**
      * Fetches an existing user from Workfront based on provided email address or if not found then creates a new user.
      *
      * @param console - logger object (for later debugging in case of errors happen in processing)
@@ -78,13 +92,13 @@ export declare class Workfront {
     getOrCreateUser(console: Workfront.Logger, fromEmail: EmailAddress, accessConfigs: {
         externalUsers: Workfront.UserAccessConfig;
         idtUsers: Workfront.UserAccessConfig;
-    }, fetchSsoId?: Workfront.FetchSsoId): Promise<WfModel.User>;
+    }, userFieldsToReturn: string[], fetchSsoId?: Workfront.FetchSsoId): Promise<WfModel.User>;
     /**
      * For all provided user email addresses create corresponding user objects in Workfront.
      *
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
-    getOrCreateUsersByEmail(console: Workfront.Logger, userEmails: EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fetchSsoId: Workfront.FetchSsoId): Promise<Map<string, Workfront.User>>;
+    getOrCreateUsersByEmail(console: Workfront.Logger, userEmails: EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fieldsToReturn: string[], fetchSsoId: Workfront.FetchSsoId): Promise<Map<string, Workfront.User>>;
     /**
      * Fetches a user from Workfront based on provided user id.
      *
