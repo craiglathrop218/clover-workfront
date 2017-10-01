@@ -315,8 +315,10 @@ class Workfront {
         let userEmailsFetched = [];
         let usersFetched = [];
         for (let userEmail of userEmails) {
-            usersFetched.push(this.getUserByEmail(console, userEmail, fieldsToReturn));
-            userEmailsFetched.push(userEmail.address);
+            if (!ignoreEmails.has(userEmail.address.toLowerCase())) {
+                usersFetched.push(this.getUserByEmail(console, userEmail, fieldsToReturn));
+                userEmailsFetched.push(userEmail.address);
+            }
         }
         let users = await Promise.all(usersFetched);
         console.log("Users fetched! " + JSON.stringify(users));
@@ -446,15 +448,13 @@ class Workfront {
         let ignoreEmails = new Set();
         // add all mail account emails to ignore
         for (let email of emailsToIgnore) {
-            ignoreEmails.add(email.toLowerCase());
+            ignoreEmails.add(email.toLowerCase().trim());
         }
         // fetch users by email
         let userEmailsFetched = [];
         let usersFetched = [];
         for (let userEmail of userEmails) {
-            // Sometimes distribution lists are copied when submitting a request. We do not want to create them as a user.
-            // Some distribution lists start with "corp", and some start with "kk" (for unknown reasons).
-            if (userEmail.address.substr(0, 2) != "kk" && userEmail.address.substr(0, 4) != "corp" && !ignoreEmails.has(userEmail.address.toLowerCase())) {
+            if (!ignoreEmails.has(userEmail.address.toLowerCase().trim())) {
                 usersFetched.push(this.getOrCreateUser(console, userEmail, otherConfigs.accessConfigs, fieldsToReturn, fetchSsoId));
                 userEmailsFetched.push(userEmail.address);
             }
