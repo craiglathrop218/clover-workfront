@@ -309,13 +309,13 @@ class Workfront {
         let ignoreEmails = new Set();
         // add all mail account emails to ignore
         for (let email of emailsToIgnore) {
-            ignoreEmails.add(email.toLowerCase());
+            ignoreEmails.add(email.toLowerCase().trim());
         }
         // fetch users by email
         let userEmailsFetched = [];
         let usersFetched = [];
         for (let userEmail of userEmails) {
-            if (!ignoreEmails.has(userEmail.address.toLowerCase())) {
+            if (!ignoreEmails.has(userEmail.address.toLowerCase().trim())) {
                 usersFetched.push(this.getUserByEmail(console, userEmail, fieldsToReturn));
                 userEmailsFetched.push(userEmail.address);
             }
@@ -785,7 +785,7 @@ class Workfront {
      * @param reply - a reply object containing target entity and reply message
      * @returns {Promise<Note>|Promise} - a new reply Note object that was created
      */
-    createReplyNoteAsUser(console, fromEmail, reply, replyToEntityRef) {
+    createReplyNoteAsUser(console, fromEmail, reply, replyToEntityRef, fieldsToReturn) {
         console.log("*** Creating Reply Note with User email: " + fromEmail.address + ", note update: " + JSON.stringify(reply));
         return this.execAsUser(console, fromEmail, (api, login) => {
             console.log(`Starting to create reply note! From: ${JSON.stringify(fromEmail)}, login: ${JSON.stringify(login)}, reply to entity ref: ${JSON.stringify(replyToEntityRef)}, reply note: ${JSON.stringify(reply)}`);
@@ -850,7 +850,7 @@ class Workfront {
             }
             // create a new note
             console.log(`Starting to create reply note 2! ${JSON.stringify(login)}`);
-            return api.create("NOTE", params).then((note) => {
+            return api.create("NOTE", params, fieldsToReturn).then((note) => {
                 console.log(`Note created to ${params.noteObjCode}:${params.objID}: ${reply.textMsg.substring(0, 50)}...`);
                 return note;
             });

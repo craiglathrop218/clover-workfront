@@ -244,7 +244,7 @@ export declare class Workfront {
      * @param reply - a reply object containing target entity and reply message
      * @returns {Promise<Note>|Promise} - a new reply Note object that was created
      */
-    createReplyNoteAsUser(console: Workfront.Logger, fromEmail: EmailAddress, reply: WfModel.ReplyMessage, replyToEntityRef: WfModel.WfObject): Promise<WfModel.Note>;
+    createReplyNoteAsUser(console: Workfront.Logger, fromEmail: EmailAddress, reply: WfModel.ReplyMessage, replyToEntityRef: WfModel.WfObject, fieldsToReturn: string[]): Promise<WfModel.Note>;
     /**
      * Fetches the Note object from Workfront based on provided note id.
      *

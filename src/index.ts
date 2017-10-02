@@ -348,14 +348,14 @@ export class Workfront {
         let ignoreEmails: Set<string> = new Set();
         // add all mail account emails to ignore
         for (let email of emailsToIgnore) {
-            ignoreEmails.add(email.toLowerCase());
+            ignoreEmails.add(email.toLowerCase().trim());
         }
 
         // fetch users by email
         let userEmailsFetched = [];
         let usersFetched: Array<Promise<WfModel.User>> = [];
         for (let userEmail of userEmails) {
-            if (!ignoreEmails.has(userEmail.address.toLowerCase())) {
+            if (!ignoreEmails.has(userEmail.address.toLowerCase().trim())) {
                 usersFetched.push(this.getUserByEmail(console, userEmail, fieldsToReturn));
                 userEmailsFetched.push(userEmail.address);
             }
@@ -855,7 +855,7 @@ export class Workfront {
      * @param reply - a reply object containing target entity and reply message
      * @returns {Promise<Note>|Promise} - a new reply Note object that was created
      */
-    createReplyNoteAsUser(console: Workfront.Logger, fromEmail: EmailAddress, reply: WfModel.ReplyMessage, replyToEntityRef: WfModel.WfObject): Promise<WfModel.Note> {
+    createReplyNoteAsUser(console: Workfront.Logger, fromEmail: EmailAddress, reply: WfModel.ReplyMessage, replyToEntityRef: WfModel.WfObject, fieldsToReturn: string[]): Promise<WfModel.Note> {
         console.log("*** Creating Reply Note with User email: " + fromEmail.address + ", note update: " + JSON.stringify(reply));
         return this.execAsUser<WfModel.Note>(console, fromEmail, (api: Api, login: LoginResult): Promise<WfModel.Note> => {
             console.log(`Starting to create reply note! From: ${JSON.stringify(fromEmail)}, login: ${JSON.stringify(login)}, reply to entity ref: ${JSON.stringify(replyToEntityRef)}, reply note: ${JSON.stringify(reply)}`);
@@ -922,7 +922,7 @@ export class Workfront {
 
             // create a new note
             console.log(`Starting to create reply note 2! ${JSON.stringify(login)}`);
-            return api.create("NOTE", params).then((note: WfModel.Note) => {
+            return api.create("NOTE", params, fieldsToReturn).then((note: WfModel.Note) => {
                 console.log(`Note created to ${params.noteObjCode}:${params.objID}: ${reply.textMsg.substring(0, 50)}...`);
                 return note;
             });
