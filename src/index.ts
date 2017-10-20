@@ -672,6 +672,20 @@ export class Workfront {
     }
 
     /**
+     * Creates a new Project with provided fields.
+     *
+     * @param console - logger object (for later debugging in case of errors happen in processing)
+     * @param params - fields to be set on an project
+     * @returns {Promise<Project>} - created Project
+     */
+    createProjectAsUser(console: Workfront.Logger, fromEmail: EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.Project> {
+        console.log("*** Creating project! Params: " + JSON.stringify(params));
+        return this.execAsUser<WfModel.Project>(console, fromEmail, (api: Api) => {
+            return api.create<WfModel.Project>("PROJ", params, fields);
+        });
+    }
+
+    /**
      * Creates a new Document Folder under a parent with provided fields.
      *
      * @param console - logger object (for later debugging in case of errors happen in processing)
