@@ -34,6 +34,7 @@ export declare namespace WfModel {
         plannedStartDate: string;
         projectedStartDate: string;
         portfolio: Portfolio;
+        approverStatuses?: ApproverStatus[];
     }
     interface Portfolio {
         objCode: string;
@@ -383,6 +384,7 @@ export declare namespace WfModel {
         assignedToID: string;
         teamID: string;
         accessRules: AccessRule[];
+        approverStatuses?: ApproverStatus[];
     }
     class ReplyMessage {
         textMsg: string;
@@ -421,6 +423,7 @@ export declare namespace WfModel {
         defaultBaselineTask: BaselineTask;
         parentID: string;
         parent?: Task;
+        approverStatuses?: ApproverStatus[];
     }
     interface Milestone {
         ID: string;
@@ -562,6 +565,95 @@ export declare namespace WfModel {
         value: string;
         valueAsInt: number;
         valueAsString: string;
+    }
+    interface ApproverStatus extends WfObject {
+        approvableObjCode?: string;
+        approvableObjID?: string;
+        approvalStepID?: string;
+        approvedByID?: string;
+        customerID?: string;
+        delegateUserID?: string;
+        isOverridden?: boolean;
+        opTaskID?: string;
+        overriddenUserID?: string;
+        projectID?: string;
+        status?: string;
+        stepApproverID?: string;
+        taskID?: string;
+        wildcardUserID?: string;
+        approvalStep?: ApprovalStage;
+        approvedBy?: User;
+        delegateUser?: User;
+        opTask?: Issue;
+        overriddenUser?: User;
+        project?: Project;
+        stepApprover?: StepApprover;
+        task?: Task;
+        wildcardUser?: User;
+    }
+    interface ApprovalStage extends WfObject {
+        approvalPathID?: string;
+        approvalType?: string;
+        customerID?: string;
+        name?: string;
+        sequenceNumber?: number;
+        approvalPath?: ApprovalPath;
+        stepApprovers?: StepApprover[];
+    }
+    interface StepApprover extends WfObject {
+        approvalStepID?: string;
+        customerID?: string;
+        roleID?: string;
+        teamID?: string;
+        userID?: string;
+        wildCard?: string;
+        approvalStep?: ApprovalStage;
+        role?: Role;
+        team?: Team;
+        user?: User;
+    }
+    interface ApprovalPath extends WfObject {
+        approvalProcessID?: string;
+        approvedStatus?: string;
+        approvedStatusLabel?: string;
+        comment?: string;
+        customerID?: string;
+        durationMinutes?: number;
+        durationUnit?: string;
+        enteredByID?: string;
+        entryDate?: string;
+        globalPathID?: string;
+        isPrivate?: boolean;
+        lastUpdateDate?: string;
+        lastUpdatedByID?: string;
+        name?: string;
+        rejectedStatus?: string;
+        rejectedStatusLabel?: string;
+        shouldCreateIssue?: boolean;
+        targetStatus?: string;
+        targetStatusLabel?: string;
+        approvalProcess?: ApprovalProcess;
+        approvalSteps?: ApprovalStage[];
+    }
+    interface ApprovalProcess extends WfObject {
+        accessorIDs?: string[];
+        approvalObjCode?: string;
+        approvalStatuses?: string[];
+        customerID?: string;
+        description?: string;
+        durationMinutes?: number;
+        enteredByID?: string;
+        entryDate?: string;
+        extRefID?: string;
+        isPrivate?: boolean;
+        lastUpdateDate?: string;
+        lastUpdatedByID?: string;
+        name?: string;
+        securityRootID?: string;
+        securityRootObjCode?: string;
+        enteredBy?: User;
+        lastUpdatedBy?: User;
+        approvalPaths?: ApprovalPath[];
     }
     interface QueryCount {
         count: number;

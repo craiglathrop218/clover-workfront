@@ -27,7 +27,8 @@ export namespace WfModel {
         percentComplete: number;
         plannedStartDate: string;
         projectedStartDate: string;
-        portfolio: Portfolio
+        portfolio: Portfolio,
+        approverStatuses?: ApproverStatus[]
     }
 
     export interface Portfolio {
@@ -404,6 +405,7 @@ export namespace WfModel {
         public assignedToID: string;
         public teamID: string;
         public accessRules: AccessRule[];
+        public approverStatuses?: ApproverStatus[]
     }
     export class ReplyMessage {
         textMsg: string;
@@ -444,7 +446,8 @@ export namespace WfModel {
         assignments?: Assignment[],
         defaultBaselineTask: BaselineTask,
         parentID: string,
-        parent?: Task
+        parent?: Task,
+        approverStatuses?: ApproverStatus[]
     }
 
     export interface Milestone {
@@ -597,6 +600,102 @@ export namespace WfModel {
         value: string,
         valueAsInt: number,
         valueAsString: string
+    }
+
+    // ARVSTS (ApproverStatus) is not a top level object and can't be requested directly in internal
+    export interface ApproverStatus extends WfObject {
+        approvableObjCode?: string,
+        approvableObjID?: string,
+        approvalStepID?: string,
+        approvedByID?: string,
+        customerID?: string,
+        delegateUserID?: string,
+        isOverridden?: boolean,
+        opTaskID?: string,
+        overriddenUserID?: string,
+        projectID?: string,
+        status?: string, // Possible values: NA (Not Available), AA (Awaiting Approval), AD (Approved), RJ (Rejected)
+        stepApproverID?: string,
+        taskID?: string,
+        wildcardUserID?: string,
+        approvalStep?: ApprovalStage,
+        approvedBy?: User,
+        delegateUser?: User,
+        opTask?: Issue,
+        overriddenUser?: User,
+        project?: Project,
+        stepApprover?: StepApprover,
+        task?: Task,
+        wildcardUser?: User
+    }
+
+    export interface ApprovalStage extends WfObject {
+        approvalPathID?: string,
+        approvalType?: string, // Possible Values: NO (None), RB (Role Based), TB (Team Based), ON (At Least One User), AL (All Users), OM (At Least One Approver), AM (All Approvers)
+        customerID?: string,
+        name?: string,
+        sequenceNumber?: number,
+        approvalPath?: ApprovalPath,
+        stepApprovers?: StepApprover[]
+    }
+
+    // Stage Approver
+    export interface StepApprover extends WfObject {
+        approvalStepID?: string,
+        customerID?: string,
+        roleID?: string,
+        teamID?: string,
+        userID?: string,
+        wildCard?: string, // Possible Values: $$ORIGINATOR (Primary Contact), $$PROJECT_OWNER (Project Owner), $$PROJECT_SPONSOR (Project Sponsor), $$PORTFOLIO_OWNER (Portfolio Owner), $$PROGRAM_OWNER (Program Owner), $$MANAGER (Assigned To Manager), $$ORIGINATOR_MANAGER (Primary Contact Manager)
+        approvalStep?: ApprovalStage,
+        role?: Role,
+        team?: Team,
+        user?: User
+    }
+
+    export interface ApprovalPath extends WfObject {
+        approvalProcessID?: string,
+        approvedStatus?: string,
+        approvedStatusLabel?: string,
+        comment?: string,
+        customerID?: string,
+        durationMinutes?: number,
+        durationUnit?: string, // Possible Values: M (Minutes), H (Hours), D (Days), W (Weeks), T (Months), EM (Elapsed Minutes), EH (Elapsed Hours), ED (Elapsed Days), EW (Elapsed Weeks)
+        enteredByID?: string,
+        entryDate?: string,
+        globalPathID?: string,
+        isPrivate?: boolean,
+        lastUpdateDate?: string,
+        lastUpdatedByID?: string,
+        name?: string,
+        rejectedStatus?: string,
+        rejectedStatusLabel?: string,
+        shouldCreateIssue?: boolean,
+        targetStatus?: string,
+        targetStatusLabel?: string,
+        approvalProcess?: ApprovalProcess,
+        approvalSteps?: ApprovalStage[]
+    }
+
+    export interface ApprovalProcess extends WfObject {
+        accessorIDs?: string[],
+        approvalObjCode?: string, // Possible Values: TASK (Task), PROJ (Project), OPTASK (Issue), TTSK (Template Task), TMPL (Template)
+        approvalStatuses?: string[],
+        customerID?: string,
+        description?: string,
+        durationMinutes?: number,
+        enteredByID?: string,
+        entryDate?: string,
+        extRefID?: string,
+        isPrivate?: boolean,
+        lastUpdateDate?: string,
+        lastUpdatedByID?: string,
+        name?: string,
+        securityRootID?: string,
+        securityRootObjCode?: string,
+        enteredBy?: User,
+        lastUpdatedBy?: User,
+        approvalPaths?: ApprovalPath[]
     }
 
     export interface QueryCount {
