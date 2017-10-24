@@ -405,6 +405,11 @@ export declare namespace Workfront {
     export import Assignment = WfModel.Assignment;
     export import Role = WfModel.Role;
     export import BaselineTask = WfModel.BaselineTask;
+    export import ApproverStatus = WfModel.ApproverStatus;
+    export import ApprovalStage = WfModel.ApprovalStage;
+    export import StepApprover = WfModel.StepApprover;
+    export import ApprovalPath = WfModel.ApprovalPath;
+    export import ApprovalProcess = WfModel.ApprovalProcess;
     interface WfConnError {
         active: boolean;
         errorDate: moment.Moment;
