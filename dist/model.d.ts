@@ -34,6 +34,7 @@ export declare namespace WfModel {
         percentComplete?: number;
         plannedStartDate?: string;
         projectedStartDate?: string;
+        approvalStartDate?: string;
         approvalCompletionDate?: string;
         portfolio?: Portfolio;
         approverStatuses?: ApproverStatus[];
@@ -371,6 +372,7 @@ export declare namespace WfModel {
         name: string;
         entryDate: string;
         plannedCompletionDate: string;
+        approvalStartDate: string;
         approvalCompletionDate: string;
         status: string;
         referenceNumber: number;
@@ -414,6 +416,7 @@ export declare namespace WfModel {
         plannedCompletionDate?: string;
         actualCompletionDate?: string;
         actualStartDate?: string;
+        approvalStartDate?: string;
         approvalCompletionDate?: string;
         status?: string;
         percentComplete?: number;

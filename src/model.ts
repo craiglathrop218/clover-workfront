@@ -28,6 +28,7 @@ export namespace WfModel {
         percentComplete?: number;
         plannedStartDate?: string;
         projectedStartDate?: string;
+        approvalStartDate?: string;
         approvalCompletionDate?: string;
         portfolio?: Portfolio,
         approverStatuses?: ApproverStatus[]
@@ -392,6 +393,7 @@ export namespace WfModel {
         public name: string;
         public entryDate: string;
         public plannedCompletionDate: string;
+        public approvalStartDate: string;
         public approvalCompletionDate: string;
         public status: string;
         public referenceNumber: number;
@@ -438,6 +440,7 @@ export namespace WfModel {
         plannedCompletionDate?: string;
         actualCompletionDate?: string,
         actualStartDate?: string,
+        approvalStartDate?: string,
         approvalCompletionDate?: string,
         status?: string;
         percentComplete?: number;
