@@ -8,26 +8,27 @@ export namespace WfModel {
     };
 
     export interface Project {
-        objCode: string,
-        ID: string,
-        name: string,
-        description: string;
-        status: string;
-        condition: string,
-        conditionType: string,
-        priority: number,
-        categoryID: string;
-        enteredBy: User,
-        owner: User,
-        sponsor: User,
-        referenceNumber: number,
-        accessRules: AccessRule[],
-        objectCategories: ObjectCategory[],
-        portfolioID: string,
-        percentComplete: number;
-        plannedStartDate: string;
-        projectedStartDate: string;
-        portfolio: Portfolio,
+        objCode?: string,
+        ID?: string,
+        name?: string,
+        description?: string;
+        status?: string;
+        condition?: string,
+        conditionType?: string,
+        priority?: number,
+        categoryID?: string;
+        extRefID?: string;
+        enteredBy?: User,
+        owner?: User,
+        sponsor?: User,
+        referenceNumber?: number,
+        accessRules?: AccessRule[],
+        objectCategories?: ObjectCategory[],
+        portfolioID?: string,
+        percentComplete?: number;
+        plannedStartDate?: string;
+        projectedStartDate?: string;
+        portfolio?: Portfolio,
         approverStatuses?: ApproverStatus[]
     }
 
@@ -427,25 +428,26 @@ export namespace WfModel {
     }
 
     export interface Task {
-        ID: string,
-        objCode: string
-        name: string;
-        referenceNumber: number;
-        plannedStartDate: string;
-        plannedCompletionDate: string;
-        actualCompletionDate: string,
-        actualStartDate: string,
-        status: string;
-        percentComplete: number;
-        commitDate: string;
-        milestoneID: string;
-        milestone: Milestone;
-        accessRules: AccessRule[];
-        enteredBy: User; // user who created a task
-        assignedTo: User; // user whom this task is assigned
+        ID?: string,
+        objCode?: string
+        name?: string;
+        referenceNumber?: number;
+        plannedStartDate?: string;
+        plannedCompletionDate?: string;
+        actualCompletionDate?: string,
+        actualStartDate?: string,
+        status?: string;
+        percentComplete?: number;
+        commitDate?: string;
+        milestoneID?: string;
+        extRefID?: string;
+        milestone?: Milestone;
+        accessRules?: AccessRule[];
+        enteredBy?: User; // user who created a task
+        assignedTo?: User; // user whom this task is assigned
         assignments?: Assignment[],
-        defaultBaselineTask: BaselineTask,
-        parentID: string,
+        defaultBaselineTask?: BaselineTask,
+        parentID?: string,
         parent?: Task,
         approverStatuses?: ApproverStatus[]
     }

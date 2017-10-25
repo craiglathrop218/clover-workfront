@@ -14,26 +14,27 @@ export declare namespace WfModel {
         name?: string;
     }
     interface Project {
-        objCode: string;
-        ID: string;
-        name: string;
-        description: string;
-        status: string;
-        condition: string;
-        conditionType: string;
-        priority: number;
-        categoryID: string;
-        enteredBy: User;
-        owner: User;
-        sponsor: User;
-        referenceNumber: number;
-        accessRules: AccessRule[];
-        objectCategories: ObjectCategory[];
-        portfolioID: string;
-        percentComplete: number;
-        plannedStartDate: string;
-        projectedStartDate: string;
-        portfolio: Portfolio;
+        objCode?: string;
+        ID?: string;
+        name?: string;
+        description?: string;
+        status?: string;
+        condition?: string;
+        conditionType?: string;
+        priority?: number;
+        categoryID?: string;
+        extRefID?: string;
+        enteredBy?: User;
+        owner?: User;
+        sponsor?: User;
+        referenceNumber?: number;
+        accessRules?: AccessRule[];
+        objectCategories?: ObjectCategory[];
+        portfolioID?: string;
+        percentComplete?: number;
+        plannedStartDate?: string;
+        projectedStartDate?: string;
+        portfolio?: Portfolio;
         approverStatuses?: ApproverStatus[];
     }
     interface Portfolio {
@@ -403,25 +404,26 @@ export declare namespace WfModel {
         ownerID: string;
     }
     interface Task {
-        ID: string;
-        objCode: string;
-        name: string;
-        referenceNumber: number;
-        plannedStartDate: string;
-        plannedCompletionDate: string;
-        actualCompletionDate: string;
-        actualStartDate: string;
-        status: string;
-        percentComplete: number;
-        commitDate: string;
-        milestoneID: string;
-        milestone: Milestone;
-        accessRules: AccessRule[];
-        enteredBy: User;
-        assignedTo: User;
+        ID?: string;
+        objCode?: string;
+        name?: string;
+        referenceNumber?: number;
+        plannedStartDate?: string;
+        plannedCompletionDate?: string;
+        actualCompletionDate?: string;
+        actualStartDate?: string;
+        status?: string;
+        percentComplete?: number;
+        commitDate?: string;
+        milestoneID?: string;
+        extRefID?: string;
+        milestone?: Milestone;
+        accessRules?: AccessRule[];
+        enteredBy?: User;
+        assignedTo?: User;
         assignments?: Assignment[];
-        defaultBaselineTask: BaselineTask;
-        parentID: string;
+        defaultBaselineTask?: BaselineTask;
+        parentID?: string;
         parent?: Task;
         approverStatuses?: ApproverStatus[];
     }
