@@ -427,7 +427,7 @@ export declare namespace WfModel {
         commitDate?: string;
         milestoneID?: string;
         extRefID?: string;
-        projectID: string;
+        projectID?: string;
         milestone?: Milestone;
         accessRules?: AccessRule[];
         enteredBy?: User;
