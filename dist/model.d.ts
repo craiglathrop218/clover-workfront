@@ -197,6 +197,7 @@ export declare namespace WfModel {
         isPrivate?: boolean;
         isPublic?: boolean;
         extRefID?: string;
+        projectID: string;
         downloadURL?: string;
         folderIDs?: string[];
         userID?: string;
@@ -423,6 +424,7 @@ export declare namespace WfModel {
         commitDate?: string;
         milestoneID?: string;
         extRefID?: string;
+        projectID: string;
         milestone?: Milestone;
         accessRules?: AccessRule[];
         enteredBy?: User;

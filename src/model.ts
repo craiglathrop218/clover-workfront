@@ -204,6 +204,7 @@ export namespace WfModel {
         isPrivate?: boolean,
         isPublic?: boolean,
         extRefID?: string,
+        projectID: string,
         downloadURL?: string,
         folderIDs?: string[], // write-only field, a reference to a folder(s) where to put a new document
         userID?: string,
@@ -447,6 +448,7 @@ export namespace WfModel {
         commitDate?: string;
         milestoneID?: string;
         extRefID?: string;
+        projectID: string;
         milestone?: Milestone;
         accessRules?: AccessRule[];
         enteredBy?: User; // user who created a task
