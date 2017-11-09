@@ -991,11 +991,12 @@ export class Workfront {
      * @param refNr - a reference number got from email body
      * @returns {Promise<Task>} - a task if found, otherwise null
      */
-    getTaskByRefNr(console: Workfront.Logger, refNr: string): Promise<WfModel.Task> {
+    getTaskByRefNr(console: Workfront.Logger, refNr: string, fields?: string|string[]): Promise<WfModel.Task> {
+        if (!fields) { fields = ["referenceNumber"]; }
         return this.api.search<WfModel.Task[]>("TASK", {
             referenceNumber: refNr,
             referenceNumber_Mod: "eq"
-        }, ["referenceNumber"]).then((tasks: WfModel.Task[]) => {
+        }, fields).then((tasks: WfModel.Task[]) => {
             if (tasks.length) {
                 return tasks[0];
             } else {
