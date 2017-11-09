@@ -278,7 +278,7 @@ export declare class Workfront {
      * @param refNr - a reference number got from email body
      * @returns {Promise<Task>} - a task if found, otherwise null
      */
-    getTaskByRefNr(console: Workfront.Logger, refNr: string): Promise<WfModel.Task>;
+    getTaskByRefNr(console: Workfront.Logger, refNr: string, fields?: string | string[]): Promise<WfModel.Task>;
     /**
      * Update existing task as a user with provided email.
      *

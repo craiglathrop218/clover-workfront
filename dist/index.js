@@ -915,11 +915,14 @@ class Workfront {
      * @param refNr - a reference number got from email body
      * @returns {Promise<Task>} - a task if found, otherwise null
      */
-    getTaskByRefNr(console, refNr) {
+    getTaskByRefNr(console, refNr, fields) {
+        if (!fields) {
+            fields = ["referenceNumber"];
+        }
         return this.api.search("TASK", {
             referenceNumber: refNr,
             referenceNumber_Mod: "eq"
-        }, ["referenceNumber"]).then((tasks) => {
+        }, fields).then((tasks) => {
             if (tasks.length) {
                 return tasks[0];
             }
