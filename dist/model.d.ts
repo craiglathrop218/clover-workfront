@@ -201,7 +201,7 @@ export declare namespace WfModel {
         isPrivate?: boolean;
         isPublic?: boolean;
         extRefID?: string;
-        projectID: string;
+        projectID?: string;
         downloadURL?: string;
         folderIDs?: string[];
         userID?: string;

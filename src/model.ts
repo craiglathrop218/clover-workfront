@@ -207,7 +207,7 @@ export namespace WfModel {
         isPrivate?: boolean,
         isPublic?: boolean,
         extRefID?: string,
-        projectID: string,
+        projectID?: string,
         downloadURL?: string,
         folderIDs?: string[], // write-only field, a reference to a folder(s) where to put a new document
         userID?: string,
