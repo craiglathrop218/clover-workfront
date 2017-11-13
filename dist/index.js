@@ -1177,10 +1177,9 @@ Workfront.apiFactoryConfig = {
 exports.Workfront = Workfront;
 // types
 (function (Workfront) {
-    ;
-    ;
     Workfront.DocumentFolderParentField = model_1.WfModel.DocumentFolderParentField;
     Workfront.Issue = model_1.WfModel.Issue;
     Workfront.ReplyMessage = model_1.WfModel.ReplyMessage;
     Workfront.IssueUpdate = model_1.WfModel.IssueUpdate;
+    ;
 })(Workfront = exports.Workfront || (exports.Workfront = {}));

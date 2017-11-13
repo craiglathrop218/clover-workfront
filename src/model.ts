@@ -7,6 +7,8 @@ export namespace WfModel {
         name?: string
     };
 
+    export interface UploadHandle {handle: string};
+
     export interface Project {
         objCode?: string,
         ID?: string,

@@ -360,15 +360,9 @@ export declare namespace Workfront {
          */
         getSessions(): Map<string, LoginResult>;
     }
-    interface UploadHandle {
-        handle: string;
-    }
-    interface Upload {
-        attachments: Attachment[];
-        handles: UploadHandle[];
-    }
     export import WfError = WfModel.WfError;
     export import WfObject = WfModel.WfObject;
+    export import UploadHandle = WfModel.UploadHandle;
     export import Project = WfModel.Project;
     export import Portfolio = WfModel.Portfolio;
     export import Program = WfModel.Program;
@@ -413,5 +407,9 @@ export declare namespace Workfront {
     interface WfConnError {
         active: boolean;
         errorDate: moment.Moment;
+    }
+    interface Upload {
+        attachments: Attachment[];
+        handles: UploadHandle[];
     }
 }

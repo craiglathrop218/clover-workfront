@@ -13,6 +13,9 @@ export declare namespace WfModel {
         ID?: string;
         name?: string;
     }
+    interface UploadHandle {
+        handle: string;
+    }
     interface Project {
         objCode?: string;
         ID?: string;

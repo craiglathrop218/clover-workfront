@@ -4,6 +4,7 @@ var WfModel;
 (function (WfModel) {
     ;
     ;
+    ;
     // This is just a meta data entity to hold document folder parent entity field name and value
     class DocumentFolderParentField {
         constructor(name, value) {

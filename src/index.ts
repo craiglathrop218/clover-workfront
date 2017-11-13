@@ -1320,12 +1320,10 @@ export namespace Workfront {
         getSessions(): Map<string, LoginResult>;
     }
 
-    export interface UploadHandle {handle: string};
-    export interface Upload {attachments: Attachment[], handles: UploadHandle[]};
-
     // Define Workfront API related types in here fop convenient use in other parts of our project
     export import WfError = WfModel.WfError;
     export import WfObject = WfModel.WfObject;
+    export import UploadHandle = WfModel.UploadHandle;
     export import Project = WfModel.Project;
     export import Portfolio = WfModel.Portfolio;
     export import Program = WfModel.Program;
@@ -1373,5 +1371,7 @@ export namespace Workfront {
         active: boolean,
         errorDate: moment.Moment
     }
+
+    export interface Upload {attachments: Attachment[], handles: UploadHandle[]};
 }
 
