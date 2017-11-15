@@ -862,7 +862,7 @@ class Workfront {
                 params.extRefID = reply.extRefID;
             }
             // create a new note
-            console.log(`Starting to create reply note 2! ${JSON.stringify(login)}`);
+            console.log(`Starting to create reply note 2! ${JSON.stringify(login)}, params: ${JSON.stringify(params)}`);
             return api.create("NOTE", params, fieldsToReturn).then((note) => {
                 console.log(`Note created to ${params.noteObjCode}:${params.objID}: ${reply.textMsg.substring(0, 50)}...`);
                 return note;
