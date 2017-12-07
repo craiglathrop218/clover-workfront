@@ -320,8 +320,14 @@ export declare namespace WfModel {
         owner?: User;
         tags?: NoteTag[];
         replies?: Note[];
+        richTextNote?: RichTextNote;
         secondsPassed?: number;
         uniqueId?: string;
+    }
+    interface RichTextNote extends WfObject {
+        ID?: string;
+        objCode?: string;
+        html?: string;
     }
     interface JournalEntry {
         ID: string;

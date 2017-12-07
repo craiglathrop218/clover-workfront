@@ -1336,6 +1336,7 @@ export namespace Workfront {
     export import AssignUserToken = WfModel.AssignUserToken;
     export import CompleteUserRegistration = WfModel.CompleteUserRegistration;
     export import Note = WfModel.Note;
+    export import RichTextNote = WfModel.RichTextNote;
     export import JournalEntry = WfModel.JournalEntry;
     export import NoteTag = WfModel.NoteTag;
     export import Team = WfModel.Team;

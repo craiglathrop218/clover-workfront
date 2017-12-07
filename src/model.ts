@@ -333,10 +333,17 @@ export namespace WfModel {
         owner?: User,
         tags?: NoteTag[],
         replies?: Note[],
+        richTextNote?: RichTextNote,
         // NB! CUSTOM FIELDS BELOW! These fields below does not exist in Workfront - custom fields added for internal processing
         // isUpdate: boolean,
         secondsPassed?: number,
         uniqueId?: string
+    }
+
+    export interface RichTextNote extends WfObject {
+        ID?: string,
+        objCode?: string,
+        html?: string
     }
 
     export interface JournalEntry {
