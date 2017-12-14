@@ -126,7 +126,7 @@ function apiOverrides(Api: Function) {
             var body = '';
             output.on('data', function (chunk: any) {
                 // chunk = chunk.toString('utf-8');
-                console.log(`HTTP receiving data: ${chunk}`);
+                //console.log(`HTTP receiving data: ${chunk}`);
                 body += chunk;
             });
             output.on('end', function () {
