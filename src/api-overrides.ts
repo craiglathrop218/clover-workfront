@@ -106,10 +106,6 @@ function apiOverrides(Api: Function) {
         return function (response: IncomingMessage) {
             let contentEncoding = response.headers['content-encoding'];
             console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, contentEncoding: ${contentEncoding}, response headers: ${JSON.stringify(response.headers)}`);
-            var body = '';
-            if (typeof response.setEncoding === 'function') {
-                response.setEncoding('utf8');
-            }
 
             // check content encoding
             var output: NodeJS.ReadWriteStream;
@@ -120,10 +116,14 @@ function apiOverrides(Api: Function) {
                 output = zlib.createInflate();
                 response.pipe(output);
             } else {
+                if (typeof response.setEncoding === 'function') {
+                    response.setEncoding('utf8');
+                }
                 output = <any>response;
             }
 
-            //
+            // collect the response
+            var body = '';
             output.on('data', function (chunk: any) {
                 // chunk = chunk.toString('utf-8');
                 console.log(`HTTP receiving data: ${chunk}`);

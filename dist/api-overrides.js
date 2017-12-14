@@ -91,10 +91,6 @@ function apiOverrides(Api) {
         return function (response) {
             let contentEncoding = response.headers['content-encoding'];
             console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, contentEncoding: ${contentEncoding}, response headers: ${JSON.stringify(response.headers)}`);
-            var body = '';
-            if (typeof response.setEncoding === 'function') {
-                response.setEncoding('utf8');
-            }
             // check content encoding
             var output;
             if (contentEncoding == 'gzip') {
@@ -106,9 +102,13 @@ function apiOverrides(Api) {
                 response.pipe(output);
             }
             else {
+                if (typeof response.setEncoding === 'function') {
+                    response.setEncoding('utf8');
+                }
                 output = response;
             }
-            //
+            // collect the response
+            var body = '';
             output.on('data', function (chunk) {
                 // chunk = chunk.toString('utf-8');
                 console.log(`HTTP receiving data: ${chunk}`);
