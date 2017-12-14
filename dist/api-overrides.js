@@ -95,13 +95,16 @@ function apiOverrides(Api) {
             if (typeof response.setEncoding === 'function') {
                 response.setEncoding('utf8');
             }
+            response.on('error', function (err) {
+                return reject(err);
+            });
             // check content encoding
             var output;
             if (contentEncoding == 'gzip') {
                 output = zlib.createGunzip();
                 response.pipe(output);
             }
-            if (contentEncoding == 'deflate') {
+            else if (contentEncoding == 'deflate') {
                 output = zlib.createInflate();
                 response.pipe(output);
             }
@@ -110,6 +113,7 @@ function apiOverrides(Api) {
             }
             //
             output.on('data', function (chunk) {
+                // chunk = chunk.toString('utf-8');
                 body += chunk;
             });
             output.on('end', function () {
