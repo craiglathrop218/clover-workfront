@@ -95,9 +95,6 @@ function apiOverrides(Api) {
             if (typeof response.setEncoding === 'function') {
                 response.setEncoding('utf8');
             }
-            response.on('error', function (err) {
-                return reject(err);
-            });
             // check content encoding
             var output;
             if (contentEncoding == 'gzip') {
@@ -114,6 +111,7 @@ function apiOverrides(Api) {
             //
             output.on('data', function (chunk) {
                 // chunk = chunk.toString('utf-8');
+                console.log(`HTTP receiving data: ${chunk}`);
                 body += chunk;
             });
             output.on('end', function () {
@@ -136,6 +134,10 @@ function apiOverrides(Api) {
                 else {
                     resolve(data.data);
                 }
+            });
+            output.on('error', function (err) {
+                console.log(`HTTP output error: ${err}`);
+                return reject(err);
             });
         };
     };

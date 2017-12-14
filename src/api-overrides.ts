@@ -110,9 +110,6 @@ function apiOverrides(Api: Function) {
             if (typeof response.setEncoding === 'function') {
                 response.setEncoding('utf8');
             }
-            response.on('error', function(err) {
-                return reject(err);
-            });
 
             // check content encoding
             var output: NodeJS.ReadWriteStream;
@@ -129,6 +126,7 @@ function apiOverrides(Api: Function) {
             //
             output.on('data', function (chunk: any) {
                 // chunk = chunk.toString('utf-8');
+                console.log(`HTTP receiving data: ${chunk}`);
                 body += chunk;
             });
             output.on('end', function () {
@@ -148,6 +146,10 @@ function apiOverrides(Api: Function) {
                 } else {
                     resolve(data.data);
                 }
+            });
+            output.on('error', function(err: any) {
+                console.log(`HTTP output error: ${err}`);
+                return reject(err);
             });
         };
     };
