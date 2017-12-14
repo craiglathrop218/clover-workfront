@@ -1,5 +1,6 @@
 import {Api as ApiFun} from "workfront-api";
 import * as fs from "fs";
+import * as zlib from "zlib";
 import * as deepExtend from "deep-extend";
 import * as FormData from "form-data";
 import * as followRedirects from "follow-redirects";
@@ -103,15 +104,30 @@ function apiOverrides(Api: Function) {
      */
     Api.prototype._handleResponse = (resolve: any, reject: any) => {
         return function (response: IncomingMessage) {
-            console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, response headers: ${JSON.stringify(response.headers)}`);
+            let contentEncoding = response.headers['content-encoding'];
+            console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, contentEncoding: ${contentEncoding}, response headers: ${JSON.stringify(response.headers)}`);
             var body = '';
             if (typeof response.setEncoding === 'function') {
                 response.setEncoding('utf8');
             }
-            response.on('data', function (chunk) {
+
+            // check content encoding
+            var output: NodeJS.WritableStream;
+            if (contentEncoding == 'gzip' ) {
+                output = zlib.createGunzip();
+                response.pipe(output);
+            } if (contentEncoding == 'deflate') {
+                output = zlib.createInflate();
+                response.pipe(output);
+            } else {
+                output = <any>response;
+            }
+
+            //
+            output.on('data', function (chunk: any) {
                 body += chunk;
             });
-            response.on('end', function () {
+            output.on('end', function () {
                 console.log(`HTTP response: ${body}`);
                 // console.log(`Response headers: ${JSON.stringify(response.headers)}`);
                 var data;

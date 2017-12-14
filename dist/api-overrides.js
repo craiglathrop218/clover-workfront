@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const zlib = require("zlib");
 const deepExtend = require("deep-extend");
 const FormData = require("form-data");
 const followRedirects = require("follow-redirects");
@@ -88,15 +89,30 @@ function apiOverrides(Api) {
      */
     Api.prototype._handleResponse = (resolve, reject) => {
         return function (response) {
-            console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, response headers: ${JSON.stringify(response.headers)}`);
+            let contentEncoding = response.headers['content-encoding'];
+            console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, contentEncoding: ${contentEncoding}, response headers: ${JSON.stringify(response.headers)}`);
             var body = '';
             if (typeof response.setEncoding === 'function') {
                 response.setEncoding('utf8');
             }
-            response.on('data', function (chunk) {
+            // check content encoding
+            var output;
+            if (contentEncoding == 'gzip') {
+                output = zlib.createGunzip();
+                response.pipe(output);
+            }
+            if (contentEncoding == 'deflate') {
+                output = zlib.createInflate();
+                response.pipe(output);
+            }
+            else {
+                output = response;
+            }
+            //
+            output.on('data', function (chunk) {
                 body += chunk;
             });
-            response.on('end', function () {
+            output.on('end', function () {
                 console.log(`HTTP response: ${body}`);
                 // console.log(`Response headers: ${JSON.stringify(response.headers)}`);
                 var data;
