@@ -34,7 +34,8 @@ export namespace WfModel {
         approvalCompletionDate?: string;
         currentApprovalStepID?: string;
         portfolio?: Portfolio,
-        approverStatuses?: ApproverStatus[]
+        approverStatuses?: ApproverStatus[],
+        subscribes?: Subscribe[]
     }
 
     export interface Portfolio {
@@ -426,7 +427,8 @@ export namespace WfModel {
         public assignedToID: string;
         public teamID: string;
         public accessRules: AccessRule[];
-        public approverStatuses?: ApproverStatus[]
+        public approverStatuses?: ApproverStatus[],
+        public subscribes?: Subscribe[]
     }
     export class ReplyMessage {
         textMsg: string;
@@ -473,7 +475,8 @@ export namespace WfModel {
         defaultBaselineTask?: BaselineTask,
         parentID?: string,
         parent?: Task,
-        approverStatuses?: ApproverStatus[]
+        approverStatuses?: ApproverStatus[],
+        subscribes?: Subscribe[]
     }
 
     export interface Milestone {
@@ -722,6 +725,24 @@ export namespace WfModel {
         enteredBy?: User,
         lastUpdatedBy?: User,
         approvalPaths?: ApprovalPath[]
+    }
+
+    export interface Subscribe extends WfObject {
+        enteredByID?: string,
+        customerID?: string,
+        opTaskID?: string,
+        projectID?: string,
+        subscribeObjCode?: string,
+        subscribeObjID?: string,
+        subscribeTime?: string,
+        subscriberID?: string,
+        taskID?: string,
+        //customer: Customer
+        enteredBy?: User,
+        opTask?: Issue,
+        project?: Project,
+        subscriber?: User,
+        task?: Task
     }
 
     export interface QueryCount {

@@ -405,6 +405,7 @@ export declare namespace Workfront {
     export import StepApprover = WfModel.StepApprover;
     export import ApprovalPath = WfModel.ApprovalPath;
     export import ApprovalProcess = WfModel.ApprovalProcess;
+    export import Subscribe = WfModel.Subscribe;
     interface WfConnError {
         active: boolean;
         errorDate: moment.Moment;

@@ -1367,6 +1367,7 @@ export namespace Workfront {
     export import StepApprover = WfModel.StepApprover;
     export import ApprovalPath = WfModel.ApprovalPath;
     export import ApprovalProcess = WfModel.ApprovalProcess;
+    export import Subscribe = WfModel.Subscribe;
 
     export interface WfConnError {
         active: boolean,
