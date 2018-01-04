@@ -1,9 +1,9 @@
 {
   "name": "clover-workfront",
   "private": true,
-  "version": "2.3.5",
+  "version": "3.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "./dist/index",
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/craiglathrop218/clover-workfront#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
     "gulp-typescript": "^3.1.5",
     "merge2": "^1.0.3",
     "typescript": "^2.2.1"
