@@ -1,12 +1,11 @@
-import * as zlib from "zlib";
-import * as deepExtend from "deep-extend";
-import * as FormData from "form-data";
-import * as followRedirects from "follow-redirects";
-import * as queryString from "querystring";
+import zlib from "zlib";
+import deepExtend from "deep-extend";
+import FormData from "form-data";
+import followRedirects from "follow-redirects";
+import queryString from "querystring";
 import { TimedOut } from "./timed-out";
 const HTTP_REQ_TIMEOUT = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 function apiOverrides(Api) {
-    let ApiFun = Api;
     // used to store entity metadata responses
     let metaDataCache = {};
     /**
@@ -82,7 +81,7 @@ function apiOverrides(Api) {
      *
      * @param resolve
      * @param reject
-     * @returns {function(IncomingMessage): undefined}
+     * @returns {function(http.IncomingMessage): undefined}
      * @private
      */
     Api.prototype._handleResponse = (resolve, reject) => {

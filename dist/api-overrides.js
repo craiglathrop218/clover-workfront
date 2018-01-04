@@ -1,14 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const zlib = require("zlib");
-const deepExtend = require("deep-extend");
-const FormData = require("form-data");
-const followRedirects = require("follow-redirects");
-const queryString = require("querystring");
+const zlib_1 = require("zlib");
+const deep_extend_1 = require("deep-extend");
+const form_data_1 = require("form-data");
+const follow_redirects_1 = require("follow-redirects");
+const querystring_1 = require("querystring");
 const timed_out_1 = require("./timed-out");
 const HTTP_REQ_TIMEOUT = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 function apiOverrides(Api) {
-    let ApiFun = Api;
     // used to store entity metadata responses
     let metaDataCache = {};
     /**
@@ -44,12 +43,12 @@ function apiOverrides(Api) {
      * @returns {Promise<any>|Promise}
      */
     Api.prototype.upload = function (stream, overrides) {
-        var form = new FormData();
+        var form = new form_data_1.default();
         form.append('uploadedFile', stream, overrides);
         var options = {
             method: 'POST'
         };
-        deepExtend(options, this.httpOptions);
+        deep_extend_1.default(options, this.httpOptions);
         options.headers = form.getHeaders();
         //JO. Changed the following
         if (this.httpOptions.headers.sessionID) {
@@ -84,7 +83,7 @@ function apiOverrides(Api) {
      *
      * @param resolve
      * @param reject
-     * @returns {function(IncomingMessage): undefined}
+     * @returns {function(http.IncomingMessage): undefined}
      * @private
      */
     Api.prototype._handleResponse = (resolve, reject) => {
@@ -94,11 +93,11 @@ function apiOverrides(Api) {
             // check content encoding
             var output;
             if (contentEncoding == 'gzip') {
-                output = zlib.createGunzip();
+                output = zlib_1.default.createGunzip();
                 response.pipe(output);
             }
             else if (contentEncoding == 'deflate') {
-                output = zlib.createInflate();
+                output = zlib_1.default.createInflate();
                 response.pipe(output);
             }
             else {
@@ -198,7 +197,7 @@ function apiOverrides(Api) {
         var options = {
             method: 'GET'
         };
-        deepExtend(options, this.httpOptions);
+        deep_extend_1.default(options, this.httpOptions);
         options.headers = {};
         // User needs to be logged in before calling download
         // We cannot download only using an API key unfortunately
@@ -209,7 +208,7 @@ function apiOverrides(Api) {
         options.path = downloadURL;
         //var httpTransport = this.httpTransport;
         var isHttps = this.httpOptions.protocol === 'https:';
-        var httpTransport = isHttps ? followRedirects.https : followRedirects.http;
+        var httpTransport = isHttps ? follow_redirects_1.default.https : follow_redirects_1.default.http;
         return new Promise((resolve, reject) => {
             console.log("Making a download request: " + JSON.stringify(options) + ", session ID: " + this.httpOptions.headers.sessionID);
             var request = httpTransport.request(options, (response) => {
@@ -264,9 +263,9 @@ function apiOverrides(Api) {
             }
         }
         // append httpParams
-        deepExtend(params, this.httpParams);
+        deep_extend_1.default(params, this.httpParams);
         var options = {}, alwaysUseGet = this.httpOptions.alwaysUseGet;
-        deepExtend(options, this.httpOptions);
+        deep_extend_1.default(options, this.httpOptions);
         if (alwaysUseGet) {
             params.method = method;
         }
@@ -282,7 +281,7 @@ function apiOverrides(Api) {
         if (fields.length !== 0) {
             params.fields = fields.join();
         }
-        params = queryString.stringify(params);
+        params = querystring_1.default.stringify(params);
         if (params) {
             if (!alwaysUseGet && requestHasData(options.method)) {
                 options.headers['Content-Type'] = 'application/x-www-form-urlencoded';

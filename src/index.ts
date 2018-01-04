@@ -1,8 +1,7 @@
 // http://workfront.github.io/workfront-api/Workfront.Api.html
-import * as api from "workfront-api";
-import {Api, Config, LoginResult} from "workfront-api";
-import * as moment from "moment";
-import {EmailAddress, Attachment} from "mailparser";
+import moment from "moment";
+import mailparser from "mailparser";
+import api from "workfront-api";
 import {WfModel} from "./model";
 import {apiOverrides} from "./api-overrides";
 
@@ -25,7 +24,7 @@ interface UserNames {
  * @param addr - an email address where to parse the names from
  * @returns {UserNames} - user names (firstname, lastname)
  */
-function parseEmailNames(addr: EmailAddress): UserNames {
+function parseEmailNames(addr: mailparser.EmailAddress): UserNames {
     let result: UserNames = <UserNames>{};
     if (addr.name && addr.name.trim()) {
         // There is a name part in an email address, like "Jaanek Oja <jaanekoja@gmail.com>"
@@ -84,7 +83,7 @@ export class Workfront {
     /**
      * Workfront API connection settings
      */
-    static apiFactoryConfig: Config = {
+    static apiFactoryConfig: api.Config = {
         url: "https://idt.my.workfront.com", // LIVE
         //url: "https://idt.attasksandbox.com/" // TEST
         //version: "4.0"
@@ -95,10 +94,10 @@ export class Workfront {
     };
 
     //
-    apiFactoryConfig: Config;
-    api: Api;
+    apiFactoryConfig: api.Config;
+    api: api.Api;
 
-    initialize(config: Config = Workfront.apiFactoryConfig, key: string) {
+    initialize(config: api.Config = Workfront.apiFactoryConfig, key: string) {
         this.apiFactoryConfig = config;
         this.api = ApiFactory.getInstance(this.apiFactoryConfig);
         this.api.httpParams.apiKey = key;
@@ -112,18 +111,18 @@ export class Workfront {
      * Login as a user with specified login email
      *
      * @param fromEmail - user login email
-     * @returns {Promise<LoginResult>}
+     * @returns {Promise<api.LoginResult>}
      */
-    login(console: Workfront.Logger, fromEmail: EmailAddress, waitDelay?: number): Promise<LoginResult> {
+    login(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, waitDelay?: number): Promise<api.LoginResult> {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
-        let api: Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
+        let api: api.Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
         api.httpParams.apiKey = this.api.httpParams.apiKey;
 
         // if there is wait delay specified after a login
         if (waitDelay) {
-            return new Promise<LoginResult>((resolve, reject) => {
-                api.login(fromEmail.address).then((login: LoginResult) => {
+            return new Promise<api.LoginResult>((resolve, reject) => {
+                api.login(fromEmail.address).then((login: api.LoginResult) => {
                     console.log(`Logged in! Waiting after login delay: ${waitDelay} before returning ...`);
                     setTimeout(() => {
                         resolve(login);
@@ -141,24 +140,24 @@ export class Workfront {
      * Login as a user with specified login email
      *
      * @param fromEmail - user login email
-     * @returns {Promise<LoginResult>}
+     * @returns {Promise<api.LoginResult>}
      */
-    logout(login: LoginResult): Promise<Object> {
+    logout(login: api.LoginResult): Promise<Object> {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
-        let api: Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
+        let api: api.Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
         delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
         api.httpOptions.headers.sessionID = login.sessionID;
         return api.logout();
     }
 
-    execAsUserWithSession<T>(console: Workfront.Logger, fromEmail: EmailAddress, callback: (api: Api, login: LoginResult) => Promise<T>, login: LoginResult): Promise<T> {
+    execAsUserWithSession<T>(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, callback: (api: api.Api, login: api.LoginResult) => Promise<T>, login: api.LoginResult): Promise<T> {
         let userEmail = fromEmail ? fromEmail.address : "";
         console.log("*** Executing as User (with existing login session). Email: " + userEmail + ", login session: " + JSON.stringify(login));
 
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
-        let api: Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
+        let api: api.Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
         delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
         api.httpOptions.headers.sessionID = login.sessionID;
 
@@ -184,11 +183,11 @@ export class Workfront {
      * @param callback - a function to execute under logged in user
      * @returns {Promise<T} - T
      */
-    async execAsUser<T>(console: Workfront.Logger, fromEmail: EmailAddress, callback: (api: Api, login: LoginResult) => Promise<T>): Promise<T> {
+    async execAsUser<T>(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, callback: (api: api.Api, login: api.LoginResult) => Promise<T>): Promise<T> {
         // check if we have WfContext coming in, if so then if not already logged in then login
         if ((console as any).getSession && (console as any).setSession) {
             let ctx: Workfront.WfContext = <Workfront.WfContext> console;
-            let login: LoginResult = ctx.getSession(fromEmail.address);
+            let login: api.LoginResult = ctx.getSession(fromEmail.address);
             if (!login) {
                 // login first
                 console.log(`*** No login session found for user email: ${fromEmail.address}. Getting a new session.`);
@@ -196,7 +195,7 @@ export class Workfront {
                 while (true) {
                     try {
                         console.log(`*** Logging in for user email: ${fromEmail.address}. Login count: ${loginCount}`);
-                        let execResult: T = await this.login(console, fromEmail, 2000).then((login: LoginResult) => {
+                        let execResult: T = await this.login(console, fromEmail, 2000).then((login: api.LoginResult) => {
                             console.log("Got login session for user: " + fromEmail.address + ", user id: " + login.userID + ", sessionId: " + login.sessionID);
                             ctx.setSession(fromEmail.address, login);
                             return this.execAsUserWithSession<T>(console, fromEmail, callback, login);
@@ -229,12 +228,12 @@ export class Workfront {
 
             // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
             // For that reason, we create a new instance of api
-            let api: Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
+            let api: api.Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
             api.httpParams.apiKey = this.api.httpParams.apiKey;
 
             // login and execute provided function under a user
             let updated = new Promise<T>((resolve, reject) => {
-                api.login(fromEmail.address).then((login: LoginResult) => {
+                api.login(fromEmail.address).then((login: api.LoginResult) => {
                     delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
                     let userId = login.userID;
                     let sessionId = login.sessionID;
@@ -315,10 +314,10 @@ export class Workfront {
      * @param attachments - attachments to upload
      * @returns {Promise<Upload>|Promise} - an object containing provided attachments and Workfront reference handles to them
      */
-    uploadMailAttachmentsAsUser(console: Workfront.Logger, fromEmail: EmailAddress, attachments: Attachment[]): Promise<Workfront.Upload> {
+    uploadMailAttachmentsAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, attachments: mailparser.Attachment[]): Promise<Workfront.Upload> {
         console.log(`Uploading mail attachments as user ${fromEmail.address}, attachments: ${attachments}!`);
         if (attachments && attachments.length) {
-            return this.execAsUser<Workfront.Upload>(console, fromEmail, (api: Api, login: LoginResult) => {
+            return this.execAsUser<Workfront.Upload>(console, fromEmail, (api: api.Api, login: api.LoginResult) => {
                 let allUploads = new Array<Promise<any>>();
                 for (let att of attachments) {
                     let data: Buffer = att.content;
@@ -341,7 +340,7 @@ export class Workfront {
      *
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
-    async getUsersByEmail(console: Workfront.Logger, userEmails: EmailAddress[], emailsToIgnore: string[], fieldsToReturn: string[]): Promise<Map<string, Workfront.User>> {
+    async getUsersByEmail(console: Workfront.Logger, userEmails: mailparser.EmailAddress[], emailsToIgnore: string[], fieldsToReturn: string[]): Promise<Map<string, Workfront.User>> {
         console.log(`Get users by email! Emails: ${JSON.stringify(userEmails)}`);
 
         // ignore service mailbox emails
@@ -378,7 +377,7 @@ export class Workfront {
      * @param fromEmail - an email address of a user that sent the email
      * @returns {Promise<User>|Promise}
      */
-    async getUserByEmail(console: Workfront.Logger, fromEmail: EmailAddress, fieldsToReturn: string[]): Promise<WfModel.User> {
+    async getUserByEmail(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, fieldsToReturn: string[]): Promise<WfModel.User> {
         // First, check if user already exists
         let users: WfModel.User[] = await this.api.search<WfModel.User[]>("USER", {
             emailAddr: fromEmail.address,
@@ -408,7 +407,7 @@ export class Workfront {
      * @param accessConfigs - the workfront access settings / levels for a user
      * @returns {Promise<User>|Promise}
      */
-    async getOrCreateUser(console: Workfront.Logger, fromEmail: EmailAddress, accessConfigs: {externalUsers: Workfront.UserAccessConfig, idtUsers: Workfront.UserAccessConfig}, userFieldsToReturn: string[], fetchSsoId?: Workfront.FetchSsoId): Promise<WfModel.User> {
+    async getOrCreateUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, accessConfigs: {externalUsers: Workfront.UserAccessConfig, idtUsers: Workfront.UserAccessConfig}, userFieldsToReturn: string[], fetchSsoId?: Workfront.FetchSsoId): Promise<WfModel.User> {
         let user: WfModel.User = await this.getUserByEmail(console, fromEmail, userFieldsToReturn);
         if (user) {
             // we found existing user, return it
@@ -495,7 +494,7 @@ export class Workfront {
      *
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
-    async getOrCreateUsersByEmail(console: Workfront.Logger, userEmails: EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fieldsToReturn: string[], fetchSsoId: Workfront.FetchSsoId): Promise<Map<string, Workfront.User>> {
+    async getOrCreateUsersByEmail(console: Workfront.Logger, userEmails: mailparser.EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fieldsToReturn: string[], fetchSsoId: Workfront.FetchSsoId): Promise<Map<string, Workfront.User>> {
         console.log(`Get or create users by email! Emails: ${JSON.stringify(userEmails)}`);
 
         // ignore service mailbox emails
@@ -605,8 +604,8 @@ export class Workfront {
      * @returns {any}
      */
         // @todo see if we can replace the specific "updateIssueAsUser" function with this more generic one.
-    makeUpdatesAsUser(console: Workfront.Logger, from: EmailAddress, entityRef: WfModel.WfObject, updates: any, fields: any[] = []): Promise<WfModel.WfObject> {
-        return this.execAsUser<WfModel.WfObject>(console, from, (api: Api, login: LoginResult) => {
+    makeUpdatesAsUser(console: Workfront.Logger, from: mailparser.EmailAddress, entityRef: WfModel.WfObject, updates: any, fields: any[] = []): Promise<WfModel.WfObject> {
+        return this.execAsUser<WfModel.WfObject>(console, from, (api: api.Api, login: api.LoginResult) => {
             console.log("[makeUpdateAsUser] - Got login session for user: " + from.address + ", sessionId: " + login.sessionID);
             // update
             return api.edit<WfModel.WfObject>(entityRef.objCode, entityRef.ID, updates, fields).then((updatedObj: WfModel.WfObject) => {
@@ -643,9 +642,9 @@ export class Workfront {
      * @param params - fields to be set on an issue
      * @returns {Promise<Issue>} - created Issue
      */
-    createIssueAsUser(console: Workfront.Logger, fromEmail: EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.Issue> {
+    createIssueAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.Issue> {
         console.log("*** Creating issue! Params: " + JSON.stringify(params));
-        return this.execAsUser<WfModel.Issue>(console, fromEmail, (api: Api) => {
+        return this.execAsUser<WfModel.Issue>(console, fromEmail, (api: api.Api) => {
             return api.create<WfModel.Issue>("OPTASK", params, fields);
         });
     }
@@ -660,9 +659,9 @@ export class Workfront {
      * @param fields - extra fields to return
      * @returns {Promise<Issue>|Promise} - update Issue
      */
-    updateIssueAsUser(console: Workfront.Logger, fromEmail: EmailAddress, issueId: string, updates: Object, fields?: string|string[]): Promise<WfModel.Issue> {
+    updateIssueAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, issueId: string, updates: Object, fields?: string|string[]): Promise<WfModel.Issue> {
         console.log("*** Updating issue as User. Email: " + fromEmail.address + ", updates: " + JSON.stringify(updates));
-        return this.execAsUser<WfModel.Issue>(console, fromEmail, (api: Api, login: LoginResult) => {
+        return this.execAsUser<WfModel.Issue>(console, fromEmail, (api: api.Api, login: api.LoginResult) => {
             // update
             return api.edit("OPTASK", issueId, updates, fields).then((issue: WfModel.Issue) => {
                 console.log("Issue updated: " + JSON.stringify(issue));
@@ -678,9 +677,9 @@ export class Workfront {
      * @param params - fields to be set on an project
      * @returns {Promise<Project>} - created Project
      */
-    createProjectAsUser(console: Workfront.Logger, fromEmail: EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.Project> {
+    createProjectAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.Project> {
         console.log("*** Creating project! Params: " + JSON.stringify(params));
-        return this.execAsUser<WfModel.Project>(console, fromEmail, (api: Api) => {
+        return this.execAsUser<WfModel.Project>(console, fromEmail, (api: api.Api) => {
             return api.create<WfModel.Project>("PROJ", params, fields);
         });
     }
@@ -692,9 +691,9 @@ export class Workfront {
      * @param params - fields to be set on an issue
      * @returns {Promise<DocumentFolder>} - created Document Folder
      */
-    createFolderAsUser(console: Workfront.Logger, fromEmail: EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.DocumentFolder> {
+    createFolderAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.DocumentFolder> {
         console.log("*** Creating document folder! Params: " + JSON.stringify(params));
-        return this.execAsUser<WfModel.DocumentFolder>(console, fromEmail, (api: Api) => {
+        return this.execAsUser<WfModel.DocumentFolder>(console, fromEmail, (api: api.Api) => {
             return api.create<WfModel.DocumentFolder>("DOCFDR", params, fields);
         });
     }
@@ -706,7 +705,7 @@ export class Workfront {
      * @param refNr - a reference number got from email body
      * @returns {Promise<Task>} - a task if found, otherwise null
      */
-    getOrCreateDocumentFolder(console: Workfront.Logger, fromEmail: EmailAddress, folderParentField: WfModel.DocumentFolderParentField, folderName: string, fields?: string|string[], parentFolderId?: string): Promise<WfModel.DocumentFolder> {
+    getOrCreateDocumentFolder(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, folderParentField: WfModel.DocumentFolderParentField, folderName: string, fields?: string|string[], parentFolderId?: string): Promise<WfModel.DocumentFolder> {
         if (!folderParentField) {
             return Promise.reject(`Document folder parent entity field name (issueID, taskID, projectID) is required to create a folder! Requested folder name: ${folderName}`);
         }
@@ -753,11 +752,11 @@ export class Workfront {
      * @param upload - references to upload entities
      * @returns {Promise<Document[]>|Promise} - created documents
      */
-    createDocumentsAsUser(console: Workfront.Logger, fromEmail: EmailAddress, parentRef: WfModel.WfObject, upload: Workfront.Upload, docFieldsToReturn: string[], docFolder?: WfModel.DocumentFolder): Promise<WfModel.Document[]> {
-        return this.execAsUser<WfModel.Document[]>(console, fromEmail, (api: Api, login: LoginResult) => {
+    createDocumentsAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, parentRef: WfModel.WfObject, upload: Workfront.Upload, docFieldsToReturn: string[], docFolder?: WfModel.DocumentFolder): Promise<WfModel.Document[]> {
+        return this.execAsUser<WfModel.Document[]>(console, fromEmail, (api: api.Api, login: api.LoginResult) => {
             let allPromises = new Array<Promise<WfModel.Document>>();
             for (let i=0; i < upload.attachments.length; i++) {
-                let att: Attachment = upload.attachments[i];
+                let att: mailparser.Attachment = upload.attachments[i];
                 let handle: Workfront.UploadHandle = upload.handles[i];
 
                 // verify that document has a name
@@ -848,9 +847,9 @@ export class Workfront {
      * @param params - note fields
      * @returns {Promise<Note>|Promise} - created note
      */
-    createNoteAsUser(console: Workfront.Logger, user: EmailAddress, params: WfModel.Note, fieldsToReturn: string[]): Promise<WfModel.Note> {
+    createNoteAsUser(console: Workfront.Logger, user: mailparser.EmailAddress, params: WfModel.Note, fieldsToReturn: string[]): Promise<WfModel.Note> {
         console.log("*** Creating Note with User email: " + user.address + ", params: " + JSON.stringify(params));
-        return this.execAsUser<WfModel.Note>(console, user, (api: Api, login: LoginResult) => {
+        return this.execAsUser<WfModel.Note>(console, user, (api: api.Api, login: api.LoginResult) => {
             let userId = login.userID;
             // create a note
             params.ownerID = userId;
@@ -869,9 +868,9 @@ export class Workfront {
      * @param reply - a reply object containing target entity and reply message
      * @returns {Promise<Note>|Promise} - a new reply Note object that was created
      */
-    createReplyNoteAsUser(console: Workfront.Logger, fromEmail: EmailAddress, reply: WfModel.ReplyMessage, replyToEntityRef: WfModel.WfObject, fieldsToReturn: string[]): Promise<WfModel.Note> {
+    createReplyNoteAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, reply: WfModel.ReplyMessage, replyToEntityRef: WfModel.WfObject, fieldsToReturn: string[]): Promise<WfModel.Note> {
         console.log("*** Creating Reply Note with User email: " + fromEmail.address + ", note update: " + JSON.stringify(reply));
-        return this.execAsUser<WfModel.Note>(console, fromEmail, (api: Api, login: LoginResult): Promise<WfModel.Note> => {
+        return this.execAsUser<WfModel.Note>(console, fromEmail, (api: api.Api, login: api.LoginResult): Promise<WfModel.Note> => {
             console.log(`Starting to create reply note! From: ${JSON.stringify(fromEmail)}, login: ${JSON.stringify(login)}, reply to entity ref: ${JSON.stringify(replyToEntityRef)}, reply note: ${JSON.stringify(reply)}`);
             let userId = login.userID;
             // create a note
@@ -1014,9 +1013,9 @@ export class Workfront {
      * @param updates - update fields on task
      * @returns {Promise<Task>|Promise} - update task
      */
-    updateTaskAsUser(console: Workfront.Logger, fromEmail: EmailAddress, taskId: string, updates: Object): Promise<WfModel.Task> {
+    updateTaskAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, taskId: string, updates: Object): Promise<WfModel.Task> {
         console.log("*** Updating task as User. Email: " + fromEmail.address + ", updates: " + JSON.stringify(updates));
-        return this.execAsUser<WfModel.Task>(console, fromEmail, (api: Api, login: LoginResult) => {
+        return this.execAsUser<WfModel.Task>(console, fromEmail, (api: api.Api, login: api.LoginResult) => {
             // update
             return api.edit("TASK", taskId, updates).then((task: WfModel.Task) => {
                 console.log("Task updated: " + JSON.stringify(task));
@@ -1170,8 +1169,8 @@ export class Workfront {
 
     /**
      */
-    uploadPdfDocumentAsUser(console: Workfront.Logger, fromEmail: EmailAddress, parentRef: WfModel.WfObject, buffer: Buffer | string, fileName: string, docFolder: WfModel.DocumentFolder, docFieldsToReturn: string[]): Promise<WfModel.Document> {
-        return this.execAsUser<WfModel.Document>(console, fromEmail, (api: Api, login: LoginResult) => {
+    uploadPdfDocumentAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, parentRef: WfModel.WfObject, buffer: Buffer | string, fileName: string, docFolder: WfModel.DocumentFolder, docFieldsToReturn: string[]): Promise<WfModel.Document> {
+        return this.execAsUser<WfModel.Document>(console, fromEmail, (api: api.Api, login: api.LoginResult) => {
             return api.upload(buffer, {filename: fileName, contentType: "application/pdf"}).then((upload: Workfront.UploadHandle) => {
                 console.log("Uploaded PDF! Handle: " + upload.handle + ", as user: " + fromEmail.address + ", sessionId: " + login.sessionID + ", into document folder: " + docFolder);
                 // Now create a document object for that uploaded PDF
@@ -1214,7 +1213,7 @@ export class Workfront {
      */
     downloadAsUser(console: Workfront.Logger, ownerUsername: string, downloadURL: string, output: NodeJS.WritableStream): Promise<void> {
         console.log(`*** Downloading document as Owner. Username: ${ownerUsername}, download url: ${downloadURL}"`);
-        return this.execAsUser<void>(console, {address: ownerUsername, name: ""}, (api: Api, login: LoginResult) => {
+        return this.execAsUser<void>(console, {address: ownerUsername, name: ""}, (api: api.Api, login: api.LoginResult) => {
             // download
             return api.download(downloadURL, output);
         });
@@ -1224,12 +1223,12 @@ export class Workfront {
      * Remove an entity from Workfront under a specified user
      *
      * @param {Workfront.Logger} console
-     * @param {EmailAddress} from
+     * @param {mailparser.EmailAddress} from
      * @param {WfModel.WfObject} entityRef
      * @returns {Promise<WfModel.WfObject>}
      */
-    removeAsUser(console: Workfront.Logger, from: EmailAddress, entityRef: WfModel.WfObject, bForce?: boolean): Promise<WfModel.WfObject> {
-        return this.execAsUser<WfModel.WfObject>(console, from, (api: Api, login: LoginResult) => {
+    removeAsUser(console: Workfront.Logger, from: mailparser.EmailAddress, entityRef: WfModel.WfObject, bForce?: boolean): Promise<WfModel.WfObject> {
+        return this.execAsUser<WfModel.WfObject>(console, from, (api: api.Api, login: api.LoginResult) => {
             console.log("[removeAsUser] - Got login session for user: " + from.address + ", sessionId: " + login.sessionID);
             // remove
             return api.remove<WfModel.WfObject>(entityRef.objCode, entityRef.ID, bForce).then((removedObj: WfModel.WfObject) => {
@@ -1304,7 +1303,7 @@ export namespace Workfront {
          *
          * @param email - user login email / username
          */
-        getSession(email: string): LoginResult;
+        getSession(email: string): api.LoginResult;
 
         /**
          * Set existing user session for user login email / username
@@ -1312,12 +1311,12 @@ export namespace Workfront {
          * @param email - user login email / username
          * @param login session
          */
-        setSession(email: string, login: LoginResult): void;
+        setSession(email: string, login: api.LoginResult): void;
 
         /**
          * Return all the login sessions
          */
-        getSessions(): Map<string, LoginResult>;
+        getSessions(): Map<string, api.LoginResult>;
     }
 
     // Define Workfront API related types in here fop convenient use in other parts of our project
@@ -1374,6 +1373,6 @@ export namespace Workfront {
         errorDate: moment.Moment
     }
 
-    export interface Upload {attachments: Attachment[], handles: UploadHandle[]};
+    export interface Upload {attachments: mailparser.Attachment[], handles: UploadHandle[]};
 }
 

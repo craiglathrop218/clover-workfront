@@ -1,18 +1,16 @@
-import {Api as ApiFun} from "workfront-api";
-import * as fs from "fs";
-import * as zlib from "zlib";
-import * as deepExtend from "deep-extend";
-import * as FormData from "form-data";
-import * as followRedirects from "follow-redirects";
-import {IncomingMessage} from "http";
-import * as queryString from "querystring";
+import fs from "fs";
+import zlib from "zlib";
+import http from "http";
+import deepExtend from "deep-extend";
+import FormData from "form-data";
+import followRedirects from "follow-redirects";
+import queryString from "querystring";
 import {TimedOut} from "./timed-out";
 import {WfModel} from "./model";
 
 const HTTP_REQ_TIMEOUT: number = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 
-function apiOverrides(Api: Function) {
-    let ApiFun = <any>Api;
+function apiOverrides(Api: any) {
     // used to store entity metadata responses
     let metaDataCache: any = {};
 
@@ -99,11 +97,11 @@ function apiOverrides(Api: Function) {
      *
      * @param resolve
      * @param reject
-     * @returns {function(IncomingMessage): undefined}
+     * @returns {function(http.IncomingMessage): undefined}
      * @private
      */
     Api.prototype._handleResponse = (resolve: any, reject: any) => {
-        return function (response: IncomingMessage) {
+        return function (response: http.IncomingMessage) {
             let contentEncoding = response.headers['content-encoding'];
             console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, contentEncoding: ${contentEncoding}, response headers: ${JSON.stringify(response.headers)}`);
 
@@ -232,7 +230,7 @@ function apiOverrides(Api: Function) {
 
         return new Promise<any>((resolve, reject) => {
             console.log("Making a download request: " + JSON.stringify(options) + ", session ID: " + this.httpOptions.headers.sessionID);
-            var request = httpTransport.request(options, (response: IncomingMessage) => {
+            var request = httpTransport.request(options, (response: http.IncomingMessage) => {
                 console.log("*** Download response: " + response.statusCode + ", " + response.statusMessage);
                 if (response.statusCode != 200) { // If Workfront is down, then workfront http proxy returns 501 but with no content - so we want to catch that in here
                     return reject(`Download failed! Response code: ${response.statusCode}, message: ${response.statusMessage}`);

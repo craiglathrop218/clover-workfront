@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// http://workfront.github.io/workfront-api/Workfront.Api.html
-const api = require("workfront-api");
+const workfront_api_1 = require("workfront-api");
 const model_1 = require("./model");
 const api_overrides_1 = require("./api-overrides");
 // execute api overrides in start of this module
-api_overrides_1.apiOverrides(api.Api);
+api_overrides_1.apiOverrides(workfront_api_1.default.Api);
 /**
  * Parse user names (firstname, lastname) out from provided email address.
  *
@@ -62,7 +61,7 @@ function randomPassword() {
     }
     return result.join("");
 }
-var ApiFactory = api.ApiFactory;
+var ApiFactory = workfront_api_1.default.ApiFactory;
 /**
  * A Workfront internal API for our project that provides a convenient and wrapped methods to be used in different usage scenarios.
  */
@@ -80,7 +79,7 @@ class Workfront {
      * Login as a user with specified login email
      *
      * @param fromEmail - user login email
-     * @returns {Promise<LoginResult>}
+     * @returns {Promise<api.LoginResult>}
      */
     login(console, fromEmail, waitDelay) {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
@@ -108,7 +107,7 @@ class Workfront {
      * Login as a user with specified login email
      *
      * @param fromEmail - user login email
-     * @returns {Promise<LoginResult>}
+     * @returns {Promise<api.LoginResult>}
      */
     logout(login) {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
@@ -1144,7 +1143,7 @@ class Workfront {
      * Remove an entity from Workfront under a specified user
      *
      * @param {Workfront.Logger} console
-     * @param {EmailAddress} from
+     * @param {mailparser.EmailAddress} from
      * @param {WfModel.WfObject} entityRef
      * @returns {Promise<WfModel.WfObject>}
      */

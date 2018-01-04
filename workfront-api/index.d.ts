@@ -1,7 +1,7 @@
 /// <reference types="node" />
 
 import {RequestOptions} from "http";
-import * as fs from "fs";
+import fs from "fs";
 
 /**
  * A Typescript API for Workfront module

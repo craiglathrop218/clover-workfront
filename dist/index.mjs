@@ -1,5 +1,4 @@
-// http://workfront.github.io/workfront-api/Workfront.Api.html
-import * as api from "workfront-api";
+import api from "workfront-api";
 import { WfModel } from "./model";
 import { apiOverrides } from "./api-overrides";
 // execute api overrides in start of this module
@@ -78,7 +77,7 @@ export class Workfront {
      * Login as a user with specified login email
      *
      * @param fromEmail - user login email
-     * @returns {Promise<LoginResult>}
+     * @returns {Promise<api.LoginResult>}
      */
     login(console, fromEmail, waitDelay) {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
@@ -106,7 +105,7 @@ export class Workfront {
      * Login as a user with specified login email
      *
      * @param fromEmail - user login email
-     * @returns {Promise<LoginResult>}
+     * @returns {Promise<api.LoginResult>}
      */
     logout(login) {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
@@ -1142,7 +1141,7 @@ export class Workfront {
      * Remove an entity from Workfront under a specified user
      *
      * @param {Workfront.Logger} console
-     * @param {EmailAddress} from
+     * @param {mailparser.EmailAddress} from
      * @param {WfModel.WfObject} entityRef
      * @returns {Promise<WfModel.WfObject>}
      */

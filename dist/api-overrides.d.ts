@@ -1,2 +1,2 @@
-declare function apiOverrides(Api: Function): void;
+declare function apiOverrides(Api: any): void;
 export { apiOverrides };

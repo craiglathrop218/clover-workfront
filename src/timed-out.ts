@@ -1,5 +1,5 @@
-import * as net from "net";
-import {ClientRequest} from "http";
+import net from "net";
+import http from "http";
 
 // modifed version of https://github.com/floatdrop/timed-out
 
@@ -69,7 +69,7 @@ export class TimedOut {
 
 // Types
 export namespace TimedOut {
-	export interface MyClientRequest extends ClientRequest {
+	export interface MyClientRequest extends http.ClientRequest {
 		timeoutTimer: number;
 	}
 }
