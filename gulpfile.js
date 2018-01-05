@@ -4,12 +4,15 @@ var ts = require("gulp-typescript");
 var rename = require('gulp-rename');
 var project = ts.createProject("tsconfig.json", {
 	typescript: require('typescript'),
-	declaration: true
+	declaration: true,
+  module: "commonjs",
+  target: "es2017"
 });
 var projectEs6 = ts.createProject("tsconfig.json", {
   typescript: require('typescript'),
   declaration: false,
-  module: "es2015"
+  module: "es2015",
+  target: "es2017"
 });
 
 // https://github.com/ivogabe/gulp-typescript
