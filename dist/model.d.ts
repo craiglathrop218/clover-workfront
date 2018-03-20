@@ -176,17 +176,17 @@ export declare namespace WfModel {
         parentID: string;
     }
     interface User {
-        ID: string;
-        objCode: string;
-        name: string;
-        firstName: string;
-        lastName: string;
-        username: string;
-        emailAddr: string;
-        phoneNumber: string;
-        title: string;
-        password: string;
-        companyID: string;
+        ID?: string;
+        objCode?: string;
+        name?: string;
+        firstName?: string;
+        lastName?: string;
+        username?: string;
+        emailAddr?: string;
+        phoneNumber?: string;
+        title?: string;
+        password?: string;
+        companyID?: string;
     }
     interface Document {
         ID?: string;

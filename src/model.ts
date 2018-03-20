@@ -181,17 +181,17 @@ export namespace WfModel {
     }
 
     export interface User {
-        ID: string,
-        objCode: string,
-        name: string,
-        firstName: string,
-        lastName: string,
-        username: string,
-        emailAddr: string,
-        phoneNumber: string,
-        title: string,
-        password: string,
-        companyID: string
+        ID?: string,
+        objCode?: string,
+        name?: string,
+        firstName?: string,
+        lastName?: string,
+        username?: string,
+        emailAddr?: string,
+        phoneNumber?: string,
+        title?: string,
+        password?: string,
+        companyID?: string
     }
 
     export interface Document {
