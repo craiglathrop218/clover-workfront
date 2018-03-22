@@ -194,6 +194,12 @@ export declare namespace WfModel {
         objCode?: string;
         isPrimary?: boolean;
         name?: string;
+        customer?: Customer;
+    }
+    interface Customer {
+        ID?: string;
+        objCode?: string;
+        name?: string;
     }
     interface Document {
         ID?: string;

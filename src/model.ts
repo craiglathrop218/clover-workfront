@@ -199,6 +199,13 @@ export namespace WfModel {
         ID?: string,
         objCode?: string,
         isPrimary?: boolean,
+        name?: string,
+        customer?: Customer
+    }
+
+    export interface Customer {
+        ID?: string,
+        objCode?: string,
         name?: string
     }
 
