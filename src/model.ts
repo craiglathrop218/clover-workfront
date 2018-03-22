@@ -191,7 +191,15 @@ export namespace WfModel {
         phoneNumber?: string,
         title?: string,
         password?: string,
-        companyID?: string
+        companyID?: string,
+        company?: Company
+    }
+
+    export interface Company {
+        ID?: string,
+        objCode?: string,
+        isPrimary?: boolean,
+        name?: string
     }
 
     export interface Document {
@@ -427,7 +435,7 @@ export namespace WfModel {
         public assignedToID: string;
         public teamID: string;
         public accessRules: AccessRule[];
-        public approverStatuses?: ApproverStatus[],
+        public approverStatuses?: ApproverStatus[];
         public subscribes?: Subscribe[]
     }
     export class ReplyMessage {

@@ -1327,6 +1327,7 @@ export namespace Workfront {
     export import Portfolio = WfModel.Portfolio;
     export import Program = WfModel.Program;
     export import User = WfModel.User;
+    export import Company = WfModel.Company;
     export import Document = WfModel.Document;
     export import DocumentVersion = WfModel.DocumentVersion;
     export import DocumentFolder = WfModel.DocumentFolder;

@@ -187,6 +187,13 @@ export declare namespace WfModel {
         title?: string;
         password?: string;
         companyID?: string;
+        company?: Company;
+    }
+    interface Company {
+        ID?: string;
+        objCode?: string;
+        isPrimary?: boolean;
+        name?: string;
     }
     interface Document {
         ID?: string;
