@@ -36,7 +36,7 @@
     "deep-extend": "^0.4.1",
     "follow-redirects": "^1.2.3",
     "form-data": "^2.1.2",
-    "mailparser": "^2.0.2",
+    "mailparser": "2.2.0",
     "moment": "^2.17.1",
     "querystring": "^0.2.0",
     "workfront-api": "^1.2.3"
