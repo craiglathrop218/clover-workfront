@@ -127,7 +127,7 @@ function apiOverrides(Api) {
                 if (data.error) {
                     reject(data);
                 }
-                else if (response.statusCode != 200) {
+                else if (response.statusCode != 200) { // If Workfront is down, then workfront http proxy returns 501 but with no content - so we want to catch that in here
                     reject(data);
                 }
                 else {
@@ -213,7 +213,7 @@ function apiOverrides(Api) {
             console.log("Making a download request: " + JSON.stringify(options) + ", session ID: " + this.httpOptions.headers.sessionID);
             var request = httpTransport.request(options, (response) => {
                 console.log("*** Download response: " + response.statusCode + ", " + response.statusMessage);
-                if (response.statusCode != 200) {
+                if (response.statusCode != 200) { // If Workfront is down, then workfront http proxy returns 501 but with no content - so we want to catch that in here
                     return reject(`Download failed! Response code: ${response.statusCode}, message: ${response.statusMessage}`);
                 }
                 // if (typeof response.setEncoding === 'function') {

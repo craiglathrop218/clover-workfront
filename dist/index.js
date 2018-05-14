@@ -805,35 +805,35 @@ class Workfront {
             // create a note
             let params = {};
             switch (replyToEntityRef.objCode) {
-                case "OPTASK": {
+                case "OPTASK": { // Issue
                     params.opTaskID = replyToEntityRef.ID;
                     break;
                 }
-                case "PROJ": {
+                case "PROJ": { // Project
                     params.projectID = replyToEntityRef.ID;
                     break;
                 }
-                case "TASK": {
+                case "TASK": { // Task
                     params.taskID = replyToEntityRef.ID;
                     break;
                 }
-                case "PORT": {
+                case "PORT": { // Portfolio
                     params.portfolioID = replyToEntityRef.ID;
                     break;
                 }
-                case "PRGM": {
+                case "PRGM": { // Program
                     params.programID = replyToEntityRef.ID;
                     break;
                 }
-                case "DOCU": {
+                case "DOCU": { // Document
                     params.documentID = replyToEntityRef.ID;
                     break;
                 }
-                case "TMPL": {
+                case "TMPL": { // Template
                     params.templateID = replyToEntityRef.ID;
                     break;
                 }
-                case "TTSK": {
+                case "TTSK": { // Template Task
                     params.templateTaskID = replyToEntityRef.ID;
                     break;
                 }
