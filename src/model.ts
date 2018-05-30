@@ -343,6 +343,7 @@ export namespace WfModel {
         templateID?: string,
         templateTaskID?: string,
         // References & Collections
+        project?: Project,
         parentJournalEntry?: JournalEntry,
         parentNote?: Note,
         document?: Document,
