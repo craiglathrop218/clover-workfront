@@ -1,7 +1,7 @@
 {
   "name": "clover-workfront",
   "private": true,
-  "version": "3.0.5",
+  "version": "3.0.10",
   "description": "",
   "main": "./dist/index",
   "types": "./dist/index.d.ts",
