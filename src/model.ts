@@ -342,6 +342,9 @@ export namespace WfModel {
         programID?: string,
         templateID?: string,
         templateTaskID?: string,
+        html?: string,
+        json?: string,
+        richTextNoteID?: string,
         // References & Collections
         project?: Project,
         parentJournalEntry?: JournalEntry,

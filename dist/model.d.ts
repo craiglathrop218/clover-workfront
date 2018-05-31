@@ -328,6 +328,9 @@ export declare namespace WfModel {
         programID?: string;
         templateID?: string;
         templateTaskID?: string;
+        html?: string;
+        json?: string;
+        richTextNoteID?: string;
         project?: Project;
         parentJournalEntry?: JournalEntry;
         parentNote?: Note;
