@@ -315,14 +315,15 @@ export class Workfront {
      * @returns {Promise<Upload>|Promise} - an object containing provided attachments and Workfront reference handles to them
      */
     uploadMailAttachmentsAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, attachments: mailparser.Attachment[]): Promise<Workfront.Upload> {
-        console.log(`Uploading mail attachments as user ${fromEmail.address}, attachments: ${attachments}!`);
+        console.log(`Uploading mail attachments (${attachments ? attachments.length : 0}) as user ${fromEmail.address}, attachments: ${attachments}!`);
         if (attachments && attachments.length) {
             return this.execAsUser<Workfront.Upload>(console, fromEmail, (api: api.Api, login: api.LoginResult) => {
                 let allUploads = new Array<Promise<any>>();
                 for (let att of attachments) {
                     let data: Buffer = att.content;
-                    //console.log("Content object type: " + data.constructor);
-                    allUploads.push(api.upload(data, {filename: att.fileName, contentType: att.contentType}));
+                    const attrs = {filename: att.fileName, contentType: att.contentType};
+                    console.log(`Uploading attachment! Content data (Buffer) type: ${data.constructor}, metadata: ${JSON.stringify(attrs)}`);
+                    allUploads.push(api.upload(data, attrs));
                 }
                 return Promise.all(allUploads).then((data: Workfront.UploadHandle[]) => {
                     console.log("Attachments uploaded!");
