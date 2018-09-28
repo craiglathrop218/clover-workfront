@@ -1,10 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const zlib_1 = require("zlib");
-const deep_extend_1 = require("deep-extend");
-const form_data_1 = require("form-data");
-const follow_redirects_1 = require("follow-redirects");
-const querystring_1 = require("querystring");
+const zlib_1 = __importDefault(require("zlib"));
+const deep_extend_1 = __importDefault(require("deep-extend"));
+const form_data_1 = __importDefault(require("form-data"));
+const follow_redirects_1 = __importDefault(require("follow-redirects"));
+const querystring_1 = __importDefault(require("querystring"));
 const timed_out_1 = require("./timed-out");
 const HTTP_REQ_TIMEOUT = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 function apiOverrides(Api) {

@@ -1,4 +1,3 @@
-/// <reference types="workfront-api" />
 /// <reference types="node" />
 import moment from "moment";
 import mailparser from "mailparser";

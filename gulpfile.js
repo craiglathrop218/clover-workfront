@@ -6,7 +6,8 @@ var project = ts.createProject("tsconfig.json", {
 	typescript: require('typescript'),
 	declaration: true,
   module: "commonjs",
-  target: "es2017"
+  target: "es2017",
+  esModuleInterop: true
 });
 var projectEs6 = ts.createProject("tsconfig.json", {
   typescript: require('typescript'),

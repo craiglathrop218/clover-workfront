@@ -1,6 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const workfront_api_1 = require("workfront-api");
+const workfront_api_1 = __importDefault(require("workfront-api"));
 const model_1 = require("./model");
 const api_overrides_1 = require("./api-overrides");
 // execute api overrides in start of this module
