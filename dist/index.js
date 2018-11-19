@@ -852,7 +852,8 @@ class Workfront {
             params.objID = replyToEntityRef.ID;
             params.noteText = reply.textMsg.trim();
             if (params.noteText) {
-                params.html = params.noteText.replace(/\r?\n/g, "<br>");
+                params.html = params.noteText.replace(/\r?\n/g, "<br>").replace("Replying", "TEST");
+                params.html = "<div>" + params.html + "</div>";
             }
             if (reply.threadID) {
                 params.threadID = reply.threadID;
