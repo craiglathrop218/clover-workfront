@@ -1,13 +1,13 @@
 
 export namespace WfModel {
-    export interface WfError {error: string, "class": string, message: string, title: string, msgKey: string, attributes: Array<string>, code: number};
+    export interface WfError { error: string, "class": string, message: string, title: string, msgKey: string, attributes: Array<string>, code: number };
     export interface WfObject {
         objCode?: string,
         ID?: string,
         name?: string
     };
 
-    export interface UploadHandle {handle: string};
+    export interface UploadHandle { handle: string };
 
     export interface Project {
         objCode?: string,
@@ -304,8 +304,8 @@ export namespace WfModel {
         requestor?: User
     }
 
-    export interface AssignUserToken {result: string};
-    export interface CompleteUserRegistration {result: string}
+    export interface AssignUserToken { result: string };
+    export interface CompleteUserRegistration { result: string }
 
     export interface Note extends WfObject {
         ID?: string,
@@ -447,7 +447,8 @@ export namespace WfModel {
         public teamID: string;
         public accessRules: AccessRule[];
         public approverStatuses?: ApproverStatus[];
-        public subscribes?: Subscribe[]
+        public subscribes?: Subscribe[];
+        public project?: Project;
     }
     export class ReplyMessage {
         textMsg: string;

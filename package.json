@@ -1,7 +1,7 @@
 {
   "name": "clover-workfront",
   "private": true,
-  "version": "3.0.14",
+  "version": "3.0.15-tmp",
   "description": "",
   "main": "./dist/index",
   "types": "./dist/index.d.ts",
@@ -22,11 +22,11 @@
   },
   "homepage": "https://github.com/craiglathrop218/clover-workfront#readme",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-typescript": "^4.0.2",
-    "merge2": "^1.2.2",
-    "typescript": "^3.1.1"
+    "gulp": "^4.0.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-typescript": "^5.0.0-alpha.3",
+    "merge2": "^1.2.3",
+    "typescript": "^3.1.6"
   },
   "dependencies": {
     "@types/deep-extend": "^0.4.31",
@@ -42,6 +42,6 @@
     "workfront-api": "^1.4.1"
   },
   "resolutions": {
-    "natives": "1.1.3"
+    "natives": "1.1.6"
   }
 }

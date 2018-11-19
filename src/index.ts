@@ -2,8 +2,8 @@
 import moment from "moment";
 import mailparser from "mailparser";
 import api from "workfront-api";
-import {WfModel} from "./model";
-import {apiOverrides} from "./api-overrides";
+import { WfModel } from "./model";
+import { apiOverrides } from "./api-overrides";
 
 // execute api overrides in start of this module
 apiOverrides(api.Api);
@@ -186,7 +186,7 @@ export class Workfront {
     async execAsUser<T>(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, callback: (api: api.Api, login: api.LoginResult) => Promise<T>): Promise<T> {
         // check if we have WfContext coming in, if so then if not already logged in then login
         if ((console as any).getSession && (console as any).setSession) {
-            let ctx: Workfront.WfContext = <Workfront.WfContext> console;
+            let ctx: Workfront.WfContext = <Workfront.WfContext>console;
             let login: api.LoginResult = ctx.getSession(fromEmail.address);
             if (!login) {
                 // login first
@@ -280,7 +280,7 @@ export class Workfront {
      * @param fields - extra fields to return for the project
      * @returns {Promise<Project>} - fetched project
      */
-    getProjectById(console: Workfront.Logger, projId: string, fields?: string|string[]): Promise<WfModel.Project> {
+    getProjectById(console: Workfront.Logger, projId: string, fields?: string | string[]): Promise<WfModel.Project> {
         console.log("Getting Project by id: " + projId);
         return this.api.get<WfModel.Project>("PROJ", projId, fields).then((project: WfModel.Project) => {
             return project;
@@ -321,13 +321,13 @@ export class Workfront {
                 let allUploads = new Array<Promise<any>>();
                 for (let att of attachments) {
                     let data: Buffer = att.content;
-                    const attrs = {filename: att.fileName, contentType: att.contentType};
+                    const attrs = { filename: att.fileName, contentType: att.contentType };
                     console.log(`Uploading attachment! Content data (Buffer) type: ${data.constructor}, metadata: ${JSON.stringify(attrs)}`);
                     allUploads.push(api.upload(data, attrs));
                 }
                 return Promise.all(allUploads).then((data: Workfront.UploadHandle[]) => {
                     console.log("Attachments uploaded!");
-                    return <Workfront.Upload>{attachments: attachments, handles: data};
+                    return <Workfront.Upload>{ attachments: attachments, handles: data };
                 });
             });
         } else {
@@ -363,7 +363,7 @@ export class Workfront {
         let users: WfModel.User[] = await Promise.all(usersFetched);
         console.log("Users fetched! " + JSON.stringify(users));
         let result = new Map<string, Workfront.User>();
-        for (let i=0; i < userEmailsFetched.length; i++) {
+        for (let i = 0; i < userEmailsFetched.length; i++) {
             let email = userEmailsFetched[i];
             let user = users[i];
             result.set(email, user);
@@ -408,7 +408,7 @@ export class Workfront {
      * @param accessConfigs - the workfront access settings / levels for a user
      * @returns {Promise<User>|Promise}
      */
-    async getOrCreateUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, accessConfigs: {externalUsers: Workfront.UserAccessConfig, idtUsers: Workfront.UserAccessConfig}, userFieldsToReturn: string[], fetchSsoId?: Workfront.FetchSsoId): Promise<WfModel.User> {
+    async getOrCreateUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, accessConfigs: { externalUsers: Workfront.UserAccessConfig, idtUsers: Workfront.UserAccessConfig }, userFieldsToReturn: string[], fetchSsoId?: Workfront.FetchSsoId): Promise<WfModel.User> {
         let user: WfModel.User = await this.getUserByEmail(console, fromEmail, userFieldsToReturn);
         if (user) {
             // we found existing user, return it
@@ -517,7 +517,7 @@ export class Workfront {
         let users: WfModel.User[] = await Promise.all(usersFetched);
         console.log("Users fetched or created! " + JSON.stringify(users));
         let result = new Map<string, Workfront.User>();
-        for (let i=0; i < userEmailsFetched.length; i++) {
+        for (let i = 0; i < userEmailsFetched.length; i++) {
             let email = userEmailsFetched[i];
             let user = users[i];
             result.set(email, user);
@@ -533,7 +533,7 @@ export class Workfront {
      * @param fields - extra fields to return for user
      * @returns {Promise<User>} - fetched user
      */
-    getUserById(console: Workfront.Logger, userId: string, fields?: string|string[]): Promise<WfModel.User> {
+    getUserById(console: Workfront.Logger, userId: string, fields?: string | string[]): Promise<WfModel.User> {
         console.log("Getting User by id: " + userId);
         return this.api.get<WfModel.User>("USER", userId, fields).then((user: WfModel.User) => {
             return user;
@@ -548,7 +548,7 @@ export class Workfront {
      * @param fields - extra fields to return for team
      * @returns {Promise<Team>} - fetched team
      */
-    getTeamById(console: Workfront.Logger, teamId: string, fields?: string|string[]): Promise<WfModel.Team> {
+    getTeamById(console: Workfront.Logger, teamId: string, fields?: string | string[]): Promise<WfModel.Team> {
         console.log("Getting Team by id: " + teamId);
         return this.api.get<WfModel.Team>("TEAMOB", teamId, fields).then((team: WfModel.Team) => {
             return team;
@@ -563,7 +563,7 @@ export class Workfront {
      * @param fields - extra fields to return for an issue
      * @returns {Promise<Issue>} - fetched issue
      */
-    getIssueById(console: Workfront.Logger, issueId: string, fields?: string|string[]): Promise<WfModel.Issue> {
+    getIssueById(console: Workfront.Logger, issueId: string, fields?: string | string[]): Promise<WfModel.Issue> {
         console.log("Getting Issue by id: " + issueId);
         return this.api.get<WfModel.Issue>("OPTASK", issueId, fields).then((issue: WfModel.Issue) => {
             return issue;
@@ -579,7 +579,7 @@ export class Workfront {
      * @param extRefID - an email id.
      * @returns {Promise<Issue>} - an issue if found based on email id
      */
-    getIssueByExtId(console: Workfront.Logger, extRefID: string, fields?: string|string[]): Promise<WfModel.Issue> {
+    getIssueByExtId(console: Workfront.Logger, extRefID: string, fields?: string | string[]): Promise<WfModel.Issue> {
         console.log("Checking issue existence by extRefId: " + extRefID);
         return this.api.search<WfModel.Issue[]>("OPTASK", {
             extRefID: extRefID,
@@ -604,7 +604,7 @@ export class Workfront {
      * @param fields
      * @returns {any}
      */
-        // @todo see if we can replace the specific "updateIssueAsUser" function with this more generic one.
+    // @todo see if we can replace the specific "updateIssueAsUser" function with this more generic one.
     makeUpdatesAsUser(console: Workfront.Logger, from: mailparser.EmailAddress, entityRef: WfModel.WfObject, updates: any, fields: any[] = []): Promise<WfModel.WfObject> {
         return this.execAsUser<WfModel.WfObject>(console, from, (api: api.Api, login: api.LoginResult) => {
             console.log("[makeUpdateAsUser] - Got login session for user: " + from.address + ", sessionId: " + login.sessionID);
@@ -623,7 +623,7 @@ export class Workfront {
      * @param refNr - issue reference nr. Got from an email body
      * @returns {Promise<Issue>} - an issue if found, otherwise null
      */
-    getIssueByRefNr(console: Workfront.Logger, refNr: string, fields?: string|string[]): Promise<WfModel.Issue> {
+    getIssueByRefNr(console: Workfront.Logger, refNr: string, fields?: string | string[]): Promise<WfModel.Issue> {
         return this.api.search<WfModel.Issue[]>("OPTASK", {
             referenceNumber: refNr,
             referenceNumber_Mod: "eq"
@@ -643,7 +643,7 @@ export class Workfront {
      * @param params - fields to be set on an issue
      * @returns {Promise<Issue>} - created Issue
      */
-    createIssueAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.Issue> {
+    createIssueAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, params: Object, fields?: string | string[]): Promise<WfModel.Issue> {
         console.log("*** Creating issue! Params: " + JSON.stringify(params));
         return this.execAsUser<WfModel.Issue>(console, fromEmail, (api: api.Api) => {
             return api.create<WfModel.Issue>("OPTASK", params, fields);
@@ -660,7 +660,7 @@ export class Workfront {
      * @param fields - extra fields to return
      * @returns {Promise<Issue>|Promise} - update Issue
      */
-    updateIssueAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, issueId: string, updates: Object, fields?: string|string[]): Promise<WfModel.Issue> {
+    updateIssueAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, issueId: string, updates: Object, fields?: string | string[]): Promise<WfModel.Issue> {
         console.log("*** Updating issue as User. Email: " + fromEmail.address + ", updates: " + JSON.stringify(updates));
         return this.execAsUser<WfModel.Issue>(console, fromEmail, (api: api.Api, login: api.LoginResult) => {
             // update
@@ -678,7 +678,7 @@ export class Workfront {
      * @param params - fields to be set on an project
      * @returns {Promise<Project>} - created Project
      */
-    createProjectAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.Project> {
+    createProjectAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, params: Object, fields?: string | string[]): Promise<WfModel.Project> {
         console.log("*** Creating project! Params: " + JSON.stringify(params));
         return this.execAsUser<WfModel.Project>(console, fromEmail, (api: api.Api) => {
             return api.create<WfModel.Project>("PROJ", params, fields);
@@ -692,7 +692,7 @@ export class Workfront {
      * @param params - fields to be set on an issue
      * @returns {Promise<DocumentFolder>} - created Document Folder
      */
-    createFolderAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, params: Object, fields?: string|string[]): Promise<WfModel.DocumentFolder> {
+    createFolderAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, params: Object, fields?: string | string[]): Promise<WfModel.DocumentFolder> {
         console.log("*** Creating document folder! Params: " + JSON.stringify(params));
         return this.execAsUser<WfModel.DocumentFolder>(console, fromEmail, (api: api.Api) => {
             return api.create<WfModel.DocumentFolder>("DOCFDR", params, fields);
@@ -706,7 +706,7 @@ export class Workfront {
      * @param refNr - a reference number got from email body
      * @returns {Promise<Task>} - a task if found, otherwise null
      */
-    getOrCreateDocumentFolder(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, folderParentField: WfModel.DocumentFolderParentField, folderName: string, fields?: string|string[], parentFolderId?: string): Promise<WfModel.DocumentFolder> {
+    getOrCreateDocumentFolder(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, folderParentField: WfModel.DocumentFolderParentField, folderName: string, fields?: string | string[], parentFolderId?: string): Promise<WfModel.DocumentFolder> {
         if (!folderParentField) {
             return Promise.reject(`Document folder parent entity field name (issueID, taskID, projectID) is required to create a folder! Requested folder name: ${folderName}`);
         }
@@ -756,7 +756,7 @@ export class Workfront {
     createDocumentsAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, parentRef: WfModel.WfObject, upload: Workfront.Upload, docFieldsToReturn: string[], docFolder?: WfModel.DocumentFolder): Promise<WfModel.Document[]> {
         return this.execAsUser<WfModel.Document[]>(console, fromEmail, (api: api.Api, login: api.LoginResult) => {
             let allPromises = new Array<Promise<WfModel.Document>>();
-            for (let i=0; i < upload.attachments.length; i++) {
+            for (let i = 0; i < upload.attachments.length; i++) {
                 let att: mailparser.Attachment = upload.attachments[i];
                 let handle: Workfront.UploadHandle = upload.handles[i];
 
@@ -801,7 +801,7 @@ export class Workfront {
      * @param fields - extra fields to return for a document
      * @returns {Promise<Document>} - fetched document
      */
-    getDocumentById(console: Workfront.Logger, docId: string, fields?: string|string[]): Promise<WfModel.Document> {
+    getDocumentById(console: Workfront.Logger, docId: string, fields?: string | string[]): Promise<WfModel.Document> {
         console.log("Getting Document by id: " + docId);
         return this.api.get<WfModel.Document>("DOCU", docId, fields).then((doc: WfModel.Document) => {
             return doc;
@@ -816,7 +816,7 @@ export class Workfront {
      * @param fields - extra fields to return for a document version
      * @returns {Promise<DocumentVersion>} - fetched document version
      */
-    getDocumentVersionById(console: Workfront.Logger, docVerId: string, fields?: string|string[]): Promise<WfModel.DocumentVersion> {
+    getDocumentVersionById(console: Workfront.Logger, docVerId: string, fields?: string | string[]): Promise<WfModel.DocumentVersion> {
         console.log("Getting Document Version by id: " + docVerId + ", fields to return: " + JSON.stringify(fields));
         return this.api.get<WfModel.DocumentVersion>("DOCV", docVerId, fields).then((docVer: WfModel.DocumentVersion) => {
             return docVer;
@@ -831,7 +831,7 @@ export class Workfront {
      * @param fields - extra fields to return for a document
      * @returns {Promise<DocumentApproval>} - fetched document approval
      */
-    getDocumentApprovalById(console: Workfront.Logger, docApprovalId: string, fields?: string|string[]): Promise<WfModel.DocumentApproval> {
+    getDocumentApprovalById(console: Workfront.Logger, docApprovalId: string, fields?: string | string[]): Promise<WfModel.DocumentApproval> {
         console.log("Getting Document Approval by id: " + docApprovalId);
         return this.api.get<WfModel.DocumentApproval>("DOCAPL", docApprovalId, fields).then((approval: WfModel.DocumentApproval) => {
             return approval;
@@ -876,7 +876,7 @@ export class Workfront {
             let userId = login.userID;
             // create a note
             let params: WfModel.Note = <WfModel.Note>{};
-            switch(replyToEntityRef.objCode){
+            switch (replyToEntityRef.objCode) {
                 case "OPTASK": { // Issue
                     params.opTaskID = replyToEntityRef.ID;
                     break;
@@ -913,13 +913,16 @@ export class Workfront {
                     return Promise.reject(`!!!!ERROR!!!! An unrecognized object type ${replyToEntityRef.objCode} while creating a reply note was just entered.`);
                 }
             }
-            if (reply.parentJournalEntryID){
+            if (reply.parentJournalEntryID) {
                 params.parentJournalEntryID = reply.parentJournalEntryID;
             }
             params.noteObjCode = replyToEntityRef.objCode;
             params.objID = replyToEntityRef.ID;
             params.noteText = reply.textMsg.trim();
-            if (reply.threadID){
+            if (params.noteText) {
+                params.html = params.noteText.replace(/\r?\n/g, "<br>");
+            }
+            if (reply.threadID) {
                 params.threadID = reply.threadID;
                 // If it's a journal entry response then there is no parentNoteID
                 if (!reply.parentJournalEntryID) {
@@ -951,7 +954,7 @@ export class Workfront {
      * @param fields - extra fields to return
      * @returns {Promise<Note>} - Note object corresponding to provided note id
      */
-    getNoteById(console: Workfront.Logger, noteId: string, fields?: string|string[]): Promise<WfModel.Note> {
+    getNoteById(console: Workfront.Logger, noteId: string, fields?: string | string[]): Promise<WfModel.Note> {
         console.log("Getting Note by id: " + noteId);
         return this.api.get<WfModel.Note>("NOTE", noteId, fields).then((note: WfModel.Note) => {
             return note;
@@ -966,7 +969,7 @@ export class Workfront {
      * @param fields - extra fields to return
      * @returns {Promise<Note>} - Note object corresponding to provided note id
      */
-    getJournalEntryById(console: Workfront.Logger, journalEntryId: string, fields?: string|string[]): Promise<WfModel.JournalEntry> {
+    getJournalEntryById(console: Workfront.Logger, journalEntryId: string, fields?: string | string[]): Promise<WfModel.JournalEntry> {
         console.log("Getting Journal Entry by id: " + journalEntryId);
         return this.api.get<WfModel.JournalEntry>("JRNLE", journalEntryId, fields).then((jrnle: WfModel.JournalEntry) => {
             return jrnle;
@@ -991,7 +994,7 @@ export class Workfront {
      * @param refNr - a reference number got from email body
      * @returns {Promise<Task>} - a task if found, otherwise null
      */
-    getTaskByRefNr(console: Workfront.Logger, refNr: string, fields?: string|string[]): Promise<WfModel.Task> {
+    getTaskByRefNr(console: Workfront.Logger, refNr: string, fields?: string | string[]): Promise<WfModel.Task> {
         if (!fields) { fields = ["referenceNumber"]; }
         return this.api.search<WfModel.Task[]>("TASK", {
             referenceNumber: refNr,
@@ -1154,7 +1157,7 @@ export class Workfront {
     /**
      * Find DocV corresponding journal entry
      */
-    findDocVJournalEntry(console: Workfront.Logger, docv: WfModel.DocumentVersion, fieldsToReturn?: string|string[]): Promise<WfModel.JournalEntry> {
+    findDocVJournalEntry(console: Workfront.Logger, docv: WfModel.DocumentVersion, fieldsToReturn?: string | string[]): Promise<WfModel.JournalEntry> {
         return this.api.search<WfModel.JournalEntry[]>("JRNLE", {
             aux2: docv.ID, // DocV id will be put in "aux - Additional info field" when journal entry is created
             subObjCode: "DOCU",
@@ -1172,7 +1175,7 @@ export class Workfront {
      */
     uploadPdfDocumentAsUser(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, parentRef: WfModel.WfObject, buffer: Buffer | string, fileName: string, docFolder: WfModel.DocumentFolder, docFieldsToReturn: string[]): Promise<WfModel.Document> {
         return this.execAsUser<WfModel.Document>(console, fromEmail, (api: api.Api, login: api.LoginResult) => {
-            return api.upload(buffer, {filename: fileName, contentType: "application/pdf"}).then((upload: Workfront.UploadHandle) => {
+            return api.upload(buffer, { filename: fileName, contentType: "application/pdf" }).then((upload: Workfront.UploadHandle) => {
                 console.log("Uploaded PDF! Handle: " + upload.handle + ", as user: " + fromEmail.address + ", sessionId: " + login.sessionID + ", into document folder: " + docFolder);
                 // Now create a document object for that uploaded PDF
                 console.log("Creating document for PDF!");
@@ -1214,7 +1217,7 @@ export class Workfront {
      */
     downloadAsUser(console: Workfront.Logger, ownerUsername: string, downloadURL: string, output: NodeJS.WritableStream): Promise<void> {
         console.log(`*** Downloading document as Owner. Username: ${ownerUsername}, download url: ${downloadURL}"`);
-        return this.execAsUser<void>(console, {address: ownerUsername, name: ""}, (api: api.Api, login: api.LoginResult) => {
+        return this.execAsUser<void>(console, { address: ownerUsername, name: "" }, (api: api.Api, login: api.LoginResult) => {
             // download
             return api.download(downloadURL, output);
         });
@@ -1375,6 +1378,6 @@ export namespace Workfront {
         errorDate: moment.Moment
     }
 
-    export interface Upload {attachments: mailparser.Attachment[], handles: UploadHandle[]};
+    export interface Upload { attachments: mailparser.Attachment[], handles: UploadHandle[] };
 }
 

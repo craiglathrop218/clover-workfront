@@ -8,3 +8,4 @@ export declare namespace TimedOut {
         timeoutTimer: number;
     }
 }
+//# sourceMappingURL=timed-out.d.ts.map

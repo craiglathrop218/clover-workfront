@@ -415,3 +415,4 @@ export declare namespace Workfront {
         handles: UploadHandle[];
     }
 }
+//# sourceMappingURL=index.d.ts.map

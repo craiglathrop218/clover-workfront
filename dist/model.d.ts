@@ -425,6 +425,7 @@ export declare namespace WfModel {
         accessRules: AccessRule[];
         approverStatuses?: ApproverStatus[];
         subscribes?: Subscribe[];
+        project?: Project;
     }
     class ReplyMessage {
         textMsg: string;
@@ -721,3 +722,4 @@ export declare namespace WfModel {
         count: number;
     }
 }
+//# sourceMappingURL=model.d.ts.map

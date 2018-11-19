@@ -851,6 +851,9 @@ class Workfront {
             params.noteObjCode = replyToEntityRef.objCode;
             params.objID = replyToEntityRef.ID;
             params.noteText = reply.textMsg.trim();
+            if (params.noteText) {
+                params.html = params.noteText.replace(/\r?\n/g, "<br>");
+            }
             if (reply.threadID) {
                 params.threadID = reply.threadID;
                 // If it's a journal entry response then there is no parentNoteID
