@@ -61,7 +61,7 @@ function randomPassword() {
 }
 var ApiFactory = api.ApiFactory;
 function getAPIInstance(apiFactoryConfig, returnNewInstance) {
-    const api = ApiFactory.getInstance(this.apiFactoryConfig);
+    const api = ApiFactory.getInstance(apiFactoryConfig, returnNewInstance);
     // Setting secureProtocol to "TLSv1_method" is blocks connecting to workfront
     // this.httpOptions.secureProtocol = config.secureProtocol || 'TLSv1_method';
     delete api.httpOptions.secureProtocol;
