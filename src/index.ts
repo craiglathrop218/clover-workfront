@@ -71,6 +71,14 @@ function randomPassword() {
 
 var ApiFactory = api.ApiFactory;
 
+function getAPIInstance(apiFactoryConfig: any, returnNewInstance: boolean): api.Api {
+    const api = ApiFactory.getInstance(this.apiFactoryConfig);
+    // Setting secureProtocol to "TLSv1_method" is blocks connecting to workfront
+    // this.httpOptions.secureProtocol = config.secureProtocol || 'TLSv1_method';
+    delete api.httpOptions.secureProtocol;
+    return api;
+}
+
 /**
  * A Workfront internal API for our project that provides a convenient and wrapped methods to be used in different usage scenarios.
  */
@@ -99,7 +107,7 @@ export class Workfront {
 
     initialize(config: api.Config = Workfront.apiFactoryConfig, key: string) {
         this.apiFactoryConfig = config;
-        this.api = ApiFactory.getInstance(this.apiFactoryConfig);
+        this.api = getAPIInstance(this.apiFactoryConfig);
         this.api.httpParams.apiKey = key;
     }
 
@@ -116,7 +124,7 @@ export class Workfront {
     login(console: Workfront.Logger, fromEmail: mailparser.EmailAddress, waitDelay?: number): Promise<api.LoginResult> {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
-        let api: api.Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
+        let api: api.Api = getAPIInstance(this.apiFactoryConfig, true);
         api.httpParams.apiKey = this.api.httpParams.apiKey;
 
         // if there is wait delay specified after a login
@@ -145,7 +153,7 @@ export class Workfront {
     logout(login: api.LoginResult): Promise<Object> {
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
-        let api: api.Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
+        let api: api.Api = getAPIInstance(this.apiFactoryConfig, true);
         delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
         api.httpOptions.headers.sessionID = login.sessionID;
         return api.logout();
@@ -157,7 +165,7 @@ export class Workfront {
 
         // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
         // For that reason, we create a new instance of api
-        let api: api.Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
+        let api: api.Api = getAPIInstance(this.apiFactoryConfig, true);
         delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
         api.httpOptions.headers.sessionID = login.sessionID;
 
@@ -228,7 +236,7 @@ export class Workfront {
 
             // NB! existing api instance (Workfront.api) is not safe to use while just replacing a sessionId over there
             // For that reason, we create a new instance of api
-            let api: api.Api = ApiFactory.getInstance(this.apiFactoryConfig, true);
+            let api: api.Api = getAPIInstance(this.apiFactoryConfig, true);
             api.httpParams.apiKey = this.api.httpParams.apiKey;
 
             // login and execute provided function under a user
