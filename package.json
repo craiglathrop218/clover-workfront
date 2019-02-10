@@ -1,7 +1,7 @@
 {
   "name": "clover-workfront",
   "private": true,
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "",
   "main": "./dist/index",
   "types": "./dist/index.d.ts",
@@ -31,12 +31,12 @@
   "dependencies": {
     "@types/deep-extend": "^0.4.31",
     "@types/form-data": "0.0.33",
-    "@types/mailparser": "^0.5.32",
+    "@types/mailparser": "^2.0.2",
     "@types/node": "^7.0.64",
     "deep-extend": "^0.4.2",
     "follow-redirects": "^1.4.1",
     "form-data": "^2.3.2",
-    "mailparser": "^2.2.0",
+    "mailparser": "^2.4.3",
     "moment": "^2.22.1",
     "querystring": "^0.2.0",
     "workfront-api": "^1.4.1"
