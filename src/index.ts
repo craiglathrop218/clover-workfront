@@ -329,7 +329,7 @@ export class Workfront {
                 let allUploads = new Array<Promise<any>>();
                 for (let att of attachments) {
                     let data: Buffer = att.content;
-                    const attrs = { filename: att.fileName, contentType: att.contentType };
+                    const attrs = { filename: att.filename, contentType: att.contentType };
                     console.log(`Uploading attachment! Content data (Buffer) type: ${data.constructor}, metadata: ${JSON.stringify(attrs)}`);
                     allUploads.push(api.upload(data, attrs));
                 }
@@ -769,10 +769,10 @@ export class Workfront {
                 let handle: Workfront.UploadHandle = upload.handles[i];
 
                 // verify that document has a name
-                let docName = att.fileName;
-                if (!docName) {
-                    docName = att.generatedFileName;
-                }
+                let docName = att.filename;
+                // if (!docName) {
+                //     docName = att.generatedFileName;
+                // }
                 if (!docName) {
                     docName = "unknown";
                 }
@@ -786,7 +786,7 @@ export class Workfront {
                         handle: handle.handle
                         // currentVersion: {
                         //     version: "1.0",
-                        //     fileName: att.fileName
+                        //     fileName: att.filename
                         // }
                     };
                     if (docFolder) {
@@ -1192,7 +1192,7 @@ export class Workfront {
                         handle: upload.handle
                         // currentVersion: {
                         //     version: "1.0",
-                        //     fileName: att.fileName
+                        //     fileName: att.filename
                         // }
                     }
                     if (docFolder) {
