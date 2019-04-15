@@ -1,8 +1,10 @@
 import net from "net";
 import http from "http";
+import debug from "debug";
+
+const log = debug("clover:api");
 
 // modifed version of https://github.com/floatdrop/timed-out
-
 export class TimedOut {
     static applyToRequest(req: TimedOut.MyClientRequest, time: number): TimedOut.MyClientRequest {
         if (req.timeoutTimer) {
@@ -28,7 +30,7 @@ export class TimedOut {
         // request and is connected.
         req.on('socket', function assign(socket: net.Socket) {
             socket.on("lookup", (err, address: string) => {
-                console.log("Got remote address! Remote address: " + address + ", for host: " + host);
+                log("Got remote address! Remote address: " + address + ", for host: " + host);
                 remoteAddress = address;
             });
             // Socket may come from Agent pool and may be already connected.

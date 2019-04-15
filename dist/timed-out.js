@@ -1,5 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const debug_1 = __importDefault(require("debug"));
+const log = debug_1.default("clover:api");
 // modifed version of https://github.com/floatdrop/timed-out
 class TimedOut {
     static applyToRequest(req, time) {
@@ -23,7 +28,7 @@ class TimedOut {
         // request and is connected.
         req.on('socket', function assign(socket) {
             socket.on("lookup", (err, address) => {
-                console.log("Got remote address! Remote address: " + address + ", for host: " + host);
+                log("Got remote address! Remote address: " + address + ", for host: " + host);
                 remoteAddress = address;
             });
             // Socket may come from Agent pool and may be already connected.
