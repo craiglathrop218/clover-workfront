@@ -6,9 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const zlib_1 = __importDefault(require("zlib"));
 const deep_extend_1 = __importDefault(require("deep-extend"));
 const form_data_1 = __importDefault(require("form-data"));
-const follow_redirects_1 = __importDefault(require("follow-redirects"));
 const querystring_1 = __importDefault(require("querystring"));
+const debug_1 = __importDefault(require("debug"));
 const timed_out_1 = require("./timed-out");
+const followHttp = require('follow-redirects').http;
+const followHttps = require('follow-redirects').https;
+const log = debug_1.default("clover:api");
 const HTTP_REQ_TIMEOUT = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 function apiOverrides(Api) {
     // used to store entity metadata responses
@@ -24,7 +27,7 @@ function apiOverrides(Api) {
      */
     Api.prototype.login = function (username, password) {
         return this.request('login', (() => {
-            console.log("logging in! Username: " + username);
+            log("logging in! Username: " + username);
             let params = { username: username };
             if (password) {
                 params.password = password;
@@ -73,7 +76,7 @@ function apiOverrides(Api) {
                     reject(err);
                     return;
                 }
-                //console.log("Setting content-length: " + length);
+                //log("Setting content-length: " + length);
                 request.setHeader('Content-Length', length);
                 form.pipe(request);
             });
@@ -92,7 +95,7 @@ function apiOverrides(Api) {
     Api.prototype._handleResponse = (resolve, reject) => {
         return function (response) {
             let contentEncoding = response.headers['content-encoding'];
-            console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, contentEncoding: ${contentEncoding}, response headers: ${JSON.stringify(response.headers)}`);
+            log(`*** Response: ${response.statusCode}, ${response.statusMessage}, contentEncoding: ${contentEncoding}, response headers: ${JSON.stringify(response.headers)}`);
             // check content encoding
             var output;
             if (contentEncoding == 'gzip') {
@@ -113,12 +116,12 @@ function apiOverrides(Api) {
             var body = '';
             output.on('data', function (chunk) {
                 // chunk = chunk.toString('utf-8');
-                //console.log(`HTTP receiving data: ${chunk}`);
+                //log(`HTTP receiving data: ${chunk}`);
                 body += chunk;
             });
             output.on('end', function () {
-                console.log(`HTTP response: ${body}`);
-                // console.log(`Response headers: ${JSON.stringify(response.headers)}`);
+                log(`HTTP response: ${body}`);
+                // log(`Response headers: ${JSON.stringify(response.headers)}`);
                 var data;
                 try {
                     data = JSON.parse(body);
@@ -138,7 +141,7 @@ function apiOverrides(Api) {
                 }
             });
             output.on('error', function (err) {
-                console.log(`HTTP output error: ${err}`);
+                log(`HTTP output error: ${err}`);
                 return reject(err);
             });
         };
@@ -173,7 +176,7 @@ function apiOverrides(Api) {
      */
     Api.prototype.metadata = function (objCode, useCache) {
         if (useCache && metaDataCache[objCode]) {
-            // console.log(`Metadata from cache! ${objCode}`);
+            // log(`Metadata from cache! ${objCode}`);
             return Promise.resolve(metaDataCache[objCode]);
         }
         let params = {};
@@ -181,7 +184,7 @@ function apiOverrides(Api) {
             params.apiKey = this.httpParams.apiKey;
         }
         let endpoint = objCode + "/metadata";
-        // console.log(`Metadata from network! ${objCode}`);
+        // log(`Metadata from network! ${objCode}`);
         return this.request(endpoint, params, [], Api.Methods.GET).then((metaData) => {
             metaDataCache[objCode] = metaData;
             return metaData;
@@ -211,11 +214,11 @@ function apiOverrides(Api) {
         options.path = downloadURL;
         //var httpTransport = this.httpTransport;
         var isHttps = this.httpOptions.protocol === 'https:';
-        var httpTransport = isHttps ? follow_redirects_1.default.https : follow_redirects_1.default.http;
+        var httpTransport = isHttps ? followHttps : followHttp;
         return new Promise((resolve, reject) => {
-            console.log("Making a download request: " + JSON.stringify(options) + ", session ID: " + this.httpOptions.headers.sessionID);
+            log("Making a download request: " + JSON.stringify(options) + ", session ID: " + this.httpOptions.headers.sessionID);
             var request = httpTransport.request(options, (response) => {
-                console.log("*** Download response: " + response.statusCode + ", " + response.statusMessage);
+                log("*** Download response: " + response.statusCode + ", " + response.statusMessage);
                 if (response.statusCode != 200) { // If Workfront is down, then workfront http proxy returns 501 but with no content - so we want to catch that in here
                     return reject(`Download failed! Response code: ${response.statusCode}, message: ${response.statusMessage}`);
                 }
@@ -225,11 +228,11 @@ function apiOverrides(Api) {
                 response.on("error", reject);
                 response.pipe(output);
                 output.on('finish', () => {
-                    console.log(`HTTP download ended!`);
+                    log(`HTTP download ended!`);
                     resolve();
                 });
                 // response.on('data', (chunk) => { output.write(chunk); });
-                // response.on('end', () => { console.log(`HTTP download ended!`); resolve(); });
+                // response.on('end', () => { log(`HTTP download ended!`); resolve(); });
             });
             timed_out_1.TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
             request.on('error', reject);
@@ -295,10 +298,10 @@ function apiOverrides(Api) {
             }
         }
         // debug
-        console.log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
+        log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
         // let configName = Config.instance().name;
         // if (configName == Config.OJA) {
-        //     console.log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
+        //     log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
         // }
         var httpTransport = this.httpTransport;
         return new Promise(function (resolve, reject) {

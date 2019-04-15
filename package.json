@@ -1,12 +1,12 @@
 {
   "name": "clover-workfront",
   "private": true,
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "",
   "main": "./dist/index",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -22,17 +22,15 @@
   },
   "homepage": "https://github.com/craiglathrop218/clover-workfront#readme",
   "devDependencies": {
-    "gulp": "^4.0.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-typescript": "^5.0.0-alpha.3",
-    "merge2": "^1.2.3",
-    "typescript": "^3.1.6"
+    "@types/debug": "^4.1.4",
+    "@types/node": "^11.13.4",
+    "typescript": "^3.4.3"
   },
   "dependencies": {
     "@types/deep-extend": "^0.4.31",
     "@types/form-data": "0.0.33",
     "@types/mailparser": "^2.0.2",
-    "@types/node": "^7.0.64",
+    "debug": "^4.1.1",
     "deep-extend": "^0.4.2",
     "follow-redirects": "^1.4.1",
     "form-data": "^2.3.2",

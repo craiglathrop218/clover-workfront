@@ -1,4 +1,3 @@
-
 export namespace WfModel {
     export interface WfError { error: string, "class": string, message: string, title: string, msgKey: string, attributes: Array<string>, code: number };
     export interface WfObject {

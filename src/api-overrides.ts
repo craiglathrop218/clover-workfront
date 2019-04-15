@@ -3,11 +3,15 @@ import zlib from "zlib";
 import http from "http";
 import deepExtend from "deep-extend";
 import FormData from "form-data";
-import followRedirects from "follow-redirects";
 import queryString from "querystring";
-import {TimedOut} from "./timed-out";
-import {WfModel} from "./model";
+import debug from "debug";
+import { TimedOut } from "./timed-out";
+import { WfModel } from "./model";
 
+const followHttp = require('follow-redirects').http;
+const followHttps = require('follow-redirects').https;
+
+const log = debug("clover:api");
 const HTTP_REQ_TIMEOUT: number = 30000; // Time in milliseconds to wait for connect event on socket and also time to wait on inactive socket.
 
 function apiOverrides(Api: any) {
@@ -23,10 +27,10 @@ function apiOverrides(Api: any) {
      * @param password - Workfront password
      * @returns {any}
      */
-    Api.prototype.login = function (username: string, password: string) {
+    Api.prototype.login = function(username: string, password: string) {
         return this.request('login', (() => {
-            console.log("logging in! Username: " + username);
-            let params: any = { username: username};
+            log("logging in! Username: " + username);
+            let params: any = { username: username };
             if (password) {
                 params.password = password;
             }
@@ -34,7 +38,7 @@ function apiOverrides(Api: any) {
                 params.apiKey = this.httpParams.apiKey;
             }
             return params;
-        })(), null, Api.Methods.POST).then(function (data: any) {
+        })(), null, Api.Methods.POST).then(function(data: any) {
             this.httpOptions.headers.sessionID = data.sessionID;
             return data;
         }.bind(this));
@@ -47,7 +51,7 @@ function apiOverrides(Api: any) {
      * @param overrides - optionally provide filename and contentType
      * @returns {Promise<any>|Promise}
      */
-    Api.prototype.upload = function(stream: fs.ReadStream|Buffer, overrides?: {filename: string, contentType: string}): Promise<any> {
+    Api.prototype.upload = function(stream: fs.ReadStream | Buffer, overrides?: { filename: string, contentType: string }): Promise<any> {
         var form = new FormData();
         form.append('uploadedFile', stream, overrides);
 
@@ -74,7 +78,7 @@ function apiOverrides(Api: any) {
 
         var httpTransport = this.httpTransport;
 
-        return new Promise<any>(function (resolve: any, reject: any) {
+        return new Promise<any>(function(resolve: any, reject: any) {
             var request = httpTransport.request(options, this._handleResponse(resolve, reject));
             TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
             // get content length and fire away
@@ -83,7 +87,7 @@ function apiOverrides(Api: any) {
                     reject(err);
                     return;
                 }
-                //console.log("Setting content-length: " + length);
+                //log("Setting content-length: " + length);
                 request.setHeader('Content-Length', length);
                 form.pipe(request);
             });
@@ -101,9 +105,9 @@ function apiOverrides(Api: any) {
      * @private
      */
     Api.prototype._handleResponse = (resolve: any, reject: any) => {
-        return function (response: http.IncomingMessage) {
+        return function(response: http.IncomingMessage) {
             let contentEncoding = response.headers['content-encoding'];
-            console.log(`*** Response: ${response.statusCode}, ${response.statusMessage}, contentEncoding: ${contentEncoding}, response headers: ${JSON.stringify(response.headers)}`);
+            log(`*** Response: ${response.statusCode}, ${response.statusMessage}, contentEncoding: ${contentEncoding}, response headers: ${JSON.stringify(response.headers)}`);
 
             // check content encoding
             var output: NodeJS.ReadWriteStream;
@@ -122,14 +126,14 @@ function apiOverrides(Api: any) {
 
             // collect the response
             var body = '';
-            output.on('data', function (chunk: any) {
+            output.on('data', function(chunk: any) {
                 // chunk = chunk.toString('utf-8');
-                //console.log(`HTTP receiving data: ${chunk}`);
+                //log(`HTTP receiving data: ${chunk}`);
                 body += chunk;
             });
-            output.on('end', function () {
-                console.log(`HTTP response: ${body}`);
-                // console.log(`Response headers: ${JSON.stringify(response.headers)}`);
+            output.on('end', function() {
+                log(`HTTP response: ${body}`);
+                // log(`Response headers: ${JSON.stringify(response.headers)}`);
                 var data;
                 try {
                     data = JSON.parse(body);
@@ -146,7 +150,7 @@ function apiOverrides(Api: any) {
                 }
             });
             output.on('error', function(err: any) {
-                console.log(`HTTP output error: ${err}`);
+                log(`HTTP output error: ${err}`);
                 return reject(err);
             });
         };
@@ -183,7 +187,7 @@ function apiOverrides(Api: any) {
      */
     Api.prototype.metadata = function(objCode: string, useCache?: boolean): Promise<WfModel.MetaData> {
         if (useCache && metaDataCache[objCode]) {
-            // console.log(`Metadata from cache! ${objCode}`);
+            // log(`Metadata from cache! ${objCode}`);
             return Promise.resolve(metaDataCache[objCode]);
         }
         let params: any = {};
@@ -191,7 +195,7 @@ function apiOverrides(Api: any) {
             params.apiKey = this.httpParams.apiKey;
         }
         let endpoint = objCode + "/metadata";
-        // console.log(`Metadata from network! ${objCode}`);
+        // log(`Metadata from network! ${objCode}`);
         return this.request(endpoint, params, [], Api.Methods.GET).then((metaData: WfModel.MetaData) => {
             metaDataCache[objCode] = metaData;
             return metaData;
@@ -226,12 +230,12 @@ function apiOverrides(Api: any) {
 
         //var httpTransport = this.httpTransport;
         var isHttps = this.httpOptions.protocol === 'https:';
-        var httpTransport = isHttps ? followRedirects.https : followRedirects.http;
+        var httpTransport = isHttps ? followHttps : followHttp;
 
         return new Promise<any>((resolve, reject) => {
-            console.log("Making a download request: " + JSON.stringify(options) + ", session ID: " + this.httpOptions.headers.sessionID);
+            log("Making a download request: " + JSON.stringify(options) + ", session ID: " + this.httpOptions.headers.sessionID);
             var request = httpTransport.request(options, (response: http.IncomingMessage) => {
-                console.log("*** Download response: " + response.statusCode + ", " + response.statusMessage);
+                log("*** Download response: " + response.statusCode + ", " + response.statusMessage);
                 if (response.statusCode != 200) { // If Workfront is down, then workfront http proxy returns 501 but with no content - so we want to catch that in here
                     return reject(`Download failed! Response code: ${response.statusCode}, message: ${response.statusMessage}`);
                 }
@@ -241,11 +245,11 @@ function apiOverrides(Api: any) {
                 response.on("error", reject);
                 response.pipe(output);
                 output.on('finish', () => {
-                    console.log(`HTTP download ended!`);
+                    log(`HTTP download ended!`);
                     resolve();
                 });
                 // response.on('data', (chunk) => { output.write(chunk); });
-                // response.on('end', () => { console.log(`HTTP download ended!`); resolve(); });
+                // response.on('end', () => { log(`HTTP download ended!`); resolve(); });
             });
             TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
             request.on('error', reject);
@@ -319,15 +323,15 @@ function apiOverrides(Api: any) {
         }
 
         // debug
-        console.log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
+        log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
         // let configName = Config.instance().name;
         // if (configName == Config.OJA) {
-        //     console.log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
+        //     log(`Making a request: ${JSON.stringify(options)}, params: ${JSON.stringify(params)}`);
         // }
 
         var httpTransport = this.httpTransport;
 
-        return new Promise(function (resolve: any, reject: any) {
+        return new Promise(function(resolve: any, reject: any) {
             var request = httpTransport.request(options, this._handleResponse(resolve, reject));
             TimedOut.applyToRequest(request, HTTP_REQ_TIMEOUT);
             request.on('error', reject);
@@ -339,4 +343,4 @@ function apiOverrides(Api: any) {
     };
 }
 
-export {apiOverrides};
+export { apiOverrides };

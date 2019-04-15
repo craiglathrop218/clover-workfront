@@ -722,4 +722,3 @@ export declare namespace WfModel {
         count: number;
     }
 }
-//# sourceMappingURL=model.d.ts.map
