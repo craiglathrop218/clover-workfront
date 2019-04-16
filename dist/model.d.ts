@@ -225,6 +225,7 @@ export declare namespace WfModel {
         currentVersionID?: string;
         currentVersion?: DocumentVersion;
         handle?: string;
+        project?: Project;
     }
     interface DocumentVersion {
         ID: string;

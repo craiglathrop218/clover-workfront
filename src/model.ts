@@ -231,7 +231,8 @@ export namespace WfModel {
         lastVersionNum?: string,
         currentVersionID?: string,
         currentVersion?: DocumentVersion,
-        handle?: string // Upload handle
+        handle?: string, // Upload handle
+        project?: Project
     }
     export interface DocumentVersion {
         ID: string,
