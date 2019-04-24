@@ -91,13 +91,13 @@ export declare class Workfront {
     getOrCreateUser(logger: Workfront.Logger, fromEmail: mailparser.EmailAddress, accessConfigs: {
         externalUsers: Workfront.UserAccessConfig;
         idtUsers: Workfront.UserAccessConfig;
-    }, userFieldsToReturn: string[], fetchSsoId?: Workfront.FetchSsoId): Promise<WfModel.User>;
+    }, userFieldsToReturn: string[]): Promise<WfModel.User>;
     /**
      * For all provided user email addresses create corresponding user objects in Workfront.
      *
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
-    getOrCreateUsersByEmail(logger: Workfront.Logger, userEmails: mailparser.EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fieldsToReturn: string[], fetchSsoId: Workfront.FetchSsoId): Promise<Map<string, Workfront.User>>;
+    getOrCreateUsersByEmail(logger: Workfront.Logger, userEmails: mailparser.EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fieldsToReturn: string[]): Promise<Map<string, Workfront.User>>;
     /**
      * Fetches a user from Workfront based on provided user id.
      *

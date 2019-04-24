@@ -416,7 +416,7 @@ export class Workfront {
      * @param accessConfigs - the workfront access settings / levels for a user
      * @returns {Promise<User>|Promise}
      */
-    async getOrCreateUser(logger: Workfront.Logger, fromEmail: mailparser.EmailAddress, accessConfigs: { externalUsers: Workfront.UserAccessConfig, idtUsers: Workfront.UserAccessConfig }, userFieldsToReturn: string[], fetchSsoId?: Workfront.FetchSsoId): Promise<WfModel.User> {
+    async getOrCreateUser(logger: Workfront.Logger, fromEmail: mailparser.EmailAddress, accessConfigs: { externalUsers: Workfront.UserAccessConfig, idtUsers: Workfront.UserAccessConfig }, userFieldsToReturn: string[]): Promise<WfModel.User> {
         let user: WfModel.User = await this.getUserByEmail(logger, fromEmail, userFieldsToReturn);
         if (user) {
             // we found existing user, return it
@@ -503,7 +503,7 @@ export class Workfront {
      *
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
-    async getOrCreateUsersByEmail(logger: Workfront.Logger, userEmails: mailparser.EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fieldsToReturn: string[], fetchSsoId: Workfront.FetchSsoId): Promise<Map<string, Workfront.User>> {
+    async getOrCreateUsersByEmail(logger: Workfront.Logger, userEmails: mailparser.EmailAddress[], emailsToIgnore: string[], otherConfigs: any, fieldsToReturn: string[]): Promise<Map<string, Workfront.User>> {
         logger.log(`Get or create users by email! Emails: ${JSON.stringify(userEmails)}`);
 
         // ignore service mailbox emails
@@ -518,7 +518,7 @@ export class Workfront {
         let usersFetched: Array<Promise<WfModel.User>> = [];
         for (let userEmail of userEmails) {
             if (!ignoreEmails.has(userEmail.address.toLowerCase().trim())) {
-                usersFetched.push(this.getOrCreateUser(logger, userEmail, otherConfigs.accessConfigs, fieldsToReturn, fetchSsoId));
+                usersFetched.push(this.getOrCreateUser(logger, userEmail, otherConfigs.accessConfigs, fieldsToReturn));
                 userEmailsFetched.push(userEmail.address);
             }
         }

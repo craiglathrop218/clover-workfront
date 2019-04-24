@@ -374,7 +374,7 @@ class Workfront {
      * @param accessConfigs - the workfront access settings / levels for a user
      * @returns {Promise<User>|Promise}
      */
-    async getOrCreateUser(logger, fromEmail, accessConfigs, userFieldsToReturn, fetchSsoId) {
+    async getOrCreateUser(logger, fromEmail, accessConfigs, userFieldsToReturn) {
         let user = await this.getUserByEmail(logger, fromEmail, userFieldsToReturn);
         if (user) {
             // we found existing user, return it
@@ -452,7 +452,7 @@ class Workfront {
      *
      * @returns {Promise<T>|Promise<R>|Promise} - created user objects
      */
-    async getOrCreateUsersByEmail(logger, userEmails, emailsToIgnore, otherConfigs, fieldsToReturn, fetchSsoId) {
+    async getOrCreateUsersByEmail(logger, userEmails, emailsToIgnore, otherConfigs, fieldsToReturn) {
         logger.log(`Get or create users by email! Emails: ${JSON.stringify(userEmails)}`);
         // ignore service mailbox emails
         let ignoreEmails = new Set();
@@ -465,7 +465,7 @@ class Workfront {
         let usersFetched = [];
         for (let userEmail of userEmails) {
             if (!ignoreEmails.has(userEmail.address.toLowerCase().trim())) {
-                usersFetched.push(this.getOrCreateUser(logger, userEmail, otherConfigs.accessConfigs, fieldsToReturn, fetchSsoId));
+                usersFetched.push(this.getOrCreateUser(logger, userEmail, otherConfigs.accessConfigs, fieldsToReturn));
                 userEmailsFetched.push(userEmail.address);
             }
         }
