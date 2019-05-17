@@ -395,7 +395,9 @@ export class Workfront {
 
         logger.log(`getUser. Got users: ${users}`);
         if (users && users.length > 1) {
-            throw new Error(`Multiple users returned for an email: ${fromEmail.address}`);
+            //throw new Error(`Multiple users returned for an email: ${fromEmail.address}`);
+            logger.log(`*** Multiple users returned for an email: ${fromEmail.address}. Returning first one!`);
+            return users[0];
         }
         if (users && users.length) {
             // we have found an existing user
