@@ -425,11 +425,13 @@ export class Workfront {
             return user;
         }
 
-        // skip creating idt.com users
-        let isIDTEmployee = fromEmail.address.toLowerCase().indexOf("@idt.com") > 0 ? true : false;
+        // skip creating idt.com or renesas.com users
+        let isIDTEmployeeEmail = fromEmail.address.toLowerCase().indexOf("@idt.com") > 0 ? true : false;
+        let isRenesasEmployeeEmail = fromEmail.address.toLowerCase().indexOf("@renesas.com") > 0 ? true : false;
+        let isIDTEmployee = isIDTEmployeeEmail || isRenesasEmployeeEmail;
         if (isIDTEmployee) {
             // Skipping idt.com user creation
-            logger.log(`*** Skipping to create new user: ${fromEmail.address}`);
+            logger.log(`*** Skipping to create new user: ${fromEmail.address}. It's either from @idt.com or from @renesas.com`);
             return null;
         }
 
