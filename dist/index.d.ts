@@ -3,6 +3,12 @@ import moment from "moment";
 import mailparser from "mailparser";
 import api from "workfront-api";
 import { WfModel } from "./model";
+export interface Dictionary<T> {
+    [key: string]: T;
+}
+export interface WorkfrontInitOptions {
+    notFoundUserEmailMapping?: Dictionary<string>;
+}
 /**
  * A Workfront internal API for our project that provides a convenient and wrapped methods to be used in different usage scenarios.
  */
@@ -15,7 +21,8 @@ export declare class Workfront {
     static apiFactoryConfig: api.Config;
     apiFactoryConfig: api.Config;
     api: api.Api;
-    initialize(config: api.Config, key: string): void;
+    notFoundUserEmailMapping: Dictionary<string>;
+    initialize(config: api.Config, key: string, initOptions?: WorkfrontInitOptions): void;
     setApiKey(key: string): void;
     /**
      * Login as a user with specified login email

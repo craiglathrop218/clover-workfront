@@ -77,10 +77,16 @@ function getAPIInstance(apiFactoryConfig, returnNewInstance) {
  */
 // implementation
 class Workfront {
-    initialize(config = Workfront.apiFactoryConfig, key) {
+    constructor() {
+        this.notFoundUserEmailMapping = undefined;
+    }
+    initialize(config = Workfront.apiFactoryConfig, key, initOptions) {
         this.apiFactoryConfig = config;
         this.api = getAPIInstance(this.apiFactoryConfig);
         this.api.httpParams.apiKey = key;
+        if (initOptions) {
+            this.notFoundUserEmailMapping = initOptions.notFoundUserEmailMapping;
+        }
     }
     setApiKey(key) {
         this.api.httpParams.apiKey = key;
@@ -363,6 +369,22 @@ class Workfront {
             // we have found an existing user
             logger.log(`*** User found by email: ${fromEmail.address}`);
             return users[0];
+        }
+        // check if we have to check a not found mapping for users
+        if (this.notFoundUserEmailMapping) {
+            const mappedEmailAddress = this.notFoundUserEmailMapping[fromEmail.address];
+            if (mappedEmailAddress) {
+                let users = await this.api.search("USER", {
+                    emailAddr: mappedEmailAddress,
+                    emailAddr_Mod: "cieq"
+                }, fieldsToReturn);
+                if (users && users.length) {
+                    // we have found an existing user
+                    logger.log(`*** User found by mapped email: ${mappedEmailAddress}, original email: ${fromEmail.address}`);
+                    return users[0];
+                }
+                logger.log(`*** User not found by mapped email: ${mappedEmailAddress}`);
+            }
         }
         // user not found
         logger.log(`*** User not found by email: ${fromEmail.address}`);

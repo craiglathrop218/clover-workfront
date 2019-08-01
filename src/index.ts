@@ -14,6 +14,14 @@ interface UserNames {
     lastName: string
 }
 
+export interface Dictionary<T> {
+    [key: string]: T;
+}
+
+export interface WorkfrontInitOptions {
+    notFoundUserEmailMapping?: Dictionary<string>;
+}
+
 /**
  * Parse user names (firstname, lastname) out from provided email address.
  *
@@ -104,11 +112,15 @@ export class Workfront {
     //
     apiFactoryConfig: api.Config;
     api: api.Api;
+    notFoundUserEmailMapping: Dictionary<string> = undefined;
 
-    initialize(config: api.Config = Workfront.apiFactoryConfig, key: string) {
+    initialize(config: api.Config = Workfront.apiFactoryConfig, key: string, initOptions?: WorkfrontInitOptions) {
         this.apiFactoryConfig = config;
         this.api = getAPIInstance(this.apiFactoryConfig);
         this.api.httpParams.apiKey = key;
+        if (initOptions) {
+            this.notFoundUserEmailMapping = initOptions.notFoundUserEmailMapping;
+        }
     }
 
     setApiKey(key: string): void {
@@ -403,6 +415,23 @@ export class Workfront {
             // we have found an existing user
             logger.log(`*** User found by email: ${fromEmail.address}`);
             return users[0];
+        }
+
+        // check if we have to check a not found mapping for users
+        if (this.notFoundUserEmailMapping) {
+            const mappedEmailAddress = this.notFoundUserEmailMapping[fromEmail.address];
+            if (mappedEmailAddress) {
+                let users: WfModel.User[] = await this.api.search<WfModel.User[]>("USER", {
+                    emailAddr: mappedEmailAddress,
+                    emailAddr_Mod: "cieq"
+                }, fieldsToReturn);
+                if (users && users.length) {
+                    // we have found an existing user
+                    logger.log(`*** User found by mapped email: ${mappedEmailAddress}, original email: ${fromEmail.address}`);
+                    return users[0];
+                }
+                logger.log(`*** User not found by mapped email: ${mappedEmailAddress}`);
+            }
         }
 
         // user not found
