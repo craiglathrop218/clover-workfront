@@ -127,6 +127,23 @@ export class Workfront {
         this.api.httpParams.apiKey = key;
     }
 
+    async apiLogin(logger: Workfront.Logger, api: api.Api, username: string): Promise<api.LoginResult> {
+        try {
+            return await api.login(username);
+        } catch (e) {
+            if (this.notFoundUserEmailMapping) {
+                const mappedEmailAddress = this.notFoundUserEmailMapping[username];
+                if (mappedEmailAddress) {
+                    logger.log(`Login failed with username: ${username}, trying to login with mapped username: ${mappedEmailAddress}`);
+                    const login = await api.login(mappedEmailAddress);
+                    logger.log(`Logged in with mapped username: ${mappedEmailAddress}, original username: ${username}`);
+                    return login;
+                }
+            }
+            throw e;
+        }
+    }
+
     /**
      * Login as a user with specified login email
      *
@@ -142,7 +159,7 @@ export class Workfront {
         // if there is wait delay specified after a login
         if (waitDelay) {
             return new Promise<api.LoginResult>((resolve, reject) => {
-                api.login(fromEmail.address).then((login: api.LoginResult) => {
+                this.apiLogin(logger, api, fromEmail.address).then((login: api.LoginResult) => {
                     logger.log(`Logged in! Waiting after login delay: ${waitDelay} before returning ...`);
                     setTimeout(() => {
                         resolve(login);
@@ -152,7 +169,7 @@ export class Workfront {
                 });
             });
         } else {
-            return api.login(fromEmail.address);
+            return this.apiLogin(logger, api, fromEmail.address);
         }
     }
 
@@ -222,6 +239,7 @@ export class Workfront {
                         });
                         return Promise.resolve(execResult);
                     } catch (e) {
+                        console.log(`Error while logging in: `, e, e.error["class"]);
                         if (e.error && e.error["class"]) {
                             let errorClass = e.error["class"];
                             let errorMsg = e.error.message;
@@ -253,7 +271,7 @@ export class Workfront {
 
             // login and execute provided function under a user
             let updated = new Promise<T>((resolve, reject) => {
-                api.login(fromEmail.address).then((login: api.LoginResult) => {
+                this.apiLogin(logger, api, fromEmail.address).then((login: api.LoginResult) => {
                     delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
                     let userId = login.userID;
                     let sessionId = login.sessionID;

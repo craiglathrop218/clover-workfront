@@ -91,6 +91,23 @@ class Workfront {
     setApiKey(key) {
         this.api.httpParams.apiKey = key;
     }
+    async apiLogin(logger, api, username) {
+        try {
+            return await api.login(username);
+        }
+        catch (e) {
+            if (this.notFoundUserEmailMapping) {
+                const mappedEmailAddress = this.notFoundUserEmailMapping[username];
+                if (mappedEmailAddress) {
+                    logger.log(`Login failed with username: ${username}, trying to login with mapped username: ${mappedEmailAddress}`);
+                    const login = await api.login(mappedEmailAddress);
+                    logger.log(`Logged in with mapped username: ${mappedEmailAddress}, original username: ${username}`);
+                    return login;
+                }
+            }
+            throw e;
+        }
+    }
     /**
      * Login as a user with specified login email
      *
@@ -105,7 +122,7 @@ class Workfront {
         // if there is wait delay specified after a login
         if (waitDelay) {
             return new Promise((resolve, reject) => {
-                api.login(fromEmail.address).then((login) => {
+                this.apiLogin(logger, api, fromEmail.address).then((login) => {
                     logger.log(`Logged in! Waiting after login delay: ${waitDelay} before returning ...`);
                     setTimeout(() => {
                         resolve(login);
@@ -116,7 +133,7 @@ class Workfront {
             });
         }
         else {
-            return api.login(fromEmail.address);
+            return this.apiLogin(logger, api, fromEmail.address);
         }
     }
     /**
@@ -214,7 +231,7 @@ class Workfront {
             api.httpParams.apiKey = this.api.httpParams.apiKey;
             // login and execute provided function under a user
             let updated = new Promise((resolve, reject) => {
-                api.login(fromEmail.address).then((login) => {
+                this.apiLogin(logger, api, fromEmail.address).then((login) => {
                     delete api.httpParams.apiKey; // This needs to be here, otherwise entity is created under apiKey user
                     let userId = login.userID;
                     let sessionId = login.sessionID;

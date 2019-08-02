@@ -24,6 +24,7 @@ export declare class Workfront {
     notFoundUserEmailMapping: Dictionary<string>;
     initialize(config: api.Config, key: string, initOptions?: WorkfrontInitOptions): void;
     setApiKey(key: string): void;
+    apiLogin(logger: Workfront.Logger, api: api.Api, username: string): Promise<api.LoginResult>;
     /**
      * Login as a user with specified login email
      *
