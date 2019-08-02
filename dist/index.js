@@ -97,6 +97,7 @@ class Workfront {
         }
         catch (e) {
             if (this.notFoundUserEmailMapping) {
+                username = username.toLowerCase().trim();
                 const mappedEmailAddress = this.notFoundUserEmailMapping[username];
                 if (mappedEmailAddress) {
                     logger.log(`Login failed with username: ${username}, trying to login with mapped username: ${mappedEmailAddress}`);
@@ -199,6 +200,7 @@ class Workfront {
                         return Promise.resolve(execResult);
                     }
                     catch (e) {
+                        console.log(`Error while logging in: `, e, e.error["class"]);
                         if (e.error && e.error["class"]) {
                             let errorClass = e.error["class"];
                             let errorMsg = e.error.message;
@@ -389,7 +391,8 @@ class Workfront {
         }
         // check if we have to check a not found mapping for users
         if (this.notFoundUserEmailMapping) {
-            const mappedEmailAddress = this.notFoundUserEmailMapping[fromEmail.address];
+            const username = fromEmail.address.toLowerCase().trim();
+            const mappedEmailAddress = this.notFoundUserEmailMapping[username];
             if (mappedEmailAddress) {
                 let users = await this.api.search("USER", {
                     emailAddr: mappedEmailAddress,
