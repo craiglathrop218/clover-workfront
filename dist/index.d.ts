@@ -8,6 +8,7 @@ export interface Dictionary<T> {
 }
 export interface WorkfrontInitOptions {
     notFoundUserEmailMapping?: Dictionary<string>;
+    notFoundUserEmailMappingReverse?: Dictionary<string>;
 }
 /**
  * A Workfront internal API for our project that provides a convenient and wrapped methods to be used in different usage scenarios.
@@ -22,6 +23,7 @@ export declare class Workfront {
     apiFactoryConfig: api.Config;
     api: api.Api;
     notFoundUserEmailMapping: Dictionary<string>;
+    notFoundUserEmailMappingReverse: Dictionary<string>;
     initialize(config: api.Config, key: string, initOptions?: WorkfrontInitOptions): void;
     setApiKey(key: string): void;
     apiLogin(logger: Workfront.Logger, api: api.Api, username: string): Promise<api.LoginResult>;

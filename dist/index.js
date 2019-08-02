@@ -79,6 +79,7 @@ function getAPIInstance(apiFactoryConfig, returnNewInstance) {
 class Workfront {
     constructor() {
         this.notFoundUserEmailMapping = undefined;
+        this.notFoundUserEmailMappingReverse = undefined;
     }
     initialize(config = Workfront.apiFactoryConfig, key, initOptions) {
         this.apiFactoryConfig = config;
@@ -86,6 +87,7 @@ class Workfront {
         this.api.httpParams.apiKey = key;
         if (initOptions) {
             this.notFoundUserEmailMapping = initOptions.notFoundUserEmailMapping;
+            this.notFoundUserEmailMappingReverse = initOptions.notFoundUserEmailMappingReverse;
         }
     }
     setApiKey(key) {
@@ -96,11 +98,23 @@ class Workfront {
             return await api.login(username);
         }
         catch (e) {
+            // first check @renesas.com -> @idt.com mapping
             if (this.notFoundUserEmailMapping) {
                 username = username.toLowerCase().trim();
                 const mappedEmailAddress = this.notFoundUserEmailMapping[username];
                 if (mappedEmailAddress) {
                     logger.log(`Login failed with username: ${username}, trying to login with mapped username: ${mappedEmailAddress}`);
+                    const login = await api.login(mappedEmailAddress);
+                    logger.log(`Logged in with mapped username: ${mappedEmailAddress}, original username: ${username}`);
+                    return login;
+                }
+            }
+            // then check the opposite/reversed: @idt.com -> @renesas.com
+            if (this.notFoundUserEmailMappingReverse) {
+                username = username.toLowerCase().trim();
+                const mappedEmailAddress = this.notFoundUserEmailMappingReverse[username];
+                if (mappedEmailAddress) {
+                    logger.log(`Login failed with username: ${username}, trying to login with reverse mapped username: ${mappedEmailAddress}`);
                     const login = await api.login(mappedEmailAddress);
                     logger.log(`Logged in with mapped username: ${mappedEmailAddress}, original username: ${username}`);
                     return login;

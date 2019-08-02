@@ -20,6 +20,7 @@ export interface Dictionary<T> {
 
 export interface WorkfrontInitOptions {
     notFoundUserEmailMapping?: Dictionary<string>;
+    notFoundUserEmailMappingReverse?: Dictionary<string>;
 }
 
 /**
@@ -113,6 +114,7 @@ export class Workfront {
     apiFactoryConfig: api.Config;
     api: api.Api;
     notFoundUserEmailMapping: Dictionary<string> = undefined;
+    notFoundUserEmailMappingReverse: Dictionary<string> = undefined;
 
     initialize(config: api.Config = Workfront.apiFactoryConfig, key: string, initOptions?: WorkfrontInitOptions) {
         this.apiFactoryConfig = config;
@@ -120,6 +122,7 @@ export class Workfront {
         this.api.httpParams.apiKey = key;
         if (initOptions) {
             this.notFoundUserEmailMapping = initOptions.notFoundUserEmailMapping;
+            this.notFoundUserEmailMappingReverse = initOptions.notFoundUserEmailMappingReverse;
         }
     }
 
@@ -131,11 +134,23 @@ export class Workfront {
         try {
             return await api.login(username);
         } catch (e) {
+            // first check @renesas.com -> @idt.com mapping
             if (this.notFoundUserEmailMapping) {
                 username = username.toLowerCase().trim();
                 const mappedEmailAddress = this.notFoundUserEmailMapping[username];
                 if (mappedEmailAddress) {
                     logger.log(`Login failed with username: ${username}, trying to login with mapped username: ${mappedEmailAddress}`);
+                    const login = await api.login(mappedEmailAddress);
+                    logger.log(`Logged in with mapped username: ${mappedEmailAddress}, original username: ${username}`);
+                    return login;
+                }
+            }
+            // then check the opposite/reversed: @idt.com -> @renesas.com
+            if (this.notFoundUserEmailMappingReverse) {
+                username = username.toLowerCase().trim();
+                const mappedEmailAddress = this.notFoundUserEmailMappingReverse[username];
+                if (mappedEmailAddress) {
+                    logger.log(`Login failed with username: ${username}, trying to login with reverse mapped username: ${mappedEmailAddress}`);
                     const login = await api.login(mappedEmailAddress);
                     logger.log(`Logged in with mapped username: ${mappedEmailAddress}, original username: ${username}`);
                     return login;
