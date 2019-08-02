@@ -132,6 +132,7 @@ export class Workfront {
             return await api.login(username);
         } catch (e) {
             if (this.notFoundUserEmailMapping) {
+                username = username.toLowerCase().trim();
                 const mappedEmailAddress = this.notFoundUserEmailMapping[username];
                 if (mappedEmailAddress) {
                     logger.log(`Login failed with username: ${username}, trying to login with mapped username: ${mappedEmailAddress}`);
@@ -437,7 +438,8 @@ export class Workfront {
 
         // check if we have to check a not found mapping for users
         if (this.notFoundUserEmailMapping) {
-            const mappedEmailAddress = this.notFoundUserEmailMapping[fromEmail.address];
+            const username = fromEmail.address.toLowerCase().trim();
+            const mappedEmailAddress = this.notFoundUserEmailMapping[username];
             if (mappedEmailAddress) {
                 let users: WfModel.User[] = await this.api.search<WfModel.User[]>("USER", {
                     emailAddr: mappedEmailAddress,
