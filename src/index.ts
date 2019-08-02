@@ -469,6 +469,24 @@ export class Workfront {
             }
         }
 
+        // also check the reverse mapping: @idt -> @renesas
+        if (this.notFoundUserEmailMappingReverse) {
+            const username = fromEmail.address.toLowerCase().trim();
+            const mappedEmailAddress = this.notFoundUserEmailMappingReverse[username];
+            if (mappedEmailAddress) {
+                let users: WfModel.User[] = await this.api.search<WfModel.User[]>("USER", {
+                    emailAddr: mappedEmailAddress,
+                    emailAddr_Mod: "cieq"
+                }, fieldsToReturn);
+                if (users && users.length) {
+                    // we have found an existing user
+                    logger.log(`*** User found by reverse mapped email: ${mappedEmailAddress}, original email: ${fromEmail.address}`);
+                    return users[0];
+                }
+                logger.log(`*** User not found by reverse mapped email: ${mappedEmailAddress}`);
+            }
+        }
+
         // user not found
         logger.log(`*** User not found by email: ${fromEmail.address}`);
         return null;
