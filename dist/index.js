@@ -457,11 +457,11 @@ class Workfront {
         }
         // skip creating idt.com or renesas.com users
         let isIDTEmployeeEmail = fromEmail.address.toLowerCase().indexOf("@idt.com") > 0 ? true : false;
-        let isRenesasEmployeeEmail = fromEmail.address.toLowerCase().indexOf("@renesas.com") > 0 ? true : false;
+        let isRenesasEmployeeEmail = fromEmail.address.toLowerCase().endsWith("renesas.com");
         let isIDTEmployee = isIDTEmployeeEmail || isRenesasEmployeeEmail;
         if (isIDTEmployee) {
             // Skipping idt.com user creation
-            logger.log(`*** Skipping to create new user: ${fromEmail.address}. It's either from @idt.com or from @renesas.com`);
+            logger.log(`*** Skipping to create new user: ${fromEmail.address}. It's either from @idt.com or ends with renesas.com`);
             return null;
         }
         // // check if we need to get ssoId
