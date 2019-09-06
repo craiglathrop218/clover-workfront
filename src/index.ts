@@ -255,7 +255,7 @@ export class Workfront {
                         });
                         return Promise.resolve(execResult);
                     } catch (e) {
-                        console.log(`Error while logging in: `, e, e.error["class"]);
+                        console.log(`Error while logging in: `, e);
                         if (e.error && e.error["class"]) {
                             let errorClass = e.error["class"];
                             let errorMsg = e.error.message;
