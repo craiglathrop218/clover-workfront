@@ -32,7 +32,7 @@
     "@types/mailparser": "^2.0.2",
     "debug": "^4.1.1",
     "deep-extend": "^0.4.2",
-    "follow-redirects": "^1.4.1",
+    "follow-redirects": "^1.14.8",
     "form-data": "^2.3.2",
     "mailparser": "^2.4.3",
     "moment": "^2.22.1",
